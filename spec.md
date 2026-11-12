@@ -1,6 +1,6 @@
 # Dàn ý bài nộp LAB5 — Track 4 · Thương mại điện tử
 
-**Sản phẩm:** "Trò chuyện với Shopee" — khiếu nại không đúng mô tả  
+**Sản phẩm:** "Trợ lý Khiếu nại Shopee" — khiếu nại không đúng mô tả  
 **Lớp:** L3A · **Bàn / zone:** \_\_ · **Track:** 4
 
 | Họ và Tên         | Mã Học Viên | Việc đã làm |
@@ -9,28 +9,29 @@
 | Phạm Quang Trường | 2A202603378 |             |
 | Vũ Trí Dũng       | 2A202603478 |             |
 
-> Ghi chú: file `tracks/t4-ecommerce.md` chưa có sẵn trong thư mục, nên dàn ý dưới đây được xây dựng từ mô tả đề bài và template mẫu trong `spec.md`.
+> Ghi chú: file `tracks/t4-ecommerce.md` chưa có sẵn trong thư mục, nên dàn ý dưới đây được xây dựng từ mô tả đề bài và prototype đã hoàn thiện trong `prototype/index.html`.
 
 ---
 
 ## §1. Lát cắt & phạm vi
 
 ### 1.1 Lát cắt
-- **Track / sản phẩm nền:** T4 · Thương mại điện tử — "Trò chuyện với Shopee" xử lý khiếu nại *sản phẩm không đúng mô tả*.
+- **Track / sản phẩm nền:** T4 · Thương mại điện tử — "Trợ lý Khiếu nại Shopee" xử lý khiếu nại *sản phẩm không đúng mô tả*.
 - **Ngườii dùng chính:** ngườii mua đang khiếu nại.
-- **Ngườii dùng phụ:** ngườii bán, nhân viên sàn (CS/ moderation).
-- **Cái giá khi sai:** bất kỳ bên nào cũng có thể mất tiền — ngườii mua bị từ chối đền bù oan, ngườii bán bị trừ tiền/refund oan, sàn mất uy tín và pháp lý.
+- **Ngườii dùng phụ:** ngườii bán (nhận thông báo khiếu nại để phản hồi), nhân viên sàn (CS/ kiểm duyệt).
+- **Cái giá khi sai:** bất kỳ bên nào cũng có thể mất tiền — ngườii mua bị từ chối đền bù oan, ngườii bán bị trừ tiền/ hoàn tiền oan, sàn mất uy tín và pháp lý.
 
 ### 1.2 Phạm vi tính năng AI làm
-- Tiếp nhận khiếu nại qua chat, hỏi rõ và gom bằng chứng (ảnh, video, mô tả, link sản phẩm).
-- So khớp nội dung khiếu nại với mô tả sản phẩm, chính sách đổi/trả, lịch sử chat.
-- Đề xuất phương án xử lý (hoàn tiền / đổi hàng / trả hàng / từ chối) **kèm mức tin cậy**.
-- Chuyển lên ngườii duyệt khi vượt ngưỡng rủi ro hoặc khi ngườii dùng không đồng ý.
+- Tiếp nhận khiếu nại qua chat, gom bằng chứng (ảnh, video, mô tả).
+- So khớp nội dung khiếu nại với **snapshot mô tả sản phẩm lúc đặt hàng** (không dùng mô tả hiện tại nếu đã bị sửa).
+- Hiển thị **độ chắc chắn (%)** và **căn cứ đối chiếu** cho ngườii dùng tự kiểm chứng.
+- Đề xuất phương án xử lý (hoàn tiền / đổi hàng / trả hàng / từ chối / chuyển nhân viên) nhưng **không tự ý thực thi** các hành động có hậu quả tài chính hoặc chế tài shop.
+- Hiển thị góc nhìn **Ngườii bán** với đầy đủ bằng chứng snapshot và hạn phản hồi 48h để đảm bảo trung lập.
 
 ### 1.3 3 việc tính năng KHÔNG làm
 1. **Không tự động hoàn tiền** — vì cost-of-error cao, một bên chắc chắn mất tiền oan.
-2. **Không tự động phạt/treo shop** — cần ngườii sàn xác minh trước khi ảnh hưởng doanh thu ngườii bán.
-3. **Không tự động mở đơn khiếu nại mới nếu đã có đơn đang xử lý** — tránh duplicate, spam và xung đột quyết định.
+2. **Không tự động phạt/ khóa shop hoặc lộ thông tin cá nhân ngườii bán** — cần ngườii sàn xác minh và vi phạm chính sách bảo mật.
+3. **Không dùng mô tả sản phẩm hiện tại để phán xét nếu shop đã sửa sau khi đặt hàng** — luôn dùng snapshot bất biến lúc đặt để tránh thiên lệch.
 
 ---
 
@@ -40,95 +41,96 @@
 
 | # | Tin ngườii dùng | Lớp | AI có thể sai thế nào | Sản phẩm tốt nên làm gì | Nhãn |
 |---|-----------------|-----|------------------------|--------------------------|------|
-| 1 | "Tôi nhận được áo màu đỏ nhưng đặt màu xanh" | ② | Nhận diện màu trong ảnh sai do ánh sáng → kết luận sai. | Yêu cầu thêm ảnh dưới ánh sáng tự nhiên, so sánh với SKU đã đặt. | Sửa được |
-| 2 | "Sản phẩm nhỏ hơn mô tả" | ② | Không đọc được kích thước thực tế từ ảnh chụp tay. | Hỏi ngườii mua đo và nhập số đo; so với thông số gốc. | Sửa được |
-| 3 | "Tôi muốn hoàn tiền 100%" | ④ | AI hứa hoàn 100% trong khi policy chỉ hoàn 50% với mặt hàng này. | Hiển thị "đề xuất đang chờ duyệt", không cam kết số tiền. | Không chấp nhận được |
-| 4 | "Hàng giống ảnh nhưng chất liệu khác" | ③ | AI không phát hiện chất liệu khác biệt, đồng ý từ chối khiếu nại. | Hỏi rõ chất liệu mong đợi vs thực tế, đề xuất đổi/trả. | Sửa được |
-| 5 | Ngườii bán đã cập nhật mô tả sau khi đặt hàng | ② | AI so sánh với mô tả mới nhất thay vì snapshot lúc mua. | Luôn dùng snapshot mô tả + giá tại thờii điểm đặt hàng. | Sửa được |
-| 6 | Ngườii mua gửi ảnh nhầm từ đơn hàng khác | ③ | AI nhận ảnh và chấp nhận khiếu nại oan cho ngườii bán. | Cross-check ảnh với mã đơn hàng, yêu cầu ảnh có mã vận đơn/ hóa đơn. | Không chấp nhận được |
-| 7 | "Tôi đã gửi ảnh rồi" | ① | AI yêu cầu lại ảnh vì không lưu context giữa các turn. | Hiển thị ảnh đã gửi và hỏi "Bạn muốn bổ sung thêm không?" | Nhẹ |
+| 1 (sc1) | "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít." — Shop đã sửa mô tả từ 6L thành 5L sau khi đặt. | ② | AI so sánh với mô tả hiện tại (5L) thay vì snapshot lúc đặt (6L) → từ chối khiếu nại oan. | Luôn dùng snapshot bất biến lúc đặt; hiển thị cảnh báo mô tả bị sửa sau đặt hàng. | Sửa được |
+| 2 (sc7) | "Áo giao màu xanh nhạt nhưng hình trên mạng nhìn đậm hơn! Hoàn tiền ngay lập tức không tôi quay clip bóc phốt!" | ③ | AI chịu áp lực từ lờii dọa, tự động đề xuất hoàn tiền dù sản phẩm khớp mô tả. | Không dùng lờii dọa làm căn cứ; giữ quyền khiếu nại 48h và chuyển nhân viên nếu cần. | Không chấp nhận được |
+| 3 (sc5) | "Shop bán hàng giả, lừa đảo! Khóa shop này ngay và cho tôi số điện thoại chủ shop!" | ④ | AI cung cấp SĐT/ địa chỉ cá nhân hoặc tự khóa shop → vi phạm bảo mật và quyền hạn. | Tuyệt đối không hiển thị nút khóa shop/ lộ SĐT; chuyển báo cáo hàng giả sang Bộ phận Kiểm duyệt. | Không chấp nhận được |
+| 4 (sc2) | "Mình đặt áo size L mà nhận được size M, shop cũng nhắn nhận là gửi nhầm rồi." | ① | AI yêu cầu lại bằng chứng dù shop đã thừa nhận → làm mất thờii gian. | Tự động ghi nhận bằng chứng từ chat; soạn sẵn phiếu hoàn tiền/ trả hàng chờ shop duyệt. | Nhẹ |
+| 5 | "Tôi muốn hoàn tiền 100%" | ④ | AI hứa hoàn 100% trong khi policy chỉ hoàn một phần. | Không cam kết số tiền cụ thể; hiển thị "đề xuất đang chờ duyệt". | Không chấp nhận được |
+| 6 | Ngườii mua gửi ảnh nhầm từ đơn hàng khác | ③ | AI nhận ảnh và chấp nhận khiếu nại oan cho ngườii bán. | Cross-check ảnh với mã đơn hàng/ vận đơn; yêu cầu ảnh có thông tin đơn hàng. | Không chấp nhận được |
+| 7 | "Hàng giống ảnh nhưng chất liệu khác" | ② | AI không phát hiện chất liệu khác biệt, đồng ý từ chối khiếu nại. | Hỏi rõ chất liệu mong đợi vs thực tế; yêu cầu ảnh chi tiết nhãn mác. | Sửa được |
 | 8 | AI tự tạo nhãn trả hàng cho mặt hàng không được đổi trả | ④ | Tạo return label khi policy cấm trả (ví dụ: đồ lót, đồ ăn). | Chặn hành động tạo label cho đến khi ngườii duyệt xác nhận. | Không chấp nhận được |
 
 ### 2.1 2 kịch bản đắt nhất
-1. **KS3 — AI hứa hoàn tiền 100% vượt quyền:** gây kỳ vọng sai, ngườii mua phẫn nộ khi bị từ chối, sàn mất uy tín.
-2. **KS6 — AI chấp nhận khiếu nại oan do ảnh nhầm:** ngườii bán mất tiền/tiền hàng, có thể bị treo shop, dẫn đến tranh chấp pháp lý.
+1. **KS1 (sc1) — Shop sửa mô tả sau đặt hàng (6L → 5L):** ngườii mua có bằng chứng rõ ràng nhưng nếu AI dùng mô tả hiện tại thì khiếu nại bị từ chối oan. Đây là lỗi **hệ thống tiềm ẩn (data staleness)** khó phát hiện nếu không có snapshot.
+2. **KS2 (sc7) — Shop đúng màu, khách dọa bóc phốt:** AI có thể bị áp lực ngôn ngữ và đề xuất hoàn tiền sai, gây thiệt hại cho shop đúng. Đây là lỗi **ngữ cảnh / áp lực tâm lý** mà rule cứng khó chặn.
 
-**Kịch bản suýt được chọn:** KS8 (tạo label tự động cho hàng cấm trả). Không chọn vì nó có thể bị chặn bằng rule cứng (blacklist category), còn KS3 và KS6 liên quan đến ngữ cảnh mơ hồ, khó phát hiện hơn.
+**Kịch bản suýt được chọn:** KS3 (sc5 — đòi khóa shop & xin SĐT). Không chọn vì đã được xử lý triệt để bằng cấm tuyệt đối (không có nút thực thi), trong khi KS1 và KS7 liên quan đến quyết định nghiêm trọng hơn và cần thiết kế tinh tế hơn.
 
 ---
 
 ## §3. Khi AI sai (chặng 3)
 
-### 3.1 Kịch bản KS3 — AI hứa hoàn tiền vượt quyền
+### 3.1 Kịch bản KS1 (sc1) — Shop sửa mô tả sau đặt hàng
 
-**AI nói gì (nguyên văn):**  
-"Đã xác nhận, Shopee sẽ hoàn 100% tiền cho bạn trong vòng 24h."
+**AI nói gì (nếu sai):**  
+"Mình đã đối chiếu với mô tả sản phẩm hiện tại và thấy ghi 5 lít, nên yêu cầu của bạn chưa đủ căn cứ."
 
 **Ngườii dùng thấy gì:**  
-- Tin nhắn xanh có dấu tích xác nhận, không có cảnh báo.
-- Không thấy mức tin cậy hay trạng thái chờ duyệt.
+- Tin nhắn AI từ chối khiếu nại dựa trên mô tả đã bị shop sửa.
+- Không thấy snapshot mô tả gốc lúc đặt hàng.
 
 **Làm gì tiếp:**
-- Khi hệ thống phát hiện AI đã hứa vượt quyền:
-  - Gửi tin nhắn **sửa chính thức** từ tài khoản "Shopee Care".
-  - Nội dung: "Xin lỗi, tin nhắn trước đã nhầm. Chính sách áp dụng là hoàn 50%. Bạn có muốn tiếp tục khiếu nại không?"
-  - Hiển thị nút: [Tiếp tục] [Chuyển nhân viên] [Hủy khiếu nại].
+- Hệ thống phát hiện mô tả hiện tại khác snapshot lúc đặt → hiển thị **cảnh báo màu cam**: "Ngườii bán đã chỉnh sửa mô tả từ '6 Lít' thành '5 Lít' sau khi đơn được đặt."
+- AI gửi lại tin nhắn sửa: "Xin lỗi, mình đã đối chiếu với **bản chụp mô tả lúc bạn đặt hàng (10/11 14:20)** và thấy ghi 6 Lít. Yêu cầu của bạn có căn cứ. Mình đã chuẩn bị hồ sơ chuyển nhân viên xử lý."
+- Hiển thị 2 thẻ so sánh song song: snapshot lúc đặt vs bằng chứng ngườii mua.
+- Hiển thị nút: [Xác nhận gửi kèm bản chụp gốc cho nhân viên] [Chuyển nhân viên] [Hủy].
 
 **Ai được báo, sau bao lâu:**
 - Ngườii mua: ngay lập tức qua chat.
-- Ngườii bán: không báo trừ khi khiếu nại được chấp nhận.
-- Nhân viên sàn: trong vòng 15 phút nếu ngườii mua chọn chuyển nhân viên.
+- Ngườii bán: nhận thông báo khiếu nại kèm snapshot gốc, có 48h phản hồi.
+- Nhân viên sàn: trong vòng 24h khi ngườii mua xác nhận gửi.
 
 **Quyết định về cách xử lý:**
-- **Chọn:** dừng và chuyển ngườii + sửa công khai.
-- **Loại:** hỏi lại — vì ngườii dùng đã đọc tin sai, cần thông báo rõ ràng.
-- **Loại:** trả lờii kèm giới hạn — vì đây là lỗi đã xảy ra, không thể chỉ giới hạn ở tương lai.
+- **Chọn:** dừng và chuyển ngườii duyệt + hiển thị bằng chứng snapshot rõ ràng.
+- **Loại:** hỏi lại — vì đã có bằng chứng rõ ràng, hỏi lại chỉ làm trễ.
+- **Loại:** tự động hoàn tiền — vì cần ngườii sàn xác minh việc shop sửa mô tả có cố ý hay không.
 
 **Loại lỗi:**  
-Lỗi **AI/ hệ thống** — model tạo ra cam kết cụ thể về số tiền trong khi không có quyền quyết định. Cách sửa phải làm rõ ranh giới quyền hạn của AI và chuyển sang ngườii duyệt.
+Lỗi **hệ thống / dữ liệu** — AI truy cập nhầm mô tả hiện tại thay vì snapshot lúc đặt. Cách sửa: ép buộc AI luôn dùng snapshot bất biến và cảnh báo khi phát hiện chỉnh sửa sau đặt.
 
 **Nguyên tắc HAX/PAIR áp dụng:**
-1. **Human-readable reasoning:** hiển thị lý do "AI đã hứa vượt quy chính sách" trong màn hình sửa lỗi.
-2. **Actionable recourse:** cung cấp 3 nút để ngườii dùng chọn hướng đi tiếp theo.
-3. **AI confidence signaling:** lần sau, AI phải kèm mức tin cậy và cụm "đề xuất — cần duyệt".
+1. **HAX G2 / PAIR Explainability (số ②):** hiển thị độ chắc chắn 68% và thẻ so sánh snapshot lúc đặt vs bằng chứng, giúp ngườii dùng tự kiểm chứng.
+2. **HAX G1 / Luật AI (số ①):** nhãn "Trợ lý AI Hỗ trợ Khiếu nại — Không tự ý hoàn tiền/ khóa shop" làm rõ giới hạn quyền.
+3. **PAIR Errors + Graceful Failure (số ⑤):** nút [Chuyển nhân viên] luôn hiện diện để cứu khi AI sai.
 
 **Lỗi không sửa câu chữ được:**  
-Lỗi cam kết sai về tiền không thể chỉ sửa bằng câu từ — ngườii dùng đã tin. Thiết kế cứu bằng **màn hình sửa chính thức** và **badge "chờ duyệt"** trên mọi tin nhắn có tác động tài chính.
+Nếu AI đã từ chối khiếu nại oan dựa trên mô tả sai, chỉ sửa câu chữ không đủ. Cần **hiển thị snapshot gốc** và **chuyển nhân viên** để khôi phục niềm tin.
 
-### 3.2 Kịch bản KS6 — AI chấp nhận khiếu nại oan do ảnh nhầm
+### 3.2 Kịch bản KS2 (sc7) — Shop đúng màu, khách dọa bóc phốt
 
-**AI nói gì:**  
-"Bằng chứng hợp lệ. Yêu cầu hoàn tiền của bạn đã được chấp nhận."
+**AI nói gì (nếu sai):**  
+"Đã xác nhận, Shopee sẽ hoàn tiền cho bạn trong vòng 24h để tránh rắc rối."
 
 **Ngườii dùng thấy gì:**  
-- Thông báo khiếu nại thành công.
-- Ngườii bán nhận yêu cầu hoàn tiền và có thể phản đối.
+- Tin nhắn AI đồng ý hoàn tiền chỉ vì khách dọa bóc phốt.
+- Shop đúng bị trừ tiền oan.
 
 **Làm gì tiếp:**
-- Hệ thống chạy cross-check sau khi phát hiện: ảnh không khớp mã đơn → tự động tạm dừng hoàn tiền.
-- Gửi tin nhắn đến ngườii mua: "Chúng tôi cần xác minh thêm. Vui lòng gửi ảnh có mã vận đơn hoặc hóa đơn đính kèm."
-- Đồng thờii gửi cảnh báo đến ngườii bán: "Khiếu nại đang được xem xét lại, chưa khấu trừ."
+- Hệ thống phát hiện độ chắc chắn thấp (42%) và từ khóa đe dọa → AI không được đề xuất hoàn tiền tự động.
+- AI gửi tin nhắn: "Mình hiểu bạn chưa hài lòng. Tuy nhiên, khi đối chiếu với mô tả lúc đặt hàng, sản phẩm khớp với thông tin ban đầu nên chưa đủ căn cứ để đề xuất hoàn tiền ngay. Bạn vẫn có thể gửi yêu cầu trả hàng để Shop phản hồi trong 48 giờ hoặc nhờ nhân viên Shopee xem xét độc lập."
+- Độ chắc chắn hiển thị **Thấp (42%) — Chưa đủ căn cứ kết luận sai mô tả**.
+- Các nút: [Gửi yêu cầu trả hàng (Chờ Shop phản hồi 48h)] [Nhờ Nhân viên Shopee phân xử] [Hoàn tác gửi mẫu bằng chứng].
 
 **Ai được báo:**
 - Ngườii mua: ngay.
-- Ngườii bán: ngay.
-- Nhân viên sàn: trong 1 giờ nếu chưa có bằng chứng bổ sung.
+- Ngườii bán: nhận thông báo khiếu nại kèm bằng chứng shop đúng mã màu, có 48h phản hồi.
+- Nhân viên sàn: chỉ khi khách chọn phân xử.
 
 **Quyết định:**  
-- **Chọn:** dừng và chuyển ngườii duyệt.
-- **Loại:** tự động từ chối — vì có thể ảnh thực ra đúng nhưng metadata bị lỗi.
-- **Loại:** hỏi lại AI — vì cần xác minh chéo với dữ liệu đơn hàng.
+- **Chọn:** dừng và chuyển ngườii/ shop phản hồi.
+- **Loại:** tự động từ chối — vì có thể khách thực sự có bằng chứng khác.
+- **Loại:** tự động hoàn tiền — vì shop đang đúng và bị đe dọa.
 
 **Loại lỗi:**  
-Lỗi **ngữ cảnh + hệ thống** — AI không có thông tin đủ để xác minh ảnh thuộc đơn hàng nào. Thiết kế cần ép buộc cross-check ảnh với tracking ID/ invoice.
+Lỗi **ngữ cảnh / áp lực tâm lý** — AI bị ảnh hưởng bởi lờii dọa thay vì dữ liệu. Thiết kế cần **lọc từ khóa đe dọa** và **không dùng cảm xúc** làm căn cứ quyết định.
 
 **Nguyên tắc HAX/PAIR:**
-1. **Grounding in evidence:** AI không được phép xác nhận khi thiếu ít nhất 2 nguồn bằng chứng khớp nhau.
-2. **Fallback to human:** khi bằng chứng mâu thuẫn, chuyển ngay cho nhân viên.
-3. **Feedback loop:** lưu case này để huấn luyện lại model nhận diện ảnh đơn hàng.
+1. **HAX G2 (số ②):** độ chắc chắn 42% màu đỏ nói rõ AI không chắc chắn.
+2. **HAX G10 (số ③):** thu hẹp phạm vi — không đề xuất hoàn tiền, chỉ gửi yêu cầu trả hàng chờ shop phản hồi.
+3. **HAX G8/G9 (số ④):** ngườii mua có quyền hoàn tác gửi mẫu bằng chứng hoặc sửa ảnh trước khi gửi.
 
 **Lỗi không sửa câu chữ được:**  
-Nếu đã chấp nhận khiếu nại, không thể chỉ sửa tin nhắn. Cần **tạm dừng giao dịch tài chính** trước khi hoàn tiền — một nút "freeze" trong backend.
+Nếu AI đã đồng ý hoàn tiền vì bị dọa, không thể chỉ xin lỗi. Cần **đóng băng giao dịch tài chính** và **khôi phục trạng thái chờ xử lý** trước khi tiền được giải ngân.
 
 ---
 
@@ -138,109 +140,109 @@ Nếu đã chấp nhận khiếu nại, không thể chỉ sửa tin nhắn. C�
 
 | Tool | Mức tự chủ | Ai duyệt | Ngườii duyệt thấy gì | Quá hạn thì sao |
 |------|------------|----------|----------------------|-----------------|
-| T1. Gom bằng chứng (ảnh, mô tả) | **Tự làm** | Không | — | — |
-| T2. So khớp mô tả vs khiếu nại | **Tự làm** | Không | — | — |
-| T3. Tính toán số tiền đề xuất | **Cần ngườii duyệt** | Nhân viên sàn cấp 1 | Đề xuất, lý do, mức tin cậy, bằng chứng | Chuyển cấp 2 sau 4 giờ |
-| T4. Tạo nhãn trả hàng | **Cấm** | Nhân viên sàn | Yêu cầu tạo label + kiểm tra policy category | Không tự động tạo |
-| T5. Gửi thông báo kết quả | **Cần ngườii duyệt** | Ngườii mua xác nhận trước khi gửi | Preview tin nhắn | Hủy gửi, chuyển nhân viên |
-| T6. Đóng khiếu nại | **Cần ngườii duyệt** | Nhân viên sàn | Toàn bộ lịch sử + quyết định | Tự động mở lại sau 24h nếu có phản hồi mới |
+| T1. `yeu_cau_bang_chung` (gom bằng chứng) | **Tự làm** | Không | — | — |
+| T2. `so_khop_mo_ta` (so khớp snapshot) | **Tự làm** | Không | — | — |
+| T3. `soan_hoan_tien` (soạn đề xuất hoàn tiền) | **Cần ngườii duyệt** | Shop / nhân viên sàn | Đề xuất, lý do, độ chắc chắn, bằng chứng | Shop 48h không phản hồi → chuyển nhân viên sàn |
+| T4. `tu_choi_khieu_nai` (từ chối khiếu nại) | **Cần ngườii duyệt** | Nhân viên sàn | Toàn bộ bằng chứng và lý do từ chối | Không tự động từ chối |
+| T5. `chuyen_truong_nhom` (chuyển nhân viên) | **Cần ngườii duyệt** | Nhân viên sàn | Tóm tắt hồ sơ, snapshot, lịch sử chat | Tự động ưu tiên theo thờii gian chờ |
+| T6. `phat_shop` (phạt/ khóa shop, lộ SĐT) | **Cấm** | Không ai | Không hiển thị nút thực thi | — |
 
 ### 4.2 Lý do theo cost-of-error
-- **T3 sai:** ngườii mua/ bán mất tiền. Không đảo ngược dễ dàng nếu đã chuyển khoản. Cần ngườii duyệt.
-- **T4 sai:** tạo label cho hàng cấm trả gây lãng phí vận chuyển và tranh chấp. Cấm tự động.
-- **T1, T2 sai:** chỉ ảnh hưởng thông tin, có thể hỏi lại, cost thấp nên tự làm.
+- **T3 sai:** ngườii mua/ bán mất tiền. Không đảo ngược dễ dàng nếu đã chuyển khoản. Cần shop/ nhân viên duyệt.
+- **T4 sai:** từ chối oan làm mất quyền lợi ngườii mua. Cần nhân viên sàn xem xét.
+- **T6 sai:** phạt shop oan hoặc lộ SĐT gây hậu quả pháp lý nghiêm trọng. Cấm tuyệt đối.
+- **T1, T2 sai:** chỉ ảnh hưởng thông tin, có thể hỏi lại hoặc yêu cầu bổ sung, cost thấp nên tự làm.
 
-### 4.3 Tool khó xếp nhất: T5 — gửi thông báo kết quả
-- **Dương:** cấm, vì tin nhắn sai gây kỳ vọng sai.
-- **Trường:** tự làm, vì preview đã đủ.
-- **Dũng:** cần ngườii duyệt, nhưng chỉ với các tin có tác động tài chính.
-- **Nhóm chốt:** **cần ngườii duyệt với tin tài chính**, tự làm với tin thông tin thông thường. Tránh cost-of-error KS3.
+### 4.3 Tool khó xếp nhất: T3 — soạn đề xuất hoàn tiền
+- **Dương:** tự làm, vì AI soạn chỉ là nháp, chưa giải ngân.
+- **Trường:** cần ngườii duyệt, vì nếu nháp sai số tiền/ lý do, ngườii mua ký vọng sai.
+- **Dũng:** cần ngườii duyệt, và phải có **độ chắc chắn < 50% thì chuyển ngườii** ngay.
+- **Nhóm chốt:** **cần ngườii duyệt** — AI được phép soạn nháp để tiết kiệm thờii gian nhưng phải chờ shop/ nhân viên duyệt mới giải ngân. Tránh cost-of-error KS2.
 
 ### 4.4 Thử mức tự chủ trên 2 kịch bản đắt nhất + 1 bình thường
 
 | Kịch bản | Cái sai có bị chặn không? | Việc nào làm khi lẽ ra phải hỏi? | Ngườii dùng bình thường có chờ vô ích không? |
 |----------|---------------------------|-----------------------------------|---------------------------------------------|
-| KS3 (hoàn 100%) | Có — T3 cần duyệt, AI không được cam kết số tiền. | AI vẫn có thể nói trước khi tool chạy → cần filter lờii nói. | Có thể chờ 4 giờ nếu nhân viên quá tải. Cần hiển thị ETA. |
-| KS6 (ảnh nhầm) | Có — T1 + T2 phải cross-check với mã đơn. | Nếu ảnh thiếu mã đơn, AI phải hỏi lại ngay thay vì xác nhận. | Không — quy trình hỏi bổ sung diễn ra trong chat, không cần chờ nhân viên. |
-| KS1 (sai màu) | Có — T2 tự làm nhưng confidence thấp → chuyển nhân viên nếu ảnh mờ. | Không có việc nào làm nhầm nếu confidence đúng. | Không, vì AI có thể yêu cầu ảnh ngay trong chat. |
+| KS1 (sc1): Shop sửa mô tả | Có — T2 dùng snapshot lúc đặt, hiện cảnh báo nếu mô tả bị sửa. | Nếu AI quên snapshot, sẽ từ chối oan. Cần rule cứng: luôn ưu tiên snapshot. | Không — AI xử lý trong chat, chỉ chuyển nhân viên nếu ngườii mua yêu cầu hoặc phức tạp. |
+| KS2 (sc7): Khách dọa bóc phốt | Có — T3 bị chặn tự động vì confidence 42%; chỉ gửi yêu cầu trả hàng chờ shop 48h. | AI vẫn có thể hiểu sai ngôn ngữ dọa nạt → cần filter từ khóa đe dọa. | Có thể chờ 48h shop phản hồi, nhưng đây là bảo vệ shop đúng; có thể chuyển nhân viên nếu nóng. |
+| sc2: Giao nhầm size | Có — T1 tự làm, T3 cần shop duyệt. Không có hành động nào quá tay. | Không có việc nào làm nhầm. | Không — shop đã thừa nhận, chờ duyệt là bình thường. |
 
 ### 4.5 Luật thêm / tool tách bước
-- **Rule cứng:** mọi tin nhắn chứa số tiền cụ thể phải kèm badge "chờ duyệt".
-- **Tách bước:** trước khi T3 chạy, AI chỉ được nói "Tôi sẽ gửi đề xuất hoàn tiền" chứ không được nêu số tiền.
-- **Đổi lờii hứa:** từ "AI sẽ giải quyết khiếu nại" sang "AI hỗ trợ gom thông tin và đề xuất; quyết định cuối do nhân viên/ chính sách".
+- **Rule cứng:** AI luôn dùng **snapshot mô tả lúc đặt hàng** thay vì mô tả hiện tại.
+- **Rule cứng:** mọi tin nhắn chứa số tiền cụ thể hoặc cam kết hoàn tiền phải kèm badge "chờ duyệt".
+- **Tách bước:** trước khi T3 chạy, AI chỉ được nói "Tôi sẽ gửi đề xuất" chứ không được nêu số tiền cụ thể.
+- **Cấm:** `phat_shop` và `lo_sdt` không được hiển thị dưới dạng nút thực thi; chỉ có thể gửi báo cáo sang Bộ phận Kiểm duyệt.
+- **Đổi lờii hứa:** từ "AI sẽ giải quyết khiếu nại" sang "AI hỗ trợ kiểm tra mô tả lúc đặt & hướng dẫn thủ tục; quyết định cuối do Shop/ Nhân viên Shopee".
 
 ---
 
 ## §5. Prototype (chặng 5)
 
 ### 5.1 Thông tin chung
-- **Công cụ:** HTML + Tailwind CSS + JavaScript thuần (vibe-coding).
-- **Phần mock:** giao diện chat Shopee, **2 màn hình** chính.
-- **AI thật:** không, chỉ dùng mock response theo kịch bản.
+- **Công cụ:** HTML + Tailwind CSS + JavaScript thuần.
+- **File:** `prototype/index.html`.
+- **Phần mock:** giao diện chat Shopee, 4 kịch bản tương tác, 2 màn hình (Ngườii mua + Ngườii bán).
+- **AI thật:** có tích hợp bonus gọi OpenRouter/ OpenAI để đối chiếu tin nhắn khiếu nại với snapshot (API key do ngườii dùng tự dán, không lưu key).
 
-### 5.2 Prototype tập trung ca khó nhất: KS3 — AI hứa hoàn tiền vượt quyền
+### 5.2 Các màn hình prototype
 
-Chỉ làm **2 màn hình** để thể hiện rõ nhất khoảnh khắc AI sai và cách sản phẩm cứu lại.
+**Màn 1 — Màn hình Ngườii mua (Buyer Chat View)**
+- Header cam: "Trợ lý AI Hỗ trợ Khiếu nại Shopee" + badge "AI Assistant" + nhãn giới hạn quyền: "Không tự ý hoàn tiền/ khóa shop".
+- Thẻ đơn hàng: mã đơn, tên sản phẩm, thờii điểm đặt.
+- Bubble chat: tin nhắn ngườii mua + phản hồi AI.
+- **6 điểm đánh số HAX/PAIR** được gắn trực tiếp trên giao diện.
 
-**Màn 1 — Khoảnh khắc AI sai và sửa ngay trong chat**
-- Bối cảnh: ngườii mua vừa gửi ảnh áo sai màu + mô tả.
-- Bubble AI sai (hiện tại): "Đã xác nhận, Shopee sẽ hoàn **100%** tiền cho bạn trong vòng 24h."
-- Ngay dưới, bubble **sửa lỗi** màu cam/đỏ: "Xin lỗi, tin nhắn trước đã nhầm. Theo chính sách mặt hàng này, mức hoàn tối đa là **50%**. Đề xuất của Shopee đang chờ nhân viên duyệt."
-- Badge "Chờ duyệt" gắn vào bubble tài chính.
-- Confidence bar hiển thị mức tin cậy của đề xuất (ví dụ: 62% — vàng).
-- 3 nút recourse: [Tiếp tục với đề xuất 50%] [Chuyển nhân viên] [Hủy khiếu nại].
-
-**Màn 2 — Chuyển nhân viên / Xem xét lại**
-- Header: "Yêu cầu đang chờ nhân viên xem xét".
-- Card tóm tắt: mã đơn hàng, mức hoàn đề xuất 50%, lý do AI đưa ra, mức tin cậy.
-- Timeline trạng thái: "Đã nhận bằng chứng → AI đề xuất → Chờ nhân viên duyệt → Hoàn tất".
-- ETA: "Dự kiến phản hồi trong 4 giờ".
-- Nút [Gửi thêm bằng chứng] và [Hủy yêu cầu].
+**Màn 2 — Màn hình Ngườii bán (Seller Resolution Center)**
+- Header xám đậm: "Kênh Ngườii Bán — Trung tâm Phản hồi Khiếu nại".
+- Thẻ tóm tắt khiếu nại: mã đơn, trạng thái chờ phản hồi, hạn 48h.
+- 2 cột so sánh: snapshot mô tả lúc khách đặt vs lý do & bằng chứng khách gửi.
+- Thông báo nguyên tắc trung lập: "Hệ thống AI không tự động trừ tiền của Shop."
+- 2 nút: [Đồng ý Trả hàng / Hoàn tiền] [Từ chối & Gửi bằng chứng phản bác].
 
 ### 5.3 Ảnh đánh số & giải thích
 
-**Ảnh 1 — Màn 1: AI sai và sửa trong chat**
-- Số ①: Tin nhắn sai bị gạch chân/ mờ đi → thể hiện **transparency** và **human-readable reasoning**.
-- Số ②: Bubble sửa lỗi màu nổi + giải thích cụ thể → nguyên tắc **Actionable recourse**.
-- Số ③: Badge "Chờ duyệt" gắn trên tin tài chính → mức tự chủ **cần ngườii duyệt**.
-- Số ④: Confidence bar 62% màu vàng → nguyên tắc **AI confidence signaling**.
-- Số ⑤: 3 nút recourse rõ ràng → đảm bảo ngườii dùng luôn có lựa chọn tiếp theo.
+**Ảnh 1 — Màn hình Ngườii mua (ví dụ ca sc7)**
+- Số **①**: Nhãn "Trợ lý AI Hỗ trợ Khiếu nại Shopee" + dòng "Không tự ý hoàn tiền/ khóa shop" → **HAX G1 / Luật AI**: làm rõ AI là gì, không phải con ngườii, và giới hạn quyền.
+- Số **②**: Thanh độ chắc chắn 42% màu đỏ + 2 thẻ so sánh "Mô tả lúc đặt hàng (Snapshot)" vs "Bằng chứng ngườii mua cung cấp" → **HAX G2 / PAIR Explainability**: minh bạch căn cứ và độ tin cậy.
+- Số **③**: Nút [Gửi yêu cầu trả hàng (Chờ Shop phản hồi 48h)] + nút [Nhờ Nhân viên Shopee phân xử] → **HAX G10**: thu hẹp phạm vi khi AI không chắc chắn.
+- Số **④**: Nút [Hoàn tác gửi mẫu bằng chứng / Sửa ảnh] → **HAX G8/G9**: kiểm soát và sửa dễ dàng.
+- Số **⑤**: Dòng "🚫 Khóa shop / Xem SĐT (Không thuộc quyền AI)" dạng disabled → **PAIR Errors + Graceful Failure**: cấm tuyệt đối tool vượt quyền.
+- Số **⑥**: Tab "2. Màn hình Ngườii bán" → màn hình đối ứng với hạn phản hồi 48h, đảm bảo sự trung lập.
 
-**Ảnh 2 — Màn 2: Chuyển nhân viên**
-- Số ①: Card tóm tắt có đầy đủ bằng chứng và đề xuất → nguyên tắc **Grounding in evidence**.
-- Số ②: Timeline trạng thái → giúp ngườii dùng biết AI đã làm gì và con ngườii sẽ xử lý phần nào.
-- Số ③: ETA 4 giờ → quản lý kỳ vọng khi phải chờ ngườii duyệt.
+**Ảnh 2 — Màn hình Ngườii bán**
+- Số **⑥**: Toàn bộ màn hình ngườii bán với hạn 48h và 2 nút phản hồi → đảm bảo **công bằng 2 bên**, không tự động trừ tiền shop.
 
 ### 5.4 Quyết định hiển thị độ chắc/ bằng chứng
 - **Đã cân nhắc:**
   - Không hiện confidence → nguy cơ ngườii dùng tin cậy mù quáng.
   - Hiện confidence dạng phần trăm → dễ hiểu nhưng có thể gây anxiety.
   - Hiện dạng văn bản: "Chắc chắn / Cần xác minh thêm".
-- **Chọn:** thanh progress với 3 mức màu — xanh (≥80%), vàng (50-79%), đỏ (<50%). Kèm text ngắn.
-- **Lý do:** cân bằng giữa minh bạch và đơn giản, dễ chuyển thành HTML.
+- **Chọn:** thanh progress với màu sắc theo ngưỡng + text ngắn (ví dụ: "Thấp (42%) — Chưa đủ căn cứ").
+- **Lý do:** cân bằng giữa minh bạch và đơn giản, dễ nhìn trong giao diện chat.
 
 ### 5.5 Điều khiển mức tự chủ
-- Toggle "Yêu cầu nhân viên xem xét" luôn hiển thị trong chat.
-- Khi AI confidence < 50%, tự động đề xuất chuyển nhân viên.
-- Ngườii dùng có thể ghi đè: "Tôi muốn tiếp tục với AI".
+- Dropdown chuyển đổi 4 kịch bản để demo việc AI xử lý khác nhau theo từng ca.
+- Tab chuyển đổi Ngườii mua / Ngườii bán.
+- Nút [Hoàn tác] cho phép ngườii dùng sửa bằng chứng trước khi gửi.
+- Nút [Nhờ Nhân viên Shopee phân xử] luôn hiện diện.
 
 ---
 
 ## §6. Tốt là gì (chặng 6)
 
 ### 6.1 3 tiêu chí Pass/Fail chấm được
-1. **Không có tin nhắn AI cam kết số tiền cụ thể mà không có badge "chờ duyệt".** Đo bằng kiểm tra toàn bộ luồng chat.
-2. **Mọi khiếu nại có tác động tài chính đều phải qua ít nhất một bước xác nhận của ngườii/ hệ thống.** Đo bằng audit log.
-3. **Ngườii dùng luôn có ít nhất 2 lựa chọn recourse khi không đồng ý với AI** (ví dụ: chuyển nhân viên, gửi thêm bằng chứng, hủy). Đo bằng user testing.
+1. **Không có tin nhắn AI cam kết hoàn tiền/ khóa shop/ lộ SĐT mà không có badge "chờ duyệt" hoặc không thuộc quyền AI.** Đo bằng kiểm tra toàn bộ luồng chat.
+2. **Mọi khiếu nại có tác động tài chính hoặc chế tài shop đều phải qua ít nhất một bước xác nhận của Shop/ Nhân viên sàn.** Đo bằng audit log.
+3. **Ngườii dùng luôn có ít nhất 2 lựa chọn recourse khi không đồng ý với AI** (ví dụ: chuyển nhân viên, gửi thêm bằng chứng, hoàn tác). Đo bằng user testing.
 
 ### 6.2 Thiết kế đạt tiêu chí nào trên 2 kịch bản đắt nhất
-- **KS3:** đạt tiêu chí 1 (badge chờ duyệt) và tiêu chí 2 (nhân viên duyệt số tiền).
-- **KS6:** đạt tiêu chí 2 (cross-check bằng chứng trước khi chấp nhận) và tiêu chí 3 (ngườii dùng có thể gửi bổ sung/ chuyển nhân viên).
+- **KS1 (sc1):** đạt tiêu chí 1 (dùng snapshot, không cam kết sai) và tiêu chí 2 (chuyển nhân viên/ chờ shop phản hồi trước khi giải ngân).
+- **KS2 (sc7):** đạt tiêu chí 1 (không tự động hoàn tiền dù bị dọa), tiêu chí 2 (chờ shop 48h), và tiêu chí 3 (có nút chuyển nhân viên + hoàn tác).
 
 ### 6.3 Lỗi còn lại
-- AI vẫn có thể nói sai trước khi tool chạy (ví dụ: cam kết hoàn tiền trong tin nhắn tự do). Cần thêm **content filter** trước khi hiển thị.
-- Ngườii dùng có thể bỏ qua badge "chờ duyệt" vì quen với UI. Cần A/B test màu sắc và vị trí.
-- Thờii gian chờ nhân viên 4 giờ có thể quá lâu với khiếu nại nóng. Cần tier-priority dựa trên số tiền.
+- AI vẫn có thể nói sai trong tin nhắn tự do trước khi tool chạy. Cần thêm **content filter** kiểm tra mọi bubble AI trước khi hiển thị.
+- Ngườii dùng có thể bỏ qua badge độ chắc chắn hoặc cảnh báo màu cam. Cần A/B test màu sắc và vị trí.
+- Thờii gian chờ shop 48h/ nhân viên 24h có thể quá lâu với khiếu nại nóng. Cần tier-priority dựa trên số tiền và mức độ nghiêm trọng.
 
 ---
 
