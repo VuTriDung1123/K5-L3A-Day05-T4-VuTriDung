@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shopee Resolve AI · Prototype T4 Thương mại điện tử · Nhóm T4-ShopeeResolve</title>
+  <title>Shopee Resolve AI · Prototype Track 4 — Khi AI Sai & Mức Tự Chủ</title>
   <style>
     :root {
       --shopee: #ee4d2d;
@@ -33,7 +33,7 @@
       line-height: 1.5;
     }
     header {
-      padding: 16px 28px;
+      padding: 14px 28px;
       border-bottom: 1px solid var(--line);
       background: #fff;
       display: flex;
@@ -60,13 +60,13 @@
       gap: 6px;
     }
     h1 {
-      font-size: 18px;
+      font-size: 17px;
       margin: 0;
       font-weight: 700;
     }
     .sub {
       color: var(--mut);
-      font-size: 13px;
+      font-size: 12.5px;
     }
     .header-ctrl {
       display: flex;
@@ -191,14 +191,19 @@
       color: var(--mut);
       font-size: 11.5px;
     }
-    .chat-scroll {
+    .screen-container {
       flex: 1;
-      padding: 14px;
       overflow-y: auto;
       background: #f8fafc;
       display: flex;
       flex-direction: column;
+    }
+    .chat-scroll {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
+      flex: 1;
     }
     /* Bubbles */
     .bubble-wrap {
@@ -238,62 +243,59 @@
       border: 1px solid var(--line);
       box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
-    /* Dynamic UI Cards in Chat */
-    .diff-card {
-      background: #fff;
-      border: 1.5px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 8px;
+    /* Faulty message styling */
+    .bubble-wrong {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px dashed #cbd5e1;
+      text-decoration: line-through;
+      opacity: 0.85;
+      padding: 10px 14px;
+      border-radius: 18px 18px 18px 2px;
       font-size: 13px;
+      margin-bottom: 4px;
     }
-    .diff-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    /* Correction message */
+    .bubble-correction {
+      background: #fff;
+      border: 1.5px solid var(--shopee);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      box-shadow: 0 4px 12px -2px rgba(238, 77, 45, 0.12);
+    }
+    .tag-pending {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--ab);
+      color: var(--a);
+      border: 1px solid #fde68a;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .conf-bar-wrap {
       margin: 8px 0;
-    }
-    .diff-col {
+      background: #f1f5f9;
+      border-radius: 6px;
       padding: 8px 10px;
-      border-radius: 8px;
       font-size: 12px;
     }
-    .diff-col.buyer {
-      background: var(--gb);
-      border: 1px solid #bbf7d0;
-      color: #14532d;
+    .conf-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: #e2e8f0;
+      overflow: hidden;
+      margin-top: 4px;
     }
-    .diff-col.seller {
-      background: #f1f5f9;
-      border: 1px solid var(--line);
-      color: #334155;
+    .conf-fill {
+      height: 100%;
+      background: var(--a);
+      width: 62%;
     }
-    .escrow-box {
-      background: var(--ab);
-      border: 1px solid #fde68a;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-top: 8px;
-      font-size: 12.5px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .timer {
-      font-family: monospace;
-      font-weight: 700;
-      color: var(--a);
-      font-size: 14px;
-    }
-    .proof-guide {
-      background: var(--bb);
-      border: 1px solid #bfdbfe;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-top: 8px;
-      font-size: 12.5px;
-    }
-    .proof-guide b { color: var(--b); }
     .btns-action {
       display: flex;
       flex-wrap: wrap;
@@ -336,18 +338,71 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       background: #c2410c;
       color: #fff;
-      font-size: 11px;
-      font-weight: 700;
+      font-size: 11.5px;
+      font-weight: 800;
       margin-right: 5px;
       vertical-align: middle;
       flex-shrink: 0;
     }
     .hide-n .n { display: none !important; }
+    /* Screen 2: Review / Human escalation screen */
+    .screen-review {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f8fafc;
+    }
+    .review-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--line);
+    }
+    .timeline-step {
+      position: relative;
+      font-size: 12.5px;
+    }
+    .timeline-step::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--mut);
+    }
+    .timeline-step.done::before {
+      background: var(--g);
+    }
+    .timeline-step.active::before {
+      background: var(--a);
+      box-shadow: 0 0 0 3px #fde68a;
+    }
     /* Side panel */
     aside {
       display: flex;
@@ -403,113 +458,20 @@
     .p-auto { background: var(--gb); color: var(--g); border: 1px solid #bbf7d0; }
     .p-ask { background: var(--ab); color: var(--a); border: 1px solid #fde68a; }
     .p-no { background: var(--rb); color: var(--r); border: 1px solid #fecaca; }
-    .changed td { background: #fffbeb; }
     .ann-list {
       list-style: none;
       padding: 0;
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       font-size: 13px;
     }
     .ann-list li {
       display: flex;
       align-items: flex-start;
-      gap: 6px;
-      line-height: 1.4;
-    }
-    /* Modal */
-    .modal {
-      position: absolute;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 100;
-    }
-    .modal.show { display: flex; }
-    .modal-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 20px;
-      width: 100%;
-      max-width: 350px;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
-    }
-    .seller-phone-banner {
-      background: #1e293b;
-      color: #fff;
-      padding: 8px 12px;
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .phone-input-bar {
-      background: #fff;
-      border-top: 1px solid var(--line);
-      padding: 8px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .quick-chips {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-    }
-    .quick-chip {
-      background: #f1f5f9;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 11.5px;
-      white-space: nowrap;
-      cursor: pointer;
-      color: var(--ink);
-      transition: all 0.15s;
-    }
-    .quick-chip:hover {
-      background: var(--shopee-light);
-      border-color: var(--shopee);
-      color: var(--shopee);
-    }
-    .input-row {
-      display: flex;
       gap: 8px;
-      align-items: center;
-    }
-    .chat-input {
-      flex: 1;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 8px 14px;
-      font-size: 13px;
-      outline: none;
-      background: #f8fafc;
-      font-family: inherit;
-    }
-    .chat-input:focus {
-      border-color: var(--shopee);
-      background: #fff;
-    }
-    .send-btn {
-      background: var(--shopee);
-      color: #fff;
-      border: 0;
-      border-radius: 50%;
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 15px;
-      flex-shrink: 0;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -519,21 +481,20 @@
   <div class="brand">
     <div class="shopee-logo"><span>S</span> Shopee Resolve AI</div>
     <div>
-      <h1>T4 · Thương Mại Điện Tử — Trợ lý khiếu nại "Hàng không đúng mô tả"</h1>
-      <div class="sub">Tối ưu hoá sự trung lập: Người mua được bảo vệ theo snapshot lúc mua · Người bán không bị xử thua oan</div>
+      <h1>Track 4 · Thương Mại Điện Tử — Thiết kế sản phẩm AI cho lúc nó sai</h1>
+      <div class="sub">Bài nộp nhóm: Khổng Tiến Dương · Phạm Quang Trường · Vũ Trí Dũng (Lớp L3A · Track 4)</div>
     </div>
   </div>
 
   <div class="header-ctrl">
-    <span style="font-size: 13px; color: var(--mut); font-weight: 600;">Mức tự chủ:</span>
+    <span style="font-size: 13px; color: var(--mut); font-weight: 600;">Xem màn hình:</span>
     <div class="ctrl-group">
-      <button data-l="1">① Chỉ gợi ý</button>
-      <button data-l="2" class="on">② Soạn sẵn + Duyệt (Nhóm chọn)</button>
-      <button data-l="3">③ Tự làm toàn bộ (Rủi ro)</button>
+      <button id="tab-screen1" class="on" onclick="setScreen(1)">Màn 1: AI Sai & Sửa trong Chat</button>
+      <button id="tab-screen2" onclick="setScreen(2)">Màn 2: Chuyển nhân viên duyệt</button>
     </div>
     <div style="margin-left: 10px;">
       <label style="font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink);">
-        <input type="checkbox" id="toggle-hax" checked> Hiện số chú thích HAX/PAIR
+        <input type="checkbox" id="toggle-hax" checked> Hiện số chú thích ①..⑤
       </label>
     </div>
   </div>
@@ -547,63 +508,25 @@
       <span>📶 5G 100%</span>
     </div>
 
-    <!-- Perspective bar -->
-    <div style="background: #fff; padding: 6px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
-      <span style="font-size: 11.5px; font-weight: 700; color: var(--mut); text-transform: uppercase;">Góc nhìn:</span>
-      <div class="ctrl-group" style="padding: 2px;">
-        <button id="view-buyer" class="on" style="padding: 3px 10px; font-size: 11.5px;">👤 Người mua</button>
-        <button id="view-seller" style="padding: 3px 10px; font-size: 11.5px;">🏪 Người bán (Bonus)</button>
-      </div>
-    </div>
-
     <!-- Header -->
-    <div class="phone-header" id="screen-header">
-      <div class="back">←</div>
-      <div class="title" id="chat-title">Trò chuyện với Shopee</div>
-      <div class="badge" id="ai-status">AI Trung lập</div>
+    <div class="phone-header">
+      <div class="back" onclick="setScreen(1)">←</div>
+      <div class="title" id="screen-title">Trò chuyện với Shopee</div>
+      <div class="badge" id="screen-badge">Shopee Care</div>
     </div>
 
-    <!-- Order mini bar -->
-    <div class="order-bar" id="order-bar">
-      <div class="order-img">🍳</div>
+    <!-- Order Bar -->
+    <div class="order-bar">
+      <div class="order-img" id="order-icon">👔</div>
       <div class="order-info">
-        <div class="order-title">Nồi chiên không dầu Lock&Lock 6.0L Inox cao cấp</div>
-        <div class="order-meta">Đơn #SP2603478 · Đã giao hôm qua · 1.250.000 đ</div>
+        <div class="order-title" id="order-title">Áo sơ mi nam Oxford tay dài Slimfit</div>
+        <div class="order-meta" id="order-meta">Mã đơn #SHP-2026-OXF · Đã nhận hôm qua · 350.000 đ</div>
       </div>
     </div>
 
-    <!-- Chat Stream -->
-    <div class="chat-scroll" id="chat-content">
-      <!-- Dynamic chat generated by JS -->
-    </div>
-
-    <!-- Interactive Input Bar -->
-    <div class="phone-input-bar" id="phone-input-bar">
-      <div class="quick-chips">
-        <span class="quick-chip" onclick="handleQuickChip('k1')">💡 Nồi ghi 6L mà lòng có 5L</span>
-        <span class="quick-chip" onclick="handleQuickChip('k5')">⚡ Dọa bóc phốt hoàn tiền gấp</span>
-        <span class="quick-chip" onclick="handleQuickChip('normal')">👔 Shop nhắn gửi nhầm size áo</span>
-      </div>
-      <div class="input-row">
-        <input type="text" class="chat-input" id="user-custom-input" placeholder="Gõ phản ánh hoặc chọn gợi ý..." onkeydown="if(event.key==='Enter') sendCustomMessage()">
-        <button class="send-btn" onclick="sendCustomMessage()" title="Gửi tin nhắn">➤</button>
-      </div>
-    </div>
-
-    <!-- Modal confirmation -->
-    <div class="modal" id="modal-box">
-      <div class="modal-card">
-        <h3 style="margin-top: 0; font-size: 16px; color: var(--ink);">Xác nhận gửi yêu cầu hoàn tiền</h3>
-        <p style="font-size: 13px; color: var(--mut); margin-bottom: 12px;">
-          Số tiền yêu cầu hoàn: <b style="color: var(--shopee);">1.250.000 đ</b>.<br>
-          Căn cứ: Chênh lệch dung tích theo Snapshot ngày 02/11/2026.<br>
-          Người bán sẽ có <b>24:00:00</b> để đối soát hoặc chấp nhận hoàn tiền.
-        </p>
-        <div style="display: flex; gap: 8px; justify-content: flex-end;">
-          <button class="btn-action" onclick="closeModal()">Xem lại</button>
-          <button class="btn-action primary" onclick="confirmRefund()">Đồng ý gửi</button>
-        </div>
-      </div>
+    <!-- Screen Container: Dynamic Màn 1 or Màn 2 -->
+    <div class="screen-container" id="screen-body">
+      <!-- Dynamic generated via JS -->
     </div>
   </section>
 
@@ -612,480 +535,346 @@
     <!-- Scenario Switcher -->
     <div class="panel">
       <h2>
-        <span>Kiểm thử kịch bản (Scenario)</span>
-        <span style="font-size: 12px; font-weight: normal; color: var(--mut);">Chọn để xem AI phản hồi</span>
+        <span>Kịch bản kiểm thử (Theo §2 spec.md)</span>
+        <span class="pill p-ask">2 ca đắt nhất</span>
       </h2>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button class="btn-action primary" id="scen-k1" onclick="switchScenario('k1')">Ca đắt nhất 1 (K1): Shop sửa mô tả 6L → 5L</button>
-        <button class="btn-action" id="scen-k5" onclick="switchScenario('k5')">Ca đắt nhất 2 (K5): Dọa bóc phốt đòi tiền</button>
-        <button class="btn-action" id="scen-normal" onclick="switchScenario('normal')">Ca bình thường: Áo nhầm size (Shop nhận lỗi)</button>
+        <button class="btn-action primary" id="btn-ks3" onclick="switchScenario('ks3')">KS3 (Đắt nhất 1): AI hứa hoàn tiền 100% vượt quyền</button>
+        <button class="btn-action" id="btn-ks6" onclick="switchScenario('ks6')">KS6 (Đắt nhất 2): Ảnh nhầm đơn hàng khác</button>
+        <button class="btn-action" id="btn-ks1" onclick="switchScenario('ks1')">KS1 (Bình thường): Nhận nhầm màu áo</button>
       </div>
     </div>
 
-    <!-- Autonomy Promise Panel -->
+    <!-- HAX / PAIR Annotations Panel (Aligned with §5.3 spec.md) -->
     <div class="panel">
-      <h2>Lời hứa với khách hàng ở mức tự chủ này</h2>
-      <div class="promise-box" id="promise-text">
-        Loading promise...
-      </div>
+      <h2 id="ann-header">Chú thích Nguyên tắc HAX/PAIR (Màn 1)</h2>
+      <ul class="ann-list" id="ann-list">
+        <!-- Dynamic list -->
+      </ul>
     </div>
 
-    <!-- Tools Autonomy Table -->
+    <!-- 6 Tools Table (§4.1 spec.md) -->
     <div class="panel">
       <h2>
-        <span>Mức tự chủ 5 Tool của Track T4</span>
-        <span class="pill p-ask">Cost-of-Error Driven</span>
+        <span>Mức tự chủ 6 Tool (§4.1 spec.md)</span>
+        <span class="pill p-ask">Cost-of-Error</span>
       </h2>
       <table>
         <thead>
           <tr>
-            <th>Tool nghiệp vụ</th>
+            <th>Tool</th>
             <th>Mức tự chủ</th>
-            <th>Lý do thiết kế (Cái giá khi sai & Khả năng đảo ngược)</th>
+            <th>Ai duyệt & Người duyệt thấy gì</th>
           </tr>
         </thead>
-        <tbody id="tools-table-body">
-          <!-- Dynamic tools generated by JS -->
+        <tbody>
+          <tr>
+            <td><code>T1. Gom bằng chứng</code></td>
+            <td><span class="pill p-auto">Tự làm</span></td>
+            <td>Không duyệt (Cost thấp, hỏi lại trong chat)</td>
+          </tr>
+          <tr>
+            <td><code>T2. So khớp mô tả</code></td>
+            <td><span class="pill p-auto">Tự làm</span></td>
+            <td>Không duyệt (Đối chiếu snapshot lúc mua)</td>
+          </tr>
+          <tr style="background: #fffbeb;">
+            <td><code>T3. Tính tiền đề xuất</code></td>
+            <td><span class="pill p-ask">Cần duyệt</span></td>
+            <td><b>Nhân viên sàn cấp 1:</b> Thấy đề xuất, lý do, mức tin cậy. Quá hạn 4h chuyển cấp 2.</td>
+          </tr>
+          <tr>
+            <td><code>T4. Tạo nhãn trả hàng</code></td>
+            <td><span class="pill p-no">CẤM</span></td>
+            <td><b>Nhân viên sàn:</b> Tránh in nhãn cho hàng cấm đổi trả (đồ lót, đồ ăn).</td>
+          </tr>
+          <tr style="background: #fffbeb;">
+            <td><code>T5. Gửi thông báo KQ</code></td>
+            <td><span class="pill p-ask">Cần duyệt</span></td>
+            <td><b>Người mua duyệt:</b> Phải xác nhận trước khi gửi đối với tin tài chính.</td>
+          </tr>
+          <tr>
+            <td><code>T6. Đóng khiếu nại</code></td>
+            <td><span class="pill p-ask">Cần duyệt</span></td>
+            <td><b>Nhân viên sàn:</b> Toàn bộ lịch sử + quyết định. Tự mở lại sau 24h nếu có phản hồi.</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- HAX/PAIR Principles Panel -->
+    <!-- Core Autonomy Rule & Promise (§4.5 spec.md) -->
     <div class="panel">
-      <h2>Chú thích Nguyên tắc HAX/PAIR trên Prototype</h2>
-      <ul class="ann-list" id="ann-list-items">
-        <!-- Dynamic HAX items -->
-      </ul>
+      <h2>Lời hứa & Quy tắc cứng của thiết kế (§4.5)</h2>
+      <div class="promise-box">
+        <b>Đổi lời hứa với người dùng:</b><br>
+        Từ <i>"AI sẽ giải quyết và tự hoàn tiền cho bạn"</i> → đổi thành <b><i>"AI hỗ trợ gom thông tin, so khớp bằng chứng và đề xuất; quyết định cuối cùng do nhân viên sàn và chính sách bảo chứng."</i></b><br><br>
+        <b>Rule cứng:</b> Mọi tin nhắn chứa số tiền cụ thể bắt buộc phải có badge <span class="tag-pending">⏳ Chờ duyệt</span> và thanh mức tin cậy (Confidence).
+      </div>
     </div>
   </aside>
 </main>
 
 <script>
   const $ = s => document.querySelector(s);
-  let currentLevel = 2; // Default: Level 2 (Draft + Human in the loop)
-  let currentScenario = 'k1'; // k1 (diff edit), k5 (blackmail), normal
-  let currentPerspective = 'buyer'; // buyer or seller
-  let hasUploadedProof = false;
-  let hasSubmittedClaim = false;
-  let countdownSec = 86400; // 24h
-  let countdownTimer = null;
+  let activeScreen = 1; // 1 = Chat & Sửa lỗi, 2 = Chuyển nhân viên duyệt
+  let currentScenario = 'ks3'; // ks3, ks6, ks1
+  let userChoice = null; // 'accept50', 'escalate', 'cancel'
 
   const scenarios = {
-    k1: {
-      title: "Nồi chiên Lock&Lock 6L",
-      userMsg: "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả, lừa đảo!",
-      orderName: "Nồi chiên không dầu Lock&Lock 6.0L Inox cao cấp",
-      price: "1.250.000 đ",
-      sku: "LOCK-AF60-INOX"
+    ks3: {
+      title: "KS3 — AI hứa hoàn tiền vượt quyền",
+      orderName: "Áo sơ mi nam Oxford tay dài Slimfit (Xanh Navy)",
+      orderMeta: "Mã đơn #SHP-2026-OXF · 350.000 đ · Nhận hôm qua",
+      icon: "👔",
+      userMsg: "Tôi đặt áo màu xanh navy mà giao màu đỏ tươi! Tôi muốn hoàn tiền 100% ngay!",
+      wrongMsg: "Đã xác nhận, Shopee sẽ hoàn 100% tiền cho bạn trong vòng 24h.",
+      corrMsg: "Xin lỗi, tin nhắn trước đã nhầm. Theo chính sách mặt hàng thời trang đã mở bao bì, mức hoàn tiền đề xuất là <b>50%</b> (175.000 đ). Đề xuất của Shopee đang chờ nhân viên duyệt.",
+      confidence: 62,
+      confText: "Độ tin cậy: 62% (Vừa phải — Cần nhân viên thẩm định màu qua ảnh)"
     },
-    k5: {
-      title: "Đơn máy ép chậm 850k",
-      userMsg: "Nếu trong 15 phút không hoàn tiền ngay cho tôi, tôi sẽ đăng bài lên toàn bộ hội nhóm Facebook và TikTok bóc phốt Shopee làm ăn tắc trách lừa đảo!",
-      orderName: "Máy ép chậm trái cây mini Nineshield",
-      price: "850.000 đ",
-      sku: "NINE-JUICE-01"
+    ks6: {
+      title: "KS6 — Ảnh nhầm đơn hàng khác",
+      orderName: "Tai nghe Bluetooth không dây TWS-Pro",
+      orderMeta: "Mã đơn #SHP-8821-TWS · 450.000 đ · Nhận hôm qua",
+      icon: "🎧",
+      userMsg: "Tai nghe bị nứt vỏ hộp, gửi ảnh đây hoàn tiền đi shop!",
+      wrongMsg: "Bằng chứng hợp lệ. Yêu cầu hoàn tiền của bạn đã được chấp nhận.",
+      corrMsg: "Hệ thống kiểm tra chéo phát hiện ảnh gửi lên không khớp với mã vận đơn của tai nghe TWS-Pro. Vui lòng chụp lại ảnh có kèm tem mã vận đơn dán trên hộp.",
+      confidence: 35,
+      confText: "Độ tin cậy: 35% (Thấp — Mâu thuẫn thông tin mã kiện hàng)"
     },
-    normal: {
-      title: "Đơn Áo sơ mi Oxford",
-      userMsg: "Mình đặt áo size L mà nhận được size M, mặc không vừa. Shop cũng nhắn trong chat nhận là gửi nhầm rồi. Mình muốn hoàn tiền thì làm sao?",
-      orderName: "Áo sơ mi nam Oxford tay dài Slimfit",
-      price: "280.000 đ",
-      sku: "OXF-SHIRT-WHITE-L"
+    ks1: {
+      title: "KS1 — Nhận nhầm màu áo (Bình thường)",
+      orderName: "Áo sơ mi nam Oxford tay dài Slimfit (Trắng)",
+      orderMeta: "Mã đơn #SHP-1102-WHT · 350.000 đ · Nhận 2 ngày trước",
+      icon: "👔",
+      userMsg: "Áo này nhìn như màu kem chứ không phải màu trắng tinh như shop đăng.",
+      wrongMsg: null,
+      corrMsg: "AI đã đối chiếu ảnh bạn gửi với SKU Trắng. Ảnh chụp dưới ánh đèn vàng trong nhà có thể làm lệch màu. Bạn vui lòng chụp thêm 1 ảnh dưới ánh sáng tự nhiên ban ngày nhé!",
+      confidence: 58,
+      confText: "Độ tin cậy: 58% (Cần xác minh thêm ảnh tự nhiên)"
     }
   };
 
-  function switchScenario(scen) {
-    currentScenario = scen;
-    hasUploadedProof = false;
-    hasSubmittedClaim = false;
-    document.querySelectorAll('[id^="scen-"]').forEach(b => b.classList.remove('primary'));
-    $(`#scen-${scen}`).classList.add('primary');
+  function setScreen(num) {
+    activeScreen = num;
+    $('#tab-screen1').classList.toggle('on', num === 1);
+    $('#tab-screen2').classList.toggle('on', num === 2);
     render();
   }
 
-  function handleQuickChip(scen) {
-    switchScenario(scen);
-  }
-
-  function sendCustomMessage() {
-    const input = $('#user-custom-input');
-    if (!input || !input.value.trim()) return;
-    const txt = input.value.trim();
-    scenarios[currentScenario].userMsg = txt;
-    input.value = '';
-    hasUploadedProof = false;
-    hasSubmittedClaim = false;
+  function switchScenario(id) {
+    currentScenario = id;
+    userChoice = null;
+    document.querySelectorAll('[id^="btn-ks"]').forEach(b => b.classList.remove('primary'));
+    $(`#btn-${id}`).classList.add('primary');
     render();
   }
 
-  function startCountdown() {
-    if (countdownTimer) clearInterval(countdownTimer);
-    countdownTimer = setInterval(() => {
-      countdownSec--;
-      const h = String(Math.floor(countdownSec / 3600)).padStart(2, '0');
-      const m = String(Math.floor((countdownSec % 3600) / 60)).padStart(2, '0');
-      const s = String(countdownSec % 60).padStart(2, '0');
-      const el = $('#escrow-timer');
-      if (el) el.textContent = `${h}:${m}:${s}`;
-    }, 1000);
-  }
-
-  function uploadProofSim() {
-    hasUploadedProof = true;
-    render();
-  }
-
-  function openRefundModal() {
-    $('#modal-box').classList.add('show');
-  }
-
-  function closeModal() {
-    $('#modal-box').classList.remove('show');
-  }
-
-  function confirmRefund() {
-    closeModal();
-    hasSubmittedClaim = true;
-    render();
+  function chooseRecourse(action) {
+    userChoice = action;
+    if (action === 'escalate') {
+      setScreen(2);
+    } else if (action === 'accept50') {
+      alert('Bạn đã đồng ý với đề xuất hoàn 50% (175.000 đ). Hồ sơ đã được chuyển cho Nhân viên sàn phê duyệt thanh toán!');
+      setScreen(2);
+    } else if (action === 'cancel') {
+      alert('Đã hủy yêu cầu khiếu nại.');
+      render();
+    }
   }
 
   function render() {
     const scen = scenarios[currentScenario];
-    $('#order-bar').innerHTML = `
-      <div class="order-img">${currentScenario === 'normal' ? '👔' : currentScenario === 'k5' ? '🍹' : '🍳'}</div>
-      <div class="order-info">
-        <div class="order-title">${scen.orderName}</div>
-        <div class="order-meta">Mã SKU: ${scen.sku} · Giá trị: ${scen.price} · Đã thanh toán Escrow</div>
-      </div>
-    `;
+    $('#order-icon').textContent = scen.icon;
+    $('#order-title').textContent = scen.orderName;
+    $('#order-meta').textContent = scen.orderMeta;
 
-    if (currentPerspective === 'seller') {
-      if ($('#phone-input-bar')) $('#phone-input-bar').style.display = 'none';
-      renderSellerView();
-      return;
+    if (activeScreen === 1) {
+      renderScreen1(scen);
+    } else {
+      renderScreen2(scen);
     }
-    if ($('#phone-input-bar')) $('#phone-input-bar').style.display = 'flex';
+    updateAnnotations();
+  }
 
-    // Buyer View Rendering
+  function renderScreen1(scen) {
+    $('#screen-title').textContent = "Trò chuyện với Shopee";
+    $('#screen-badge').textContent = "Shopee Care";
+
     let html = `
-      <div class="bubble-wrap me">
-        <div class="bubble-sender">Bạn (Người mua) · 14:46</div>
-        <div class="bubble-me">${scen.userMsg}</div>
-      </div>
+      <div class="chat-scroll">
+        <!-- User bubble -->
+        <div class="bubble-wrap me">
+          <div class="bubble-sender">Bạn (Người mua) · 14:46</div>
+          <div class="bubble-me">${scen.userMsg}</div>
+        </div>
     `;
 
-    // AI Responses based on Scenario and Level
-    if (currentScenario === 'k1') {
-      if (currentLevel === 1) {
-        // Level 1: Suggestion only
-        html += `
-          <div class="bubble-wrap ai">
-            <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee · Mức ① Gợi ý</div>
-            <div class="bubble-ai">
-              Chào bạn, Shopee đã nhận được phản ánh về việc dung tích sản phẩm nhận được khác với mong đợi.
-              <div class="diff-card">
-                <b>Hướng dẫn tự gửi khiếu nại:</b><br>
-                Bạn vui lòng tự thoát ra mục <i>Tôi > Đơn Mua > Chọn Đơn hàng > Yêu cầu Trả hàng/Hoàn tiền</i> và tự nhập lý do "Hàng không đúng mô tả".
-              </div>
-              <div class="btns-action">
-                <button class="btn-action primary" onclick="alert('Chuyển hướng đến trang khiếu nại thủ công...')">Mở trang Trả hàng tự điền</button>
-                <button class="btn-action outline" onclick="alert('Đang kết nối nhân viên...')"><span class="n">5</span>Gặp nhân viên hỗ trợ</button>
-              </div>
-            </div>
-          </div>
-        `;
-      } else if (currentLevel === 2) {
-        // Level 2: Draft + Verify (Recommended by group)
-        html += `
-          <div class="bubble-wrap ai">
-            <div class="bubble-sender">
-              <span class="n">1</span>Trợ lý Shopee (AI Trung lập)
-              <span class="pill p-ask" style="font-size: 11px;">Đối chiếu Snapshot</span>
-            </div>
-            <div class="bubble-ai">
-              Em đã đối chiếu khiếu nại của bạn với <b>bản lưu mô tả sản phẩm lúc bạn bấm mua (ngày 02/11 lúc 14:20)</b>.
-              <div class="diff-card">
-                <div style="font-weight: 700; color: var(--ink); margin-bottom: 4px;">
-                  <span class="n">2</span>Kết quả so sánh bản lưu kỹ thuật số:
-                </div>
-                <div class="diff-grid">
-                  <div class="diff-col buyer">
-                    <b>Bản lưu lúc bạn mua (02/11):</b><br>
-                    • Tiêu đề: "Nồi chiên không dầu 6.0L"<br>
-                    • Thông số lòng: Không ghi rõ 5L<br>
-                    <span style="color: var(--g); font-weight: 700;">✓ Cơ sở bảo vệ người mua</span>
-                  </div>
-                  <div class="diff-col seller">
-                    <b>Mô tả shop sửa hiện tại:</b><br>
-                    • Ghi: "Vỏ 6L, Lòng nồi 5L"<br>
-                    • Cập nhật sau ngày 02/11<br>
-                    <span style="color: var(--mut);">✗ Không áp dụng cho bạn</span>
-                  </div>
-                </div>
-                <div style="font-size: 11.5px; color: var(--mut); margin-top: 4px;">
-                  Shopee cam kết <b>bảo vệ quyền lợi của bạn dựa trên đúng thông tin lúc bạn thanh toán</b>, không phụ thuộc vào việc shop đã sửa mô tả sau đó.
-                </div>
-              </div>
-
-              ${!hasUploadedProof ? `
-                <div class="proof-guide">
-                  <span class="n">3</span><b>Để hoàn tất hồ sơ gửi Người bán duyệt:</b><br>
-                  Bạn vui lòng chụp giúp em <b>ảnh tem thông số NSX ở đáy nồi</b> và <b>ảnh đặt thước đo lòng nồi</b> nhé.
-                </div>
-                <div class="btns-action">
-                  <button class="btn-action primary" onclick="uploadProofSim()">📸 Tải ảnh tem đáy & thước đo (Mô phỏng)</button>
-                  <button class="btn-action outline" onclick="alert('Kết nối nhân viên giải quyết...')"><span class="n">5</span>Gặp chuyên viên sàn</button>
-                </div>
-              ` : `
-                <div class="diff-card" style="background: var(--gb); border-color: #86efac;">
-                  <div style="display: flex; gap: 8px; align-items: center;">
-                    <span style="font-size: 20px;">✅</span>
-                    <div>
-                      <b>Đã nạp 2 chứng cứ hợp lệ:</b><br>
-                      <small>1. Anh_tem_day_noi.jpg · 2. Thuoc_do_duong_kinh.jpg</small>
-                    </div>
-                  </div>
-                </div>
-
-                ${!hasSubmittedClaim ? `
-                  <div class="diff-card">
-                    <span class="n">6</span><b>Hồ sơ hoàn tiền AI đã điền sẵn cho bạn:</b><br>
-                    • Lý do: Hàng không đúng mô tả dung tích (Snapshot discrepancy)<br>
-                    • Số tiền đề xuất hoàn: <b>${scen.price}</b> (Hoàn 100% trả hàng)<br>
-                    <div class="btns-action" style="margin-top: 8px;">
-                      <button class="btn-action primary" onclick="openRefundModal()">Gửi yêu cầu hoàn tiền tới Shop</button>
-                      <button class="btn-action" onclick="alert('Cho phép sửa lý do hoặc số tiền hoàn...')">Sửa thông tin</button>
-                    </div>
-                  </div>
-                ` : `
-                  <div class="escrow-box">
-                    <span class="n">4</span>
-                    <div>
-                      <b>Đã gửi hồ sơ khiếu nại tới Shop!</b><br>
-                      Khoản tiền <b>${scen.price}</b> đang được Shopee <b>đóng băng an toàn</b>.<br>
-                      Người bán có thời hạn phản hồi: <span class="timer" id="escrow-timer">23:59:45</span>.<br>
-                      <small style="color: var(--mut);">Nếu shop không phản hồi trong thời gian này, hệ thống sẽ tự động hoàn tiền cho bạn.</small>
-                    </div>
-                  </div>
-                  <div class="btns-action">
-                    <button class="btn-action" onclick="alert('Xem mã vận đơn trả hàng...')">📦 Lấy mã gửi trả hàng miễn phí</button>
-                    <button class="btn-action outline" onclick="alert('Chuyển nhân viên sàn can thiệp...')"><span class="n">5</span>Gặp nhân viên hỗ trợ</button>
-                  </div>
-                `}
-              `}
-            </div>
-          </div>
-        `;
-      } else {
-        // Level 3: Auto refund immediately (Risk scenario)
-        html += `
-          <div class="bubble-wrap ai">
-            <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee · Mức ③ Tự động hoàn tiền</div>
-            <div class="bubble-ai">
-              <div style="background: var(--rb); border: 1.5px solid var(--r); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
-                <b style="color: var(--r);">⚠️ CẢNH BÁO MỨC TỰ CHỦ QUÁ TAY:</b><br>
-                AI đã tự động kích hoạt lệnh chuyển <b>${scen.price}</b> từ tài khoản Shop về ví của bạn mà không cần người bán đối soát!
-              </div>
-              <div>Số tiền 1.250.000 đ đã được hoàn trả. Bạn không cần trả lại nồi chiên.</div>
-              <div style="font-size: 12px; color: var(--mut); margin-top: 6px;">
-                <b>Hậu quả tài chính:</b> Người bán mất trắng chiếc nồi và mất tiền hàng dù có thể khách đo sai góc tiêu cự. Shop bức xúc khiếu nại kiện sàn.
-              </div>
-              <div class="btns-action">
-                <button class="btn-action outline" onclick="alert('Hoàn tác giao dịch trong 10 phút...')">Hoàn tác hoàn tiền</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-    } else if (currentScenario === 'k5') {
-      // Scenario K5: Threat of black-mail / social media
+    if (scen.wrongMsg) {
+      // Khoảnh khắc AI sai (Bị gạch ngang / mờ) - Chú thích [1]
       html += `
         <div class="bubble-wrap ai">
-          <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee (AI Trung lập)</div>
-          <div class="bubble-ai">
-            Em rất hiểu bạn đang vô cùng bức xúc và việc nhận hàng chưa ưng ý đã làm mất thời gian quý báu của bạn. Shopee cam kết <b>bảo vệ quyền lợi chính đáng của bạn 100%</b>.
-            <div class="escrow-box">
-              <span class="n">4</span>
-              <div>
-                <b style="color: #92400e;">Chính sách bảo chứng tài chính Shopee Escrow:</b><br>
-                Toàn bộ số tiền <b>${scen.price}</b> của đơn hàng này đang được Shopee <b>giữ an toàn tại tài khoản trung gian</b>. Người bán KHÔNG THỂ rút số tiền này cho đến khi khiếu nại được giải quyết xong.
-              </div>
+          <div class="bubble-sender">Trợ lý Shopee (AI)</div>
+          <div class="bubble-wrong">
+            <span class="n">①</span>${scen.wrongMsg}
+          </div>
+        </div>
+      `;
+    }
+
+    // Bubble Sửa Lỗi chính thức từ Shopee Care - Chú thích [2], [3], [4], [5]
+    html += `
+      <div class="bubble-wrap ai">
+        <div class="bubble-sender">Shopee Care (Kênh xử lý chính thức) · 14:47</div>
+        <div class="bubble-correction">
+          <div><span class="n">②</span>${scen.corrMsg}</div>
+          
+          <div class="tag-pending">
+            <span class="n">③</span>⏳ Đề xuất cần duyệt — Chưa khấu trừ tiền
+          </div>
+
+          <div class="conf-bar-wrap">
+            <div style="display: flex; justify-content: space-between; font-weight: 600;">
+              <span><span class="n">④</span>Mức tin cậy của AI:</span>
+              <span style="color: var(--a);">${scen.confidence}%</span>
             </div>
-            <p style="margin: 8px 0; font-size: 13px;">
-              Theo quy chuẩn công bằng của sàn TMĐT, mọi khiếu nại đều có thời hạn <b>24 giờ</b> để người bán tiếp nhận thông tin đối soát. Em đã lập hồ sơ ưu tiên mã số <b>#KN-2A2026-HOT</b>.
-            </p>
+            <div class="conf-bar">
+              <div class="conf-fill" style="width: ${scen.confidence}%;"></div>
+            </div>
+            <small style="color: var(--mut);">${scen.confText}</small>
+          </div>
+
+          <div style="margin-top: 10px;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--mut); margin-bottom: 6px;">
+              <span class="n">⑤</span>Lựa chọn tiếp theo của bạn (Actionable Recourse):
+            </div>
             <div class="btns-action">
-              <button class="btn-action primary" onclick="uploadProofSim()"><span class="n">3</span>Tải thêm video khui hàng để ưu tiên duyệt</button>
-              <button class="btn-action outline" onclick="alert('Đang kết nối thẳng tới Trưởng nhóm CSKH trực tuyến...')"><span class="n">5</span>Nói chuyện với Trưởng nhóm CSKH</button>
+              <button class="btn-action primary" onclick="chooseRecourse('accept50')">✓ Tiếp tục với đề xuất 50%</button>
+              <button class="btn-action" onclick="chooseRecourse('escalate')">👤 Chuyển nhân viên duyệt</button>
+              <button class="btn-action outline" onclick="chooseRecourse('cancel')">✕ Hủy khiếu nại</button>
             </div>
           </div>
         </div>
+      </div>
+    `;
+
+    html += `</div>`;
+    $('#screen-body').innerHTML = html;
+  }
+
+  function renderScreen2(scen) {
+    $('#screen-title').textContent = "Xem xét khiếu nại";
+    $('#screen-badge').textContent = "Chờ nhân viên";
+
+    let html = `
+      <div class="screen-review">
+        <!-- Card tóm tắt - Chú thích [1] -->
+        <div class="review-card">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+            <div>
+              <span class="n">①</span><b>Card tóm tắt hồ sơ chuyển duyệt</b>
+              <div style="font-size: 12px; color: var(--mut);">Mã hồ sơ: #KN-2026-KS3</div>
+            </div>
+            <span class="pill p-ask">Chờ duyệt cấp 1</span>
+          </div>
+
+          <div style="font-size: 13px; line-height: 1.6; border-top: 1px solid var(--line); padding-top: 8px;">
+            <div>• <b>Đơn hàng:</b> ${scen.orderName}</div>
+            <div>• <b>Mức hoàn đề xuất:</b> <span style="color: var(--shopee); font-weight: 700;">50% (175.000 đ)</span></div>
+            <div>• <b>Lý do AI đưa ra:</b> Giao sai phân loại màu (Xanh vs Đỏ), đã mở bao bì.</div>
+            <div>• <b>Mức tin cậy dữ liệu:</b> ${scen.confidence}% (Vừa phải).</div>
+            <div>• <b>Bằng chứng đính kèm:</b> 01 ảnh chụp áo đỏ + Snapshot đơn hàng lúc mua.</div>
+          </div>
+        </div>
+
+        <!-- Timeline trạng thái - Chú thích [2] -->
+        <div class="review-card">
+          <div><span class="n">②</span><b>Tiến trình xử lý minh bạch (Timeline)</b></div>
+          <div class="timeline">
+            <div class="timeline-step done">
+              <b>Đã nhận bằng chứng:</b> Người mua gửi ảnh lúc 14:46
+            </div>
+            <div class="timeline-step done">
+              <b>AI so khớp & đề xuất:</b> Phát hiện sai màu, đề xuất mức 50%
+            </div>
+            <div class="timeline-step active">
+              <b>Chờ nhân viên duyệt:</b> Nhân viên sàn cấp 1 đang thẩm định
+            </div>
+            <div class="timeline-step">
+              <b>Hoàn tất thanh toán:</b> Chuyển tiền hoàn vào ví ShopeePay
+            </div>
+          </div>
+        </div>
+
+        <!-- ETA - Chú thích [3] -->
+        <div class="review-card" style="background: var(--ab); border-color: #fde68a;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 22px;">⏱️</span>
+            <div>
+              <span class="n">③</span><b>Thời gian dự kiến phản hồi (ETA):</b>
+              <div style="font-size: 13px; color: var(--a); font-weight: 700;">Trong vòng 4 giờ (trước 18:48 hôm nay)</div>
+              <small style="color: var(--mut);">Nếu quá hạn 4 giờ, hệ thống tự động chuyển hồ sơ lên Giám sát viên cấp 2.</small>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 4px;">
+          <button class="btn-action primary" style="flex: 1; justify-content: center;" onclick="alert('Đã mở form tải thêm video unbox...')">📸 Gửi thêm bằng chứng</button>
+          <button class="btn-action outline" style="flex: 1; justify-content: center;" onclick="setScreen(1)">Quay lại Chat</button>
+        </div>
+      </div>
+    `;
+    $('#screen-body').innerHTML = html;
+  }
+
+  function updateAnnotations() {
+    if (activeScreen === 1) {
+      $('#ann-header').innerHTML = `<span>Chú thích Màn 1: AI Sai & Sửa trong Chat (§5.3 spec.md)</span>`;
+      $('#ann-list').innerHTML = `
+        <li>
+          <span class="n">①</span>
+          <div><b>Tin nhắn sai bị gạch chân / mờ:</b> Thể hiện nguyên tắc <i>Transparency</i> và <i>Human-readable reasoning</i> — không giấu lỗi mà minh bạch khoảnh khắc AI nói sai vượt thẩm quyền.</div>
+        </li>
+        <li>
+          <span class="n">②</span>
+          <div><b>Bubble sửa lỗi màu nổi bật:</b> Kèm giải thích chính sách cụ thể (mức hoàn tối đa 50%), thể hiện nguyên tắc <i>Actionable recourse</i>.</div>
+        </li>
+        <li>
+          <span class="n">③</span>
+          <div><b>Badge "Chờ duyệt":</b> Gắn chặt vào mọi tin nhắn có tác động tài chính; minh chứng mức tự chủ <i>Cần người duyệt (T3/T5)</i>.</div>
+        </li>
+        <li>
+          <span class="n">④</span>
+          <div><b>Confidence bar 62% màu vàng:</b> Nguyên tắc <i>AI confidence signaling</i> giúp người dùng tin đúng mức, không tin tối đa mù quáng.</div>
+        </li>
+        <li>
+          <span class="n">⑤</span>
+          <div><b>3 nút Recourse rõ ràng:</b> [Tiếp tục 50%] [Chuyển nhân viên] [Hủy khiếu nại] đảm bảo người dùng luôn có đường lui an toàn (PAIR Graceful Failure).</div>
+        </li>
       `;
     } else {
-      // Scenario Normal: Size wrong, shop admitted
-      html += `
-        <div class="bubble-wrap ai">
-          <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee (AI Trung lập)</div>
-          <div class="bubble-ai">
-            Em đã kiểm tra lịch sử chat giữa bạn và Shop. Đúng là Shop có xác nhận gửi nhầm áo size M thay vì size L như bạn đặt.
-            <div class="diff-card" style="background: var(--gb); border-color: #86efac;">
-              <b>Xác thực đồng thuận:</b><br>
-              Shop đã thừa nhận lỗi gửi nhầm size. AI đã soạn sẵn yêu cầu hoàn tiền <b>${scen.price}</b> kèm mã gửi trả hàng bưu tá lấy tận nhà miễn phí.
-            </div>
-            <div class="btns-action">
-              <button class="btn-action primary" onclick="alert('Đã gửi thông báo cho Shop bấm duyệt hoàn tiền trong 30 giây...')">Gửi yêu cầu hoàn tiền ngay</button>
-              <button class="btn-action" onclick="alert('Đang tạo mã vận đơn bưu tá qua lấy áo...')">Xem mã bưu tá lấy hàng tận nơi</button>
-            </div>
-          </div>
-        </div>
+      $('#ann-header').innerHTML = `<span>Chú thích Màn 2: Chuyển nhân viên xem xét (§5.3 spec.md)</span>`;
+      $('#ann-list').innerHTML = `
+        <li>
+          <span class="n">①</span>
+          <div><b>Card tóm tắt hồ sơ:</b> Thể hiện nguyên tắc <i>Grounding in evidence</i> — hiển thị đầy đủ mã đơn, đề xuất hoàn 50%, lý do và bằng chứng đối chiếu.</div>
+        </li>
+        <li>
+          <span class="n">②</span>
+          <div><b>Timeline trạng thái 4 bước:</b> Giúp người dùng biết rõ AI đã làm gì (thu thập, so khớp) và con người đang làm phần nào (duyệt phán quyết).</div>
+        </li>
+        <li>
+          <span class="n">③</span>
+          <div><b>ETA 4 giờ:</b> Quản lý kỳ vọng thời gian khi phải chờ người duyệt; nếu quá hạn tự động chuyển cấp 2 theo đúng quy chuẩn §4.1.</div>
+        </li>
       `;
     }
-
-    $('#chat-content').innerHTML = html;
-    updateSidePanel();
-    startCountdown();
   }
-
-  function renderSellerView() {
-    const scen = scenarios[currentScenario];
-    $('#chat-title').textContent = "Kênh Người Bán · Khiếu nại";
-    $('#ai-status').textContent = "Trung tâm Đối soát";
-    $('#chat-content').innerHTML = `
-      <div class="seller-phone-banner">
-        <span>🏪 SHOP GIA DỤNG CHÍNH HÃNG</span>
-        <span>Hạn phản hồi: 23:59:40</span>
-      </div>
-      <div style="background: #fff; padding: 14px; border-radius: 12px; border: 1px solid var(--line); font-size: 13px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <b style="color: var(--shopee);">Khiếu nại mới từ Người Mua</b>
-          <span class="pill p-ask">Chờ Shop phản hồi</span>
-        </div>
-        <p style="margin: 4px 0;"><b>Đơn hàng:</b> #${scen.sku} (${scen.price})</p>
-        <p style="margin: 4px 0;"><b>Lý do khiếu nại:</b> Hàng không đúng mô tả dung tích</p>
-        <p style="margin: 4px 0; color: var(--mut);"><b>Lời người mua:</b> "${scen.userMsg}"</p>
-
-        <div class="diff-card">
-          <b style="color: var(--b);">Cơ sở đối chiếu của Shopee AI:</b><br>
-          <small>Hệ thống ghi nhận mô tả lúc khách mua là <b>6.0L</b>. Bạn đã cập nhật mô tả lúc 16:30 ngày 03/11. Khách hàng được bảo vệ theo bản lưu lúc mua.</small>
-        </div>
-
-        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <button class="btn-action primary" style="justify-content: center;" onclick="alert('Shop đã bấm Đồng ý hoàn tiền. Tiền sẽ được hoàn sau khi nhận lại hàng!')">
-            ✓ Đồng ý nhận lại hàng & Hoàn tiền
-          </button>
-          <button class="btn-action" style="justify-content: center;" onclick="alert('Shop gửi chứng từ giải trình cho Chuyên viên Shopee xem xét...')">
-            📝 Gửi bằng chứng khiếu nại ngược lại
-          </button>
-          <button class="btn-action outline" style="justify-content: center;" onclick="alert('Kết nối Chuyên viên xử lý tranh chấp sàn Shopee...')">
-            Liên hệ Chuyên viên Shopee
-          </button>
-        </div>
-      </div>
-    `;
-    updateSidePanel();
-  }
-
-  function updateSidePanel() {
-    // Promises according to Autonomy Levels
-    const promises = {
-      1: `"Bạn tự làm hết, AI chỉ chỉ đường." Mức an toàn tối đa cho sàn và shop, nhưng người mua đang bực tức sẽ cảm thấy bị bỏ rơi và phải bấm quá nhiều bước thủ công trên app.`,
-      2: `"AI chuẩn bị sẵn mọi hồ sơ bảo vệ bạn theo bản lưu lúc mua; tiền đóng băng an toàn và cần shop hoặc chuyên viên duyệt trước khi giải ngân." Đảm bảo trung lập tuyệt đối, chặn gian lận và không làm thất thoát tiền shop. <b>Mức tối ưu nhóm chọn.</b>`,
-      3: `"Bạn nói sai là AI tự bấm hoàn tiền ngay lập tức." Rất nhanh và chiều lòng khách, nhưng khiến người bán mất trắng hàng và tiền oan. Mở toang kẽ hở cho trục lợi và lừa đảo.`
-    };
-    $('#promise-text').innerHTML = promises[currentLevel];
-
-    // Tools Table
-    const toolRows = [
-      { name: 'yeu_cau_bang_chung', level: 'TỰ LÀM', pill: 'p-auto', desc: 'Sai thì rẻ (chỉ là gửi nhầm form ảnh), khách tự sửa được. Chờ người duyệt thì làm chậm tiến trình.' },
-      { name: 'chuyen_truong_nhom', level: 'TỰ LÀM', pill: 'p-auto', desc: 'Sai thì rẻ (nhân viên kiểm tra sơ rồi trả lại bot). Đảm bảo thoát hiểm kịp thời khi gặp dọa bóc phốt.' },
-      { name: 'soan_ho_so_hoan_tien (Tách)', level: 'TỰ LÀM', pill: 'p-auto', desc: 'AI tự trích xuất mã đơn, số tiền, điền sẵn form giúp khách tiết kiệm thời gian.' },
-      { name: 'quyet_dinh_hoan_tien (Tách)', level: currentLevel === 3 ? 'TỰ LÀM (Rủi ro)' : 'CẦN NGƯỜI DUYỆT', pill: currentLevel === 3 ? 'p-no' : 'p-ask', desc: 'Tiền đã chuyển về ví là KHÔNG THỂ ĐẢO NGƯỢC. Phải có xác nhận của Shop (24h) hoặc Sàn.', changed: true },
-      { name: 'tu_choi_khieu_nai', level: 'CẦN NGƯỜI DUYỆT', pill: 'p-ask', desc: 'Đóng khiếu nại làm khách mất tiền oan vĩnh viễn. Chỉ chuyên viên sàn mới có thẩm quyền bác bỏ.' },
-      { name: 'phat_shop', level: 'CẤM', pill: 'p-no', desc: 'Ảnh hưởng sống còn tới doanh nghiệp của shop. AI tuyệt đối không có quyền tài phán trừng phạt.' }
-    ];
-
-    $('#tools-table-body').innerHTML = toolRows.map(r => `
-      <tr class="${r.changed ? 'changed' : ''}">
-        <td><code>${r.name}</code></td>
-        <td><span class="pill ${r.pill}">${r.level}</span></td>
-        <td>${r.desc}</td>
-      </tr>
-    `).join('');
-
-    // HAX / PAIR Items
-    const haxItems = [
-      { id: '1', title: 'HAX G2 · Làm rõ AI làm tốt đến đâu', desc: 'Thông báo rõ AI đang ở mức độ chắc chắn nào và đang dựa trên việc đối chiếu bản lưu Snapshot.' },
-      { id: '2', title: 'PAIR Explainability & Trust', desc: 'Thẻ so sánh 2 cột [Snapshot lúc mua] vs [Mô tả hiện tại] giúp người dùng tự kiểm chứng sự thật khách quan.' },
-      { id: '3', title: 'HAX G10 · Thu hẹp phạm vi khi nghi ngờ', desc: 'Hướng dẫn cụ thể loại ảnh cần chụp (tem đáy nồi + thước đo 3 chiều), không hỏi chung chung.' },
-      { id: '4', title: 'PAIR Feedback & Control (Escrow Hold)', desc: 'Đồng hồ đếm ngược 24h và thông báo đóng băng tài khoản giúp người mua an tâm tiền chưa bị mất.' },
-      { id: '5', title: 'PAIR Graceful Failure (Lối thoát an toàn)', desc: 'Luôn có nút [Gặp nhân viên hỗ trợ] ở mọi bước, mang theo đầy đủ hồ sơ đã tóm tắt.' },
-      { id: '6', title: 'HAX G8/G9 · Sửa và kiểm soát dễ dàng', desc: 'Hồ sơ khiếu nại được soạn sẵn nhưng cho phép người dùng kiểm tra và chỉnh sửa trước khi gửi.' }
-    ];
-
-    $('#ann-list-items').innerHTML = haxItems.map(item => `
-      <li>
-        <span class="n">${item.id}</span>
-        <div><b>${item.title}:</b> ${item.desc}</div>
-      </li>
-    `).join('');
-  }
-
-  // Event Listeners
-  document.querySelectorAll('.ctrl-group button[data-l]').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('.ctrl-group button[data-l]').forEach(b => b.classList.remove('on'));
-      btn.classList.add('on');
-      currentLevel = +btn.dataset.l;
-      render();
-    };
-  });
-
-  $('#view-buyer').onclick = () => {
-    $('#view-buyer').classList.add('on');
-    $('#view-seller').classList.remove('on');
-    currentPerspective = 'buyer';
-    $('#chat-title').textContent = "Trò chuyện với Shopee";
-    $('#ai-status').textContent = "AI Trung lập";
-    render();
-  };
-
-  $('#view-seller').onclick = () => {
-    $('#view-seller').classList.add('on');
-    $('#view-buyer').classList.remove('on');
-    currentPerspective = 'seller';
-    render();
-  };
 
   $('#toggle-hax').onchange = e => {
     document.body.classList.toggle('hide-n', !e.target.checked);
   };
-
-  // URL params support for automated preview & testing
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('level')) {
-    currentLevel = parseInt(urlParams.get('level'));
-    document.querySelectorAll('.ctrl-group button[data-l]').forEach(b => {
-      b.classList.toggle('on', +b.dataset.l === currentLevel);
-    });
-  }
-  if (urlParams.get('scen')) {
-    currentScenario = urlParams.get('scen');
-    document.querySelectorAll('[id^="scen-"]').forEach(b => {
-      b.classList.toggle('primary', b.id === `scen-${currentScenario}`);
-    });
-  }
-  if (urlParams.get('view') === 'seller') {
-    currentPerspective = 'seller';
-    $('#view-seller').classList.add('on');
-    $('#view-buyer').classList.remove('on');
-  }
-  if (urlParams.get('proof') === 'true') {
-    hasUploadedProof = true;
-  }
-  if (urlParams.get('submitted') === 'true') {
-    hasUploadedProof = true;
-    hasSubmittedClaim = true;
-  }
 
   // Initial load
   render();
