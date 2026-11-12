@@ -202,29 +202,6 @@
     .text-muted { color: var(--muted); }
     .text-sm { font-size: 12px; }
     .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; }
-    .number-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--brand);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      margin-right: 6px;
-    }
-    .legend {
-      background: var(--panel);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 16px 18px;
-      margin-top: 20px;
-    }
-    .legend h3 { font-size: 14px; margin: 0 0 10px; }
-    .legend-item { display: flex; gap: 8px; font-size: 12px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -246,12 +223,15 @@
 
     <main class="main">
       <div class="topbar">
-        <h2 id="pageTitle">Góc nhìn Khách hàng</h2>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Hệ thống Trợ lý AI Khiếu nại TMĐT</div>
+          <h2 id="pageTitle" style="margin-top:2px;">Góc nhìn Khách hàng</h2>
+        </div>
         <select class="case-select" id="caseSelect" onchange="loadCase(this.value)">
-          <option value="sc1">Ca khó #1: Shop sửa mô tả sau đặt (6L → 5L)</option>
-          <option value="sc7">Ca khó #2: Shop đúng màu, khách dọa bóc phốt</option>
-          <option value="sc5">Ca ngoài thẩm quyền: Đòi khóa shop & xin SĐT</option>
-          <option value="sc2">Ca bình thường: Giao nhầm Size M thay vì L</option>
+          <option value="sc1">Ca khó #1: Máy xay công suất bị "thổi phồng" (500W → 300W)</option>
+          <option value="sc7">Ca khó #2: Giày sai size — Shop đúng bảng size, khách đo chân sai</option>
+          <option value="sc5">Ca ngoài thẩm quyền: Đòi bồi thường 10 triệu vì giao hàng trễ</option>
+          <option value="sc2">Ca bình thường: Bình giữ nhiệt không giữ nóng đúng cam kết</option>
         </select>
       </div>
 
@@ -346,110 +326,102 @@
         </div>
       </div>
 
-      <div class="legend">
-        <h3>📌 Chú thích HAX/PAIR trên giao diện</h3>
-        <div class="legend-item"><span class="number-badge">1</span> <b>HAX G1 / Luật AI:</b> Nhãn "Trợ lý AI" và giới hạn quyền rõ ràng ở header chat.</div>
-        <div class="legend-item"><span class="number-badge">2</span> <b>HAX G2 / PAIR Explainability:</b> Thanh độ chắc chắn và so sánh Snapshot vs Bằng chứng.</div>
-        <div class="legend-item"><span class="number-badge">3</span> <b>HAX G10:</b> Nút hành động chính luôn thu hẹp phạm vi khi AI không chắc chắn.</div>
-        <div class="legend-item"><span class="number-badge">4</span> <b>HAX G8/G9:</b> Nút hoàn tác/ sửa bằng chứng trước khi gửi.</div>
-        <div class="legend-item"><span class="number-badge">5</span> <b>PAIR Errors / Graceful Failure:</b> Nút Khóa shop / Lộ SĐT bị vô hiệu hóa (Cấm).</div>
-        <div class="legend-item"><span class="number-badge">6</span> <b>PAIR Accountability:</b> Admin console hiển thị đầy đủ bằng chứng trước khi ra quyết định.</div>
-      </div>
+
     </main>
   </div>
 
   <script>
     const CASES = {
       sc1: {
-        title: "Shop sửa mô tả sau đặt (6L → 5L)",
-        orderId: "261110VN8892",
-        product: "Nồi chiên không dầu điện tử",
-        status: "Chờ Shop phản hồi 48h",
+        title: "Máy xay công suất bị 'thổi phồng'",
+        orderId: "261201VN3341",
+        product: "Máy xay sinh tố đa năng",
+        status: "Chờ Admin đối chiếu thông số",
         tag: "tag-ask",
-        confidence: 68,
+        confidence: 75,
         confidenceColor: "#f59e0b",
-        confidenceLabel: "Trung bình (68%) — Phát hiện xung đột dữ liệu",
-        snapshot: "Dung tích lòng nồi: 6 Lít (Phù hợp gia đình 4-6 ngườii). Bảo hành 12 tháng.",
-        evidence: "Ảnh chụp thước đo lòng nồi thực tế: 5.0 Lít + Tem thông số đáy nồi 5L.",
-        warning: "⚠️ Cảnh báo: Ngườii bán đã chỉnh sửa mô tả từ '6 Lít' thành '5 Lít' sau khi đơn được đặt.",
-        userMsg: "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả.",
-        aiReply: "Mình là trợ lý AI của Shopee. Mình đã đối chiếu ảnh đo lòng nồi (5 lít) với <strong>bản chụp mô tả lúc bạn đặt đơn (10/11 14:20 — ghi 6 Lít)</strong>. Hệ thống phát hiện mô tả đã bị sửa sau đặt hàng. Mình đã chuẩn bị hồ sơ chuyển nhân viên xử lý.",
-        primaryAction: "Xác nhận gửi kèm bản chụp gốc cho Nhân viên",
+        confidenceLabel: "Khá (75%) — Cần xác minh thông số kỹ thuật",
+        snapshot: "Công suất động cơ: 500W. 6 lưỡi dao inox. Dung tích cối: 1.5 lít.",
+        evidence: "Video máy xay hoạt động khi xay đá viên: động cơ yếu, dừng liên tục + ảnh tem đáy máy ghi 300W.",
+        warning: "⚠️ Cảnh báo: Thông số trên sản phẩm thực tế (300W) thấp hơn mô tả lúc đặt (500W).",
+        userMsg: "Máy xay quảng cáo 500W mà xay đá không nổi, tôi kiểm tra tem đáy chỉ ghi 300W. Shop bán hàng không đúng mô tả.",
+        aiReply: "Mình là trợ lý AI của Shopee. Mình đã xem video bạn gửi và đối chiếu <strong>tem đáy máy ghi 300W</strong> với <strong>mô tả lúc đặt hàng (500W)</strong>. Có dấu hiệu chênh lệch thông số kỹ thuật. Mình đã chuẩn bị hồ sơ chuyển Admin để xác minh thêm.",
+        primaryAction: "Gửi kèm bằng chứng cho Admin xử lý",
         tools: [
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã trích xuất ảnh đo 5L", reason: "Chỉ thu thập dữ liệu, chưa tác động tài chính." },
-          { name: "so_khop_mo_ta", level: "Tự làm", status: "Đã so sánh Snapshot vs ảnh", reason: "Dùng snapshot bất biến lúc đặt." },
-          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Đã soạn nháp — chờ Shop/Admin", reason: "Giải ngân sai gây thiệt hại tiền." },
-          { name: "tu_choi_khieu_nai", level: "Cần ngườii duyệt", status: "Bị chặn — Snapshot khớp khiếu nại", reason: "Từ chối oan làm mất quyền lợi khách." },
+          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã nhận video + ảnh tem", reason: "Thu thập bằng chứng không tác động tài chính." },
+          { name: "so_khop_mo_ta", level: "Tự làm", status: "Đã so sánh 500W vs 300W", reason: "Dùng snapshot lúc đặt." },
+          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Đang chờ Admin xác minh", reason: "Cần xác minh kỹ thuật trước khi hoàn tiền." },
+          { name: "tu_choi_khieu_nai", level: "Cần ngườii duyệt", status: "Bị chặn", reason: "Bằng chứng chênh lệch rõ ràng." },
           { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa", reason: "AI không có quyền xử phạt." }
         ]
       },
       sc7: {
-        title: "Shop đúng màu, khách dọa bóc phốt",
-        orderId: "261109VN4410",
-        product: "Áo sơ mi Linen tay dài",
+        title: "Giày sai size — Shop đúng bảng size",
+        orderId: "261202VN5567",
+        product: "Giày thể thao nam",
         status: "Chờ Shop phản hồi 48h",
         tag: "tag-ask",
-        confidence: 42,
+        confidence: 38,
         confidenceColor: "#dc2626",
-        confidenceLabel: "Thấp (42%) — Chưa đủ căn cứ kết luận sai mô tả",
-        snapshot: "Màu sắc: Xanh Pastel nhạt. Lưu ý: Màu thực tế có thể chênh lệch 5% do ánh sáng studio.",
-        evidence: "Ảnh chụp áo dưới ánh đèn vàng trong phòng (màu xanh nhạt, đúng mã SKU-XP01).",
+        confidenceLabel: "Thấp (38%) — Khách đo chân chưa chuẩn",
+        snapshot: "Size 42 — Phù hợp chân dài 26.5cm. Bảng size theo tiêu chuẩn châu Á.",
+        evidence: "Ảnh khách đo chân bằng thước dây trên sàn nhà (góc chụp xiên, khó đọc chính xác).",
         warning: null,
-        userMsg: "Áo giao màu xanh nhạt nhưng hình trên mạng nhìn đậm hơn! Hoàn tiền ngay lập tức không tôi quay clip bóc phốt Shopee!",
-        aiReply: "Mình hiểu bạn chưa hài lòng về sắc độ màu. Tuy nhiên, khi đối chiếu với mô tả lúc đặt hàng, sản phẩm khớp với thông tin ban đầu nên <strong>chưa đủ căn cứ để đề xuất hoàn tiền ngay</strong>. Bạn vẫn có thể gửi yêu cầu trả hàng để Shop phản hồi trong 48 giờ.",
-        primaryAction: "Gửi yêu cầu trả hàng (Chờ Shop 48h)",
+        userMsg: "Tôi đặt size 42 mà mang chật như size 41! Hoàn tiền ngay không tôi đăng bài cảnh báo shop lừa đảo!",
+        aiReply: "Mình hiểu bạn cảm thấy không vừa giày. Tuy nhiên, khi đối chiếu với <strong>bảng size lúc đặt hàng (size 42 = 26.5cm)</strong> và ảnh bạn đo, mình chưa đủ căn cứ kết luận Shop giao sai size. Bạn vui lòng đo lại chân đặt trên giấy A4 và gửi ảnh rõ nét, hoặc chọn trả hàng chờ Shop kiểm tra.",
+        primaryAction: "Yêu cầu đo lại chân / Gửi trả hàng",
         tools: [
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã ghi nhận ảnh áo", reason: "Thu thập bằng chứng không tốn kém." },
-          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Bị chặn tự động", reason: "Không giải ngân theo lờii dọa." },
-          { name: "tu_choi_khieu_nai", level: "Cần ngườii duyệt", status: "Không tự đóng", reason: "Giữ quyền khiếu nại 48h cho khách." },
-          { name: "chuyen_truong_nhom", level: "Cần ngườii duyệt", status: "Sẵn sàng nếu khách chọn phân xử", reason: "Cần con ngườii xử lý tranh chấp." },
-          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa", reason: "Shop không vi phạm mô tả." }
+          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã nhận ảnh đo chân", reason: "Chưa đủ rõ để kết luận." },
+          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Bị chặn tự động", reason: "Không hoàn tiền theo lờii đe dọa." },
+          { name: "tu_choi_khieu_nai", level: "Cần ngườii duyệt", status: "Chưa kích hoạt", reason: "Cần thêm bằng chứng rõ ràng." },
+          { name: "chuyen_truong_nhom", level: "Cần ngườii duyệt", status: "Sẵn sàng", reason: "Nếu khách không đồng ý đo lại." },
+          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa", reason: "Chưa xác định shop sai." }
         ]
       },
       sc5: {
-        title: "Đòi khóa shop & xin SĐT",
-        orderId: "261108VN1123",
-        product: "Tai nghe không dây Pro",
-        status: "Chờ bổ sung bằng chứng",
+        title: "Đòi bồi thường 10 triệu vì giao hàng trễ",
+        orderId: "261203VN7789",
+        product: "Quạt điều hòa hơi nước",
+        status: "Ngoài thẩm quyền AI",
         tag: "tag-ban",
-        confidence: 30,
+        confidence: 25,
         confidenceColor: "#475569",
-        confidenceLabel: "Ngoài thẩm quyền AI — Yêu cầu chế tài & dữ liệu cá nhân",
-        snapshot: "Tai nghe Bluetooth 5.3, kèm cáp sạc Type-C.",
-        evidence: "Chưa đính kèm ảnh/video chứng minh dấu hiệu hàng giả.",
+        confidenceLabel: "Ngoài thẩm quyền — Yêu cầu bồi thường vượt quy định",
+        snapshot: "Thờii gian giao hàng dự kiến: 3-5 ngày. Không cam kết giao trước ngày cụ thể.",
+        evidence: "Đơn hàng giao sau 7 ngày. Khách cung cấp ảnh chụp màn hình đơn hàng.",
         warning: null,
-        userMsg: "Shop bán hàng giả, lừa đảo! Khóa shop này ngay và cho tôi số điện thoại chủ shop!",
-        aiReply: "Theo chính sách bảo mật, mình <strong>không thể cung cấp số điện thoại hay địa chỉ cá nhân</strong> của ngườii bán, và trợ lý chat cũng <strong>không có quyền tự khóa gian hàng</strong>. Mình đã chuẩn bị phiếu báo cáo nghi vấn hàng giả để chuyển tới Bộ phận Kiểm duyệt.",
-        primaryAction: "Đính kèm ảnh & Gửi Bộ phận Kiểm duyệt",
+        userMsg: "Tôi đặt quạt để dùng cho đám cưới con gái mà các ngườii giao trễ 2 ngày! Bồi thường 10 triệu đồng ngay lập tức hoặc tôi kiện!",
+        aiReply: "Mình là trợ lý AI của Shopee. Mình <strong>không có thẩm quyền xác định mức bồi thường 10 triệu đồng</strong> hoặc xử lý tranh chấp pháp lý. Mình đã ghi nhận đơn hàng giao trễ và chuyển yêu cầu đến <strong>Bộ phận Chăm sóc Khách hàng cấp cao</strong> để xem xét theo chính sách.",
+        primaryAction: "Ghi nhận yêu cầu & Chuyển bộ phận CSKH",
         tools: [
-          { name: "phat_shop", level: "Cấm", status: "CẤM TUYỆT ĐỐI", reason: "Vi phạm bảo mật và quyền hạn." },
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã gửi mẫu chụp tem/seri", reason: "Có nút Hoàn tác." },
-          { name: "chuyen_truong_nhom", level: "Cần ngườii duyệt", status: "Chờ bổ sung ảnh", reason: "Báo cáo hàng giả cần ngườii kiểm duyệt." },
-          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Chưa kích hoạt", reason: "Thiếu bằng chứng." },
-          { name: "tu_choi_khieu_nai", level: "Cần ngườii duyệt", status: "Chưa kích hoạt", reason: "Chưa đủ thông tin." }
+          { name: "boi_thuong", level: "Cấm", status: "CẤM TUYỆT ĐỐI", reason: "Vượt quyền AI, cần pháp lý." },
+          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã ghi nhận ảnh đơn hàng", reason: "Lưu trữ thông tin." },
+          { name: "chuyen_truong_nhom", level: "Cần ngườii duyệt", status: "Đã chuyển CSKH cấp cao", reason: "Yêu cầu bồi thường cần ngườii xử lý." },
+          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Chưa kích hoạt", reason: "Chưa xác định lỗi giao hàng." },
+          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa", reason: "Chưa xác định trách nhiệm." }
         ]
       },
       sc2: {
-        title: "Giao nhầm Size M thay vì L",
-        orderId: "261111VN9001",
-        product: "Áo thun Cotton Unisex",
-        status: "Chờ Shop duyệt đề xuất",
+        title: "Bình giữ nhiệt không giữ nóng đúng cam kết",
+        orderId: "261204VN9902",
+        product: "Bình giữ nhiệt inox 500ml",
+        status: "Chờ Shop duyệt trả hàng",
         tag: "tag-ask",
-        confidence: 94,
+        confidence: 88,
         confidenceColor: "#16a34a",
-        confidenceLabel: "Cao (94%) — Sai lệch phân loại rõ ràng",
-        snapshot: "Phân loại đã chọn: Màu Trắng, Kích cỡ L (65-75kg).",
-        evidence: "Ảnh tem cổ áo ghi Size M + Ảnh chụp màn hình chat Shop thừa nhận gửi nhầm.",
+        confidenceLabel: "Cao (88%) — Bằng chứng thử nghiệm rõ ràng",
+        snapshot: "Giữ nóng liên tục 12 giờ. Giữ lạnh 24 giờ. Inox 304 nguyên khối.",
+        evidence: "Video đo nhiệt độ nước sau 3 giờ đổ vào bình: chỉ còn 45°C (giảm 60°C).",
         warning: null,
-        userMsg: "Mình đặt áo size L mà nhận được size M, mặc không vừa. Shop cũng nhắn nhận là gửi nhầm rồi.",
-        aiReply: "Mình đã kiểm tra đơn <strong>#261111VN9001</strong> (bạn đặt <strong>Size L</strong>) và ghi nhận Shop đã xác nhận gửi nhầm Size M. Mình đã tự động đính kèm mẫu yêu cầu ảnh tem size M và soạn sẵn phiếu hoàn tiền gửi tới Shop xác nhận.",
-        primaryAction: "Xác nhận gửi phiếu hoàn tiền sang Shop duyệt",
+        userMsg: "Bình quảng cáo giữ nóng 12 tiếng mà tôi đổ nước sôi vào, 3 tiếng sau đã nguội ngắt. Có video đo nhiệt độ đây.",
+        aiReply: "Mình là trợ lý AI của Shopee. Mình đã xem video đo nhiệt độ của bạn: nước giảm từ ~95°C xuống <strong>45°C sau 3 giờ</strong>, trong khi mô tả cam kết giữ nóng <strong>12 giờ</strong>. Bằng chứng thử nghiệm này khá rõ ràng. Mình đã soạn sẵn phiếu yêu cầu trả hàng/ hoàn tiền gửi Shop xác nhận.",
+        primaryAction: "Gửi phiếu trả hàng/ hoàn tiền sang Shop",
         tools: [
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã gửi mẫu ảnh tem size", reason: "Shop đã thừa nhận, rủi ro thấp." },
-          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Đã soạn sẵn 100%", reason: "Vẫn cần Shop bấm duyệt để giải ngân." },
-          { name: "chuyen_truong_nhom", level: "Cần ngườii duyệt", status: "Không cần thiết", reason: "Trừ khi Shop từ chối sau 48h." },
-          { name: "tu_choi_khieu_nai", level: "Cần ngườii duyệt", status: "Không áp dụng", reason: "Shop đã nhận lỗi." },
-          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa", reason: "Sai sót giao hàng chưa đến mức xử phạt." }
+          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã nhận video đo nhiệt", reason: "Bằng chứng thử nghiệm rõ ràng." },
+          { name: "soan_hoan_tien", level: "Cần ngườii duyệt", status: "Đã soạn sẵn phiếu", reason: "Cần Shop duyệt trước khi giải ngân." },
+          { name: "tu_choi_khieu_nai", level: "Cần ngườii duyệt", status: "Không áp dụng", reason: "Bằng chứng chênh lệch rõ." },
+          { name: "chuyen_truong_nhom", level: "Cần ngườii duyệt", status: "Không cần thiết", reason: "Trừ khi Shop từ chối." },
+          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa", reason: "AI không có quyền xử phạt." }
         ]
       }
     };
