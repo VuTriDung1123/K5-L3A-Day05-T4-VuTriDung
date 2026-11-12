@@ -1,13 +1,5 @@
 # Dàn ý bài nộp _(spec.md — nộp trước 23:59 ngày lab của lớp)_
 
-**Lớp:** \_**\_ · **Bàn / zone:** \_\_** · **Track:** \_\_\_\_
-
-| Họ và Tên         | Mã Học Viên | Việc đã làm |
-| ----------------- | ----------- | ----------- |
-| Khổng Tiến Dương  | 2A202603467 |             |
-| Phạm Quang Trường | 2A202603378 |             |
-| Vũ Trí Dũng       | 2A202603478 |             |
-
 > Copy dàn ý này vào `spec.md` của nhóm. Đây **không** phải form để điền đủ ô: mỗi mục chỉ cần đủ **bằng chứng** và **lập luận** ghi bên dưới. Viết ngắn, gạch đầu dòng là được. Hướng dẫn từng chặng: `02-guide.md`. Cách chấm: `04-rubric.md`.
 >
 > **Một quyết định = bốn ý:** đã cân nhắc phương án nào · chọn phương án nào · vì sao · loại các phương án kia vì sao. Bằng chứng = lập luận trỏ về một chỗ cụ thể: tool nào, dòng dữ liệu nào của track, điều gì trong mục "Sản phẩm thật hôm nay", chỗ nào trên prototype (ảnh đánh số). Không chạy agent.
@@ -15,7 +7,13 @@
 ```markdown
 # Bài nộp LAB5 — [Track] · Nhóm [tên]
 
-[Danh sách thành viên và việc mỗi người làm — copy bảng từ README]
+**Lớp:** L3A · **Bàn / zone:** \_\_· **Track:** 4
+
+| Họ và Tên         | Mã Học Viên | Việc đã làm |
+| ----------------- | ----------- | ----------- |
+| Khổng Tiến Dương  | 2A202603467 |             |
+| Phạm Quang Trường | 2A202603378 |             |
+| Vũ Trí Dũng       | 2A202603478 |             |
 
 ## §1. Lát cắt & phạm vi
 
