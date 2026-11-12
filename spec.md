@@ -175,46 +175,41 @@ Nếu đã chấp nhận khiếu nại, không thể chỉ sửa tin nhắn. C�
 
 ### 5.1 Thông tin chung
 - **Công cụ:** HTML + Tailwind CSS + JavaScript thuần (vibe-coding).
-- **Phần mock:** giao diện chat Shopee, 3-4 màn hình chính.
+- **Phần mock:** giao diện chat Shopee, **2 màn hình** chính.
 - **AI thật:** không, chỉ dùng mock response theo kịch bản.
 
-### 5.2 Các màn hình prototype
+### 5.2 Prototype tập trung ca khó nhất: KS3 — AI hứa hoàn tiền vượt quyền
 
-**Màn 1 — Bắt đầu khiếu nại**
-- Header: "Trò chuyện với Shopee".
-- Card đơn hàng: tên sản phẩm, ảnh, nút [Khiếu nại không đúng mô tả].
-- Tin nhắn chào từ AI.
+Chỉ làm **2 màn hình** để thể hiện rõ nhất khoảnh khắc AI sai và cách sản phẩm cứu lại.
 
-**Màn 2 — AI thu thập bằng chứng**
-- Bubble AI hỏi: "Bạn vui lòng mô tả sản phẩm khác mô tả như thế nào?"
-- Upload ảnh/ video.
-- Badge "chưa xác nhận" trên mỗi bằng chứng.
+**Màn 1 — Khoảnh khắc AI sai và sửa ngay trong chat**
+- Bối cảnh: ngườii mua vừa gửi ảnh áo sai màu + mô tả.
+- Bubble AI sai (hiện tại): "Đã xác nhận, Shopee sẽ hoàn **100%** tiền cho bạn trong vòng 24h."
+- Ngay dưới, bubble **sửa lỗi** màu cam/đỏ: "Xin lỗi, tin nhắn trước đã nhầm. Theo chính sách mặt hàng này, mức hoàn tối đa là **50%**. Đề xuất của Shopee đang chờ nhân viên duyệt."
+- Badge "Chờ duyệt" gắn vào bubble tài chính.
+- Confidence bar hiển thị mức tin cậy của đề xuất (ví dụ: 62% — vàng).
+- 3 nút recourse: [Tiếp tục với đề xuất 50%] [Chuyển nhân viên] [Hủy khiếu nại].
 
-**Màn 3 — AI đề xuất (đúng)**
-- Bubble AI: "Dựa trên ảnh và mô tả, đây là đề xuất: Hoàn 50% (theo chính sách). Bạn đồng ý không?"
-- Hiển thị **confidence bar** (ví dụ: 78%) và link "Xem cơ sở".
-- Nút [Đồng ý] [Không đồng ý — chuyển nhân viên].
-
-**Màn 4 — AI sai (KS3)**
-- Bubble AI sai: "Shopee sẽ hoàn 100%..."
-- Ngay sau đó bubble sửa lỗi màu đỏ: "Xin lỗi, tin nhắn trước đã nhầm. Chính sách áp dụng là hoàn 50%."
-- Các nút recourse: [Tiếp tục] [Chuyển nhân viên] [Hủy].
-
-**Màn 5 — Chuyển nhân viên**
-- Thông báo: "Đã chuyển đến nhân viên. Thờii gian phản hồi dự kiến: 4 giờ."
-- Form nhập thêm thông tin.
+**Màn 2 — Chuyển nhân viên / Xem xét lại**
+- Header: "Yêu cầu đang chờ nhân viên xem xét".
+- Card tóm tắt: mã đơn hàng, mức hoàn đề xuất 50%, lý do AI đưa ra, mức tin cậy.
+- Timeline trạng thái: "Đã nhận bằng chứng → AI đề xuất → Chờ nhân viên duyệt → Hoàn tất".
+- ETA: "Dự kiến phản hồi trong 4 giờ".
+- Nút [Gửi thêm bằng chứng] và [Hủy yêu cầu].
 
 ### 5.3 Ảnh đánh số & giải thích
 
-**Ảnh 1 — Màn 3: Đề xuất đúng**
-- Số ①: Confidence bar 78% → nguyên tắc **AI confidence signaling**.
-- Số ②: Nút "Xem cơ sở" → nguyên tắc **Human-readable reasoning**.
-- Số ③: Nút "Chuyển nhân viên" → mức tự chủ **cần ngườii duyệt**.
+**Ảnh 1 — Màn 1: AI sai và sửa trong chat**
+- Số ①: Tin nhắn sai bị gạch chân/ mờ đi → thể hiện **transparency** và **human-readable reasoning**.
+- Số ②: Bubble sửa lỗi màu nổi + giải thích cụ thể → nguyên tắc **Actionable recourse**.
+- Số ③: Badge "Chờ duyệt" gắn trên tin tài chính → mức tự chủ **cần ngườii duyệt**.
+- Số ④: Confidence bar 62% màu vàng → nguyên tắc **AI confidence signaling**.
+- Số ⑤: 3 nút recourse rõ ràng → đảm bảo ngườii dùng luôn có lựa chọn tiếp theo.
 
-**Ảnh 2 — Màn 4: AI sai và sửa**
-- Số ①: Tin nhắn sai bị gạch chân/ mờ đi → thể hiện **transparency**.
-- Số ②: Tin nhắn sửa màu đỏ + lý do cụ thể → nguyên tắc **Actionable recourse**.
-- Số ③: Badge "chờ duyệt" trên mọi tin tài chính → mức tự chủ **cần ngườii duyệt**.
+**Ảnh 2 — Màn 2: Chuyển nhân viên**
+- Số ①: Card tóm tắt có đầy đủ bằng chứng và đề xuất → nguyên tắc **Grounding in evidence**.
+- Số ②: Timeline trạng thái → giúp ngườii dùng biết AI đã làm gì và con ngườii sẽ xử lý phần nào.
+- Số ③: ETA 4 giờ → quản lý kỳ vọng khi phải chờ ngườii duyệt.
 
 ### 5.4 Quyết định hiển thị độ chắc/ bằng chứng
 - **Đã cân nhắc:**
