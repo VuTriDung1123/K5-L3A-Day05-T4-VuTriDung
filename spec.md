@@ -4,7 +4,6 @@
 >
 > **Một quyết định = bốn ý:** đã cân nhắc phương án nào · chọn phương án nào · vì sao · loại các phương án kia vì sao. Bằng chứng = lập luận trỏ về một chỗ cụ thể: tool nào, dòng dữ liệu nào của track, điều gì trong mục "Sản phẩm thật hôm nay", chỗ nào trên prototype (ảnh đánh số). Không chạy agent.
 
-```markdown
 # Bài nộp LAB5 — [Track] · Nhóm [tên]
 
 **Lớp:** L3A · **Bàn / zone:** \_\_· **Track:** 4
@@ -17,7 +16,11 @@
 
 ## §1. Lát cắt & phạm vi
 
-- Lát cắt (chép từ track).
+- Lát cắt (chép từ track): Track 4
+  | Track | Sản phẩm nền (tham khảo) | Người dùng | Cái giá khi sai | File |
+  |---|---|---|---|---|
+  | **T4 · Thương mại điện tử** | "Trò chuyện với Shopee" — khiếu nại không đúng mô tả | Người mua; người bán; nhân viên sàn | Sai hướng nào cũng có một bên mất tiền | `tracks/t4-ecommerce.md` |
+
 - 3 việc tính năng KHÔNG làm, mỗi việc một câu vì sao.
 
 ## §2. Kịch bản rủi ro (chặng 2)
@@ -62,4 +65,3 @@ Với mỗi tool:
 ## §7. Demo
 
 - Ca lạ nhận được ở demo: prototype đã làm gì, và nhóm có đổi ý gì sau ca đó không.
-```
