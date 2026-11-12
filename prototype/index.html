@@ -1,132 +1,1002 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Prototype mẫu · T3 Du lịch · một ca ở ba mức tự chủ</title>
-<style>
-:root{--ink:#1d2321;--mut:#6b6f6c;--line:#dcd8cf;--bg:#f6f4ef;--card:#fff;--g:#2e6a4f;--gb:#e5f1ea;--a:#8a6516;--ab:#fbefd3;--r:#a33b2b;--rb:#f8e3df;--b:#28507a;--bb:#e3ecf6}
-*{box-sizing:border-box}body{margin:0;font-family:"Be Vietnam Pro","Noto Sans","Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
-header{padding:18px 28px 10px;border-bottom:1px solid var(--line);background:#fff}
-h1{font-size:20px;margin:0 0 4px}.sub{color:var(--mut);font-size:13.5px}
-.toggle{display:flex;gap:8px;margin:12px 0 4px;flex-wrap:wrap;align-items:center}
-.toggle span{font-size:13.5px;color:var(--mut);margin-right:4px}
-.toggle button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
-.toggle button.on{border-color:var(--ink);background:var(--ink);color:#fff}
-main{display:grid;grid-template-columns:400px 1fr;gap:24px;padding:20px 28px 28px;max-width:1280px}
-.phone{background:#fff;border:1px solid var(--line);border-radius:28px;padding:14px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
-.bar{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);padding:0 6px 8px;border-bottom:1px solid var(--line)}
-.trip{margin:10px 4px;padding:10px 12px;border-radius:12px;background:var(--rb);font-size:13.5px}
-.trip b{color:var(--r)}
-.chat{display:flex;flex-direction:column;gap:10px;padding:6px 4px;min-height:420px}
-.me{align-self:flex-end;background:var(--b);color:#fff;padding:9px 12px;border-radius:14px 14px 2px 14px;max-width:85%}
-.ai{align-self:flex-start;background:#f1efe9;padding:10px 12px;border-radius:14px 14px 14px 2px;max-width:94%}
-.ai .who{font-size:12px;color:var(--mut);margin-bottom:3px}
-.conf{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;margin:6px 0 2px;background:var(--ab);color:var(--a);font-weight:600}
-.ev{font-size:12.5px;color:var(--mut);border-left:3px solid var(--line);padding-left:8px;margin-top:6px}
-.opt{border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;margin-top:8px;background:#fff;font-size:14px;display:flex;justify-content:space-between;gap:8px;align-items:center}
-.opt.sel{border-color:var(--g);background:var(--gb)}
-.opt small{color:var(--mut)}
-.box{border-radius:12px;padding:10px 12px;margin-top:8px;font-size:14px}
-.box.hold{background:var(--gb);border:1px solid #bcd9c8}.box.warn{background:var(--ab);border:1px solid #ecd59e}.box.done{background:var(--bb);border:1px solid #bcd0e6}.box.red{background:var(--rb);border:1px solid #e9bdb4}
-.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.btn{border:0;border-radius:10px;padding:8px 12px;font:inherit;font-size:14px;cursor:pointer;background:#e8e5de}
-.btn.pri{background:var(--g);color:#fff}.btn.out{background:#fff;border:1.5px solid var(--ink)}.btn.danger{background:var(--r);color:#fff}
-.timer{font-variant-numeric:tabular-nums;font-weight:700}
-.n{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#c2410c;color:#fff;font-size:11.5px;font-weight:700;margin-right:4px;vertical-align:1px;flex:none}
-.hide-n .n{display:none}
-aside{display:flex;flex-direction:column;gap:16px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px}
-.panel h2{font-size:16px;margin:0 0 8px}
-table{border-collapse:collapse;width:100%;font-size:13.5px}td,th{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}th{color:var(--mut);font-weight:600}
-.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
-.p-auto{background:var(--gb);color:var(--g)}.p-ask{background:var(--ab);color:var(--a)}.p-no{background:var(--rb);color:var(--r)}.p-sug{background:#eceae4;color:#555}
-.changed td{background:#fffaf0}
-.ann li{margin-bottom:5px}.ann{padding-left:0;list-style:none;margin:0}
-.promise{font-size:15px;border-left:4px solid var(--ink);padding:6px 10px;background:#faf9f5}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center}
-.modal.show{display:flex}.modal .card{background:#fff;border-radius:16px;padding:18px 20px;max-width:380px}
-label{font-size:14px}
-.foot{font-size:12px;color:var(--mut);padding:0 28px 20px}
-</style></head>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopee Resolve AI · Prototype T4 Thương mại điện tử · Nhóm T4-ShopeeResolve</title>
+  <style>
+    :root {
+      --shopee: #ee4d2d;
+      --shopee-dark: #d73211;
+      --shopee-light: #fef6f5;
+      --ink: #1e293b;
+      --mut: #64748b;
+      --line: #e2e8f0;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --g: #16a34a;
+      --gb: #f0fdf4;
+      --a: #d97706;
+      --ab: #fffbeb;
+      --r: #dc2626;
+      --rb: #fef2f2;
+      --b: #2563eb;
+      --bb: #eff6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+    header {
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .shopee-logo {
+      background: var(--shopee);
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      font-weight: 700;
+    }
+    .sub {
+      color: var(--mut);
+      font-size: 13px;
+    }
+    .header-ctrl {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ctrl-group {
+      display: flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+    }
+    .ctrl-group button {
+      border: 0;
+      background: transparent;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--mut);
+      transition: all 0.15s ease;
+    }
+    .ctrl-group button.on {
+      background: #fff;
+      color: var(--shopee);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    main {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      padding: 24px 28px;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+    }
+    /* Phone simulator */
+    .phone {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px -10px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      height: 740px;
+      position: relative;
+    }
+    .phone-notch {
+      height: 28px;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--mut);
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .phone-header {
+      background: var(--shopee);
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+    .phone-header .back {
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .phone-header .title {
+      font-weight: 700;
+      font-size: 15px;
+      flex: 1;
+    }
+    .phone-header .badge {
+      background: rgba(255,255,255,0.25);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .order-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12.5px;
+    }
+    .order-img {
+      width: 44px;
+      height: 44px;
+      background: #f1f5f9;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .order-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    .order-title {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--ink);
+    }
+    .order-meta {
+      color: var(--mut);
+      font-size: 11.5px;
+    }
+    .chat-scroll {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    /* Bubbles */
+    .bubble-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 90%;
+    }
+    .bubble-wrap.me {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+    .bubble-wrap.ai {
+      align-self: flex-start;
+      align-items: flex-start;
+      max-width: 95%;
+    }
+    .bubble-sender {
+      font-size: 11.5px;
+      color: var(--mut);
+      margin-left: 4px;
+    }
+    .bubble-me {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 10px 14px;
+      border-radius: 18px 18px 2px 18px;
+      font-size: 13.5px;
+      border: 1px solid #fecaca;
+    }
+    .bubble-ai {
+      background: #ffffff;
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 18px 18px 18px 2px;
+      font-size: 13.5px;
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    /* Dynamic UI Cards in Chat */
+    .diff-card {
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .diff-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .diff-col {
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .diff-col.buyer {
+      background: var(--gb);
+      border: 1px solid #bbf7d0;
+      color: #14532d;
+    }
+    .diff-col.seller {
+      background: #f1f5f9;
+      border: 1px solid var(--line);
+      color: #334155;
+    }
+    .escrow-box {
+      background: var(--ab);
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 12.5px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .timer {
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--a);
+      font-size: 14px;
+    }
+    .proof-guide {
+      background: var(--bb);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-top: 8px;
+      font-size: 12.5px;
+    }
+    .proof-guide b { color: var(--b); }
+    .btns-action {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .btn-action {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .btn-action:hover {
+      border-color: var(--shopee);
+      color: var(--shopee);
+    }
+    .btn-action.primary {
+      background: var(--shopee);
+      border-color: var(--shopee);
+      color: #fff;
+    }
+    .btn-action.primary:hover {
+      background: var(--shopee-dark);
+    }
+    .btn-action.outline {
+      background: transparent;
+      border-color: var(--mut);
+      color: var(--mut);
+    }
+    /* Number badges for HAX/PAIR */
+    .n {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #c2410c;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      margin-right: 5px;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .hide-n .n { display: none !important; }
+    /* Side panel */
+    aside {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .panel h2 {
+      font-size: 15.5px;
+      margin: 0 0 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .promise-box {
+      border-left: 4px solid var(--shopee);
+      padding: 8px 12px;
+      background: #fffaf9;
+      font-size: 13.5px;
+      border-radius: 0 8px 8px 0;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 6px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      color: var(--mut);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .p-auto { background: var(--gb); color: var(--g); border: 1px solid #bbf7d0; }
+    .p-ask { background: var(--ab); color: var(--a); border: 1px solid #fde68a; }
+    .p-no { background: var(--rb); color: var(--r); border: 1px solid #fecaca; }
+    .changed td { background: #fffbeb; }
+    .ann-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .ann-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.4;
+    }
+    /* Modal */
+    .modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+    .modal.show { display: flex; }
+    .modal-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      width: 100%;
+      max-width: 350px;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+    }
+    .seller-phone-banner {
+      background: #1e293b;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
 <body>
+
 <header>
- <h1>Prototype mẫu · T3 Du lịch — chuyến bay bị huỷ, AI đổi chuyến ở ba mức tự chủ</h1>
- <div class="sub">Cùng một ca, cùng một model. Chỉ đổi <b>mức tự chủ của tool <code>doi_chuyen_bay</code></b>. Dữ liệu dựng; hãng "Bay Mẫu" là hãng dựng. Đây là mẫu "đủ", không phải giao diện để chép.</div>
- <div class="toggle"><span>Mức tự chủ của việc đổi chuyến:</span>
-  <button data-l="1">① Chỉ gợi ý — khách tự đổi</button>
-  <button data-l="2" class="on">② Cần khách xác nhận</button>
-  <button data-l="3">③ Tự làm + hoàn tác</button>
-  <span style="margin-left:14px"><label><input type="checkbox" id="ann" checked> Hiện số chú thích HAX/PAIR</label></span>
- </div>
+  <div class="brand">
+    <div class="shopee-logo"><span>S</span> Shopee Resolve AI</div>
+    <div>
+      <h1>T4 · Thương Mại Điện Tử — Trợ lý khiếu nại "Hàng không đúng mô tả"</h1>
+      <div class="sub">Tối ưu hoá sự trung lập: Người mua được bảo vệ theo snapshot lúc mua · Người bán không bị xử thua oan</div>
+    </div>
+  </div>
+
+  <div class="header-ctrl">
+    <span style="font-size: 13px; color: var(--mut); font-weight: 600;">Mức tự chủ:</span>
+    <div class="ctrl-group">
+      <button data-l="1">① Chỉ gợi ý</button>
+      <button data-l="2" class="on">② Soạn sẵn + Duyệt (Nhóm chọn)</button>
+      <button data-l="3">③ Tự làm toàn bộ (Rủi ro)</button>
+    </div>
+    <div style="margin-left: 10px;">
+      <label style="font-size: 13px; font-weight: 600; cursor: pointer; color: var(--ink);">
+        <input type="checkbox" id="toggle-hax" checked> Hiện số chú thích HAX/PAIR
+      </label>
+    </div>
+  </div>
 </header>
+
 <main>
- <section class="phone" id="phone">
-  <div class="bar"><span>Đặt chỗ của tôi · TRV-7Q2K</span><span>15:02</span></div>
-  <div class="trip"><b>BM 213 · Hà Nội → TP.HCM · 12/11 19:00 · ĐÃ HUỶ</b> do thời tiết (bão).<br>2 hành khách: Nguyễn Minh An · bé Nguyễn Gia Bình (5 tuổi)</div>
-  <div class="chat" id="chat"></div>
- </section>
- <aside>
-  <div class="panel"><h2>Lời hứa với khách ở mức này</h2><div class="promise" id="promise"></div></div>
-  <div class="panel"><h2>Mức tự chủ của 5 tool (dòng tô vàng là tool đang đổi)</h2>
-   <table><tr><th>Tool</th><th>Mức</th><th>Vì sao (cái giá khi sai)</th></tr><tbody id="tools"></tbody></table></div>
-  <div class="panel"><h2>Chú thích: nguyên tắc nào nằm ở đâu</h2><ul class="ann" id="ann-list"></ul></div>
- </aside>
+  <!-- Phone Mockup -->
+  <section class="phone" id="phone-container">
+    <div class="phone-notch">
+      <span>14:48</span>
+      <span>📶 5G 100%</span>
+    </div>
+
+    <!-- Perspective bar -->
+    <div style="background: #fff; padding: 6px 14px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-size: 11.5px; font-weight: 700; color: var(--mut); text-transform: uppercase;">Góc nhìn:</span>
+      <div class="ctrl-group" style="padding: 2px;">
+        <button id="view-buyer" class="on" style="padding: 3px 10px; font-size: 11.5px;">👤 Người mua</button>
+        <button id="view-seller" style="padding: 3px 10px; font-size: 11.5px;">🏪 Người bán (Bonus)</button>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="phone-header" id="screen-header">
+      <div class="back">←</div>
+      <div class="title" id="chat-title">Trò chuyện với Shopee</div>
+      <div class="badge" id="ai-status">AI Trung lập</div>
+    </div>
+
+    <!-- Order mini bar -->
+    <div class="order-bar" id="order-bar">
+      <div class="order-img">🍳</div>
+      <div class="order-info">
+        <div class="order-title">Nồi chiên không dầu Lock&Lock 6.0L Inox cao cấp</div>
+        <div class="order-meta">Đơn #SP2603478 · Đã giao hôm qua · 1.250.000 đ</div>
+      </div>
+    </div>
+
+    <!-- Chat Stream -->
+    <div class="chat-scroll" id="chat-content">
+      <!-- Dynamic chat generated by JS -->
+    </div>
+
+    <!-- Modal confirmation -->
+    <div class="modal" id="modal-box">
+      <div class="modal-card">
+        <h3 style="margin-top: 0; font-size: 16px; color: var(--ink);">Xác nhận gửi yêu cầu hoàn tiền</h3>
+        <p style="font-size: 13px; color: var(--mut); margin-bottom: 12px;">
+          Số tiền yêu cầu hoàn: <b style="color: var(--shopee);">1.250.000 đ</b>.<br>
+          Căn cứ: Chênh lệch dung tích theo Snapshot ngày 02/11/2026.<br>
+          Người bán sẽ có <b>24:00:00</b> để đối soát hoặc chấp nhận hoàn tiền.
+        </p>
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+          <button class="btn-action" onclick="closeModal()">Xem lại</button>
+          <button class="btn-action primary" onclick="confirmRefund()">Đồng ý gửi</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Side Panel -->
+  <aside>
+    <!-- Scenario Switcher -->
+    <div class="panel">
+      <h2>
+        <span>Kiểm thử kịch bản (Scenario)</span>
+        <span style="font-size: 12px; font-weight: normal; color: var(--mut);">Chọn để xem AI phản hồi</span>
+      </h2>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn-action primary" id="scen-k1" onclick="switchScenario('k1')">Ca đắt nhất 1 (K1): Shop sửa mô tả 6L → 5L</button>
+        <button class="btn-action" id="scen-k5" onclick="switchScenario('k5')">Ca đắt nhất 2 (K5): Dọa bóc phốt đòi tiền</button>
+        <button class="btn-action" id="scen-normal" onclick="switchScenario('normal')">Ca bình thường: Áo nhầm size (Shop nhận lỗi)</button>
+      </div>
+    </div>
+
+    <!-- Autonomy Promise Panel -->
+    <div class="panel">
+      <h2>Lời hứa với khách hàng ở mức tự chủ này</h2>
+      <div class="promise-box" id="promise-text">
+        Loading promise...
+      </div>
+    </div>
+
+    <!-- Tools Autonomy Table -->
+    <div class="panel">
+      <h2>
+        <span>Mức tự chủ 5 Tool của Track T4</span>
+        <span class="pill p-ask">Cost-of-Error Driven</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Tool nghiệp vụ</th>
+            <th>Mức tự chủ</th>
+            <th>Lý do thiết kế (Cái giá khi sai & Khả năng đảo ngược)</th>
+          </tr>
+        </thead>
+        <tbody id="tools-table-body">
+          <!-- Dynamic tools generated by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HAX/PAIR Principles Panel -->
+    <div class="panel">
+      <h2>Chú thích Nguyên tắc HAX/PAIR trên Prototype</h2>
+      <ul class="ann-list" id="ann-list-items">
+        <!-- Dynamic HAX items -->
+      </ul>
+    </div>
+  </aside>
 </main>
-<div class="foot">LAB5 · AI20K K5 · Ngày 5 · prototype mẫu của giảng viên. Một file HTML, không gọi AI thật, không gửi dữ liệu đi đâu.</div>
-<div class="modal" id="m"><div class="card">
- <b>Gửi yêu cầu hoàn vé cho cả 2 hành khách?</b>
- <p style="font-size:14px">Gửi rồi thì <b>không huỷ được</b>. Bạn sẽ mất chỗ trên mọi chuyến thay thế. Tiền về thẻ đã thanh toán, có thể mất tới 90 ngày.<br>Chuyến bị huỷ do thời tiết: được hoàn toàn bộ, <b>không có bồi thường tiền mặt</b>.</p>
- <label><input type="checkbox" id="ok"> Mình hiểu yêu cầu này không rút lại được</label>
- <div class="btns"><button class="btn danger" id="send" disabled>Gửi yêu cầu hoàn vé</button><button class="btn" id="cancel">Quay lại, đổi chuyến</button></div>
-</div></div>
+
 <script>
-const $=s=>document.querySelector(s);let L=2,state='start',t=null,sec=0;
-const opts=[['BM 201','13/11 07:00','còn 9 chỗ',true],['BM 205','13/11 09:30','còn 4 chỗ',false],['BM 217','12/11 21:00','còn 1 chỗ — không đủ cho 2 người',false]];
-const evid='<div class="ev"><span class="n">2</span>Dựa vào: đặt chỗ TRV-7Q2K · tin báo huỷ lúc 14:42 · chính sách Bay Mẫu: chuyến bị huỷ được đổi miễn phí <b>một lần</b> trong 48 giờ.</div>';
-const conf='<span class="conf"><span class="n">1</span>Mình chưa chắc: bạn nói "sáng mai" — có 2 chuyến sáng</span>';
-const optHTML=sel=>opts.map((o,i)=>`<div class="opt ${o[0]==sel?'sel':''}"><div><b>${o[0]}</b> · ${o[1]}<br><small>${o[2]}</small></div>${i<2&&L>1&&state!='done'&&state!='auto'?`<button class="btn" onclick="pick('${o[0]}')">Chọn</button>`:''}</div>`).join('');
-let chosen='BM 201';
-function me(x){return `<div class="me">${x}</div>`}
-function ai(x){return `<div class="ai"><div class="who">Trợ lý đặt chỗ (AI)</div>${x}</div>`}
-const esc=`<button class="btn out" onclick="go('staff')"><span class="n">5</span>Gặp nhân viên</button>`;
-function render(){
- let h=me('Chuyến bị huỷ rồi à? Vậy đổi giúp mình sang sáng mai nhé.');
- if(state=='staff'){h+=ai('Mình đã chuyển cho nhân viên hỗ trợ, thời gian chờ khoảng <b>5 phút</b>. Nhân viên thấy sẵn: chuyến bị huỷ, 2 hành khách, chỗ đang giữ (nếu có). Bạn không phải kể lại.');}
- else if(state=='refund'){h+=ai('Đã gửi yêu cầu hoàn vé cho 2 hành khách. Mã yêu cầu: HT-55821. Tiền về thẻ đã thanh toán, có thể mất tới 90 ngày.');}
- else if(L==1){
-  h+=ai(`Chuyến BM 213 đã bị huỷ do thời tiết. Bạn được đổi miễn phí một lần. Các chuyến sáng mai còn chỗ:${conf}${optHTML('')}${evid}<div class="btns"><button class="btn pri">Mở trang Đổi lịch (bạn tự chọn)</button>${esc}</div>`);
- } else if(L==2){
-  if(state=='done'){h+=ai(`<div class="box done">Đã đổi sang <b>${chosen}</b> cho 2 hành khách. Vé điện tử mới gửi về email trong khoảng 60 phút. Lần đổi miễn phí đã được dùng.</div>`);}
-  else{
-  h+=ai(`Chuyến BM 213 đã bị huỷ do thời tiết.${conf}<div style="margin-top:6px"><span class="n">3</span>Bạn muốn bay chuyến nào, và đổi cho <b>cả 2 người</b> chứ?</div>${optHTML(chosen)}
-  <div class="box hold"><span class="n">4</span>Mình đã <b>giữ chỗ ${chosen}</b> cho 2 người trong <span class="timer" id="tm">20:00</span>. Chưa đổi vé — chưa mất lần đổi miễn phí.</div>
-  <div class="box warn"><b>Xác nhận đổi:</b> BM 213 → <b>${chosen}</b> · 2 hành khách · phí 0 đ · dùng lần đổi miễn phí duy nhất.
-  <div class="btns"><button class="btn pri" onclick="go('done')">Xác nhận đổi</button><button class="btn" onclick="pick(chosen=='BM 201'?'BM 205':'BM 201')"><span class="n">6</span>Sửa: chọn chuyến khác</button>${esc}</div></div>${evid}
-  <div class="btns"><button class="btn" onclick="$('#m').classList.add('show')">Thôi, hoàn vé</button></div>`);}
- } else {
-  if(state=='undone'){h+=ai('Đã hoàn tác: vé quay về trạng thái chuyến bị huỷ, lần đổi miễn phí vẫn còn. Bạn muốn chọn chuyến khác hay gặp nhân viên?'+optHTML('')+`<div class="btns">${esc}</div>`);}
-  else{
-  h+=ai(`Chuyến BM 213 đã bị huỷ. Mình đã <b>đổi sang ${chosen} · ${opts.find(o=>o[0]==chosen)[1]}</b> cho 2 hành khách${chosen=='BM 201'?' — chuyến sớm nhất còn đủ chỗ':''}.${evid}
-  <div class="box done"><span class="n">4</span>Đã đổi. <b>Hoàn tác được trong <span class="timer" id="tm">10:00</span></b> — sau đó vé mới được xuất và lần đổi miễn phí mất.
-  <div class="btns"><button class="btn out" onclick="go('undone')">Hoàn tác</button><button class="btn" onclick="go('undone')"><span class="n">6</span>Sai rồi, mình muốn 09:30</button>${esc}</div></div>
-  <div class="box red" style="font-size:13px"><b>Rủi ro của mức này:</b> khách nói "sáng mai", AI tự chọn 07:00 và đổi cho cả 2 người. Nếu khách cần 09:30, hoặc chỉ một người bay, thì AI đã dùng mất quyền đổi của khách. Hoàn tác 10 phút chỉ cứu được khi khách đọc tin kịp.</div>`);}
- }
- $('#chat').innerHTML=h;
- const P={1:'"Mình cho bạn biết lựa chọn; bạn tự đổi." AI không làm gì thay bạn. An toàn nhất, nhưng khách đang vội phải tự bấm qua nhiều bước, chuyến tốt có thể hết chỗ trong lúc đó.',
- 2:'"Mình giữ chỗ ngay cho bạn; bạn bấm xác nhận thì mình mới đổi." Việc rẻ và đảo được (giữ chỗ 20 phút) thì AI tự làm; việc dùng mất quyền đổi thì chờ khách xác nhận. <b>Mức nhóm mẫu chọn.</b>',
- 3:'"Mình đổi luôn cho bạn, sai thì bấm hoàn tác." Nhanh nhất, nhưng AI quyết thay khách khi khách nói mơ hồ. Chỉ đúng nếu câu của khách đủ rõ (chuyến, người) và hoàn tác thật sự còn tác dụng.'};
- $('#promise').innerHTML=P[L];
- const lv={1:['Gợi ý','p-sug','Khách tự đổi trên trang Đổi lịch. Không sai thay khách, nhưng chậm.'],2:['Cần xác nhận','p-ask','Đổi rồi thì mất lần đổi miễn phí duy nhất; một lần bấm xác nhận chặn được đổi nhầm. Giữ chỗ đã chặn được rủi ro hết chỗ trong lúc chờ.'],3:['Tự làm + hoàn tác','p-auto','Chỉ hợp khi khách nói rõ chuyến và người; ở ca này khách nói mơ hồ, nên là mức quá tay.']}[L];
- const T=[['tra_cuu_dat_cho','Tự làm','p-auto','Chỉ đọc.'],['giu_cho_chuyen_moi','Tự làm','p-auto','Hết 20 phút tự nhả; chờ người thì chuyến tốt hết chỗ.'],['doi_chuyen_bay',lv[0],lv[1],lv[2],1],['gui_yeu_cau_hoan_ve','Cần xác nhận','p-ask','Gửi rồi không huỷ được: phải nói trước, khách tự tích ô.'],['chuyen_nhan_vien','Tự làm','p-auto','Chuyển thừa chỉ tốn công nhân viên. Đổi tên người bay, trẻ bay một mình: luôn chuyển.']];
- $('#tools').innerHTML=T.map(r=>`<tr class="${r[4]?'changed':''}"><td><code>${r[0]}</code></td><td><span class="pill ${r[2]}">${r[1]}</span></td><td>${r[3]}</td></tr>`).join('');
- const A=[['1','HAX G2 · làm rõ AI làm tốt tới đâu','Nhãn "Mình chưa chắc" nói rõ chỗ mơ hồ, không phải con số %.'],['2','HAX G11 + PAIR Explainability','Dòng "Dựa vào" cho khách tự kiểm căn cứ: đặt chỗ, tin báo, chính sách.'],['3','HAX G10 · thu hẹp khi nghi ngờ','Hỏi lại một câu (chuyến nào, cho ai) thay vì đoán.'],['4','HAX G8/G9 + PAIR Feedback & Control','Giữ chỗ có đếm ngược (mức ②) hoặc hoàn tác có hạn (mức ③).'],['5','PAIR Errors + Graceful Failure','Luôn có đường sang người thật, kèm tóm tắt để khách không phải kể lại.'],['6','HAX G9 · sửa dễ','Sửa ngay trên thẻ: chọn chuyến khác, không phải bắt đầu lại.']];
- $('#ann-list').innerHTML=A.filter(a=>({1:['1','2','5'],2:['1','2','3','4','5','6'],3:['2','4','5','6']})[L].includes(a[0])).map(a=>`<li><span class="n">${a[0]}</span><b>${a[1]}</b> — ${a[2]}</li>`).join('')+(L==1?'<li style="color:#6b6f6c">Ở mức ① không có ③④⑥: AI không giữ chỗ, không đổi, nên không có gì để xác nhận hay hoàn tác.</li>':L==3?'<li style="color:#6b6f6c">Ở mức ③ mất ① và ③: AI không nói mình chưa chắc, không hỏi lại — đó chính là chỗ mức này quá tay.</li>':'');
- clearInterval(t);const tm=$('#tm');if(tm){sec=L==2?1200:600;t=setInterval(()=>{sec--;tm.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');if(sec<=0)clearInterval(t)},1000)}
-}
-function pick(f){chosen=f;state='start';render()}
-function go(s){state=s;render()}
-document.querySelectorAll('.toggle button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.toggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');L=+b.dataset.l;state='start';chosen='BM 201';render()});
-$('#ann').onchange=e=>document.body.classList.toggle('hide-n',!e.target.checked);
-$('#ok').onchange=e=>$('#send').disabled=!e.target.checked;
-$('#cancel').onclick=()=>$('#m').classList.remove('show');
-$('#send').onclick=()=>{$('#m').classList.remove('show');go('refund')};
-render();
-</script></body></html>
+  const $ = s => document.querySelector(s);
+  let currentLevel = 2; // Default: Level 2 (Draft + Human in the loop)
+  let currentScenario = 'k1'; // k1 (diff edit), k5 (blackmail), normal
+  let currentPerspective = 'buyer'; // buyer or seller
+  let hasUploadedProof = false;
+  let hasSubmittedClaim = false;
+  let countdownSec = 86400; // 24h
+  let countdownTimer = null;
+
+  const scenarios = {
+    k1: {
+      title: "Nồi chiên Lock&Lock 6L",
+      userMsg: "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả, lừa đảo!",
+      orderName: "Nồi chiên không dầu Lock&Lock 6.0L Inox cao cấp",
+      price: "1.250.000 đ",
+      sku: "LOCK-AF60-INOX"
+    },
+    k5: {
+      title: "Đơn máy ép chậm 850k",
+      userMsg: "Nếu trong 15 phút không hoàn tiền ngay cho tôi, tôi sẽ đăng bài lên toàn bộ hội nhóm Facebook và TikTok bóc phốt Shopee làm ăn tắc trách lừa đảo!",
+      orderName: "Máy ép chậm trái cây mini Nineshield",
+      price: "850.000 đ",
+      sku: "NINE-JUICE-01"
+    },
+    normal: {
+      title: "Đơn Áo sơ mi Oxford",
+      userMsg: "Mình đặt áo size L mà nhận được size M, mặc không vừa. Shop cũng nhắn trong chat nhận là gửi nhầm rồi. Mình muốn hoàn tiền thì làm sao?",
+      orderName: "Áo sơ mi nam Oxford tay dài Slimfit",
+      price: "280.000 đ",
+      sku: "OXF-SHIRT-WHITE-L"
+    }
+  };
+
+  function switchScenario(scen) {
+    currentScenario = scen;
+    hasUploadedProof = false;
+    hasSubmittedClaim = false;
+    document.querySelectorAll('[id^="scen-"]').forEach(b => b.classList.remove('primary'));
+    $(`#scen-${scen}`).classList.add('primary');
+    render();
+  }
+
+  function startCountdown() {
+    if (countdownTimer) clearInterval(countdownTimer);
+    countdownTimer = setInterval(() => {
+      countdownSec--;
+      const h = String(Math.floor(countdownSec / 3600)).padStart(2, '0');
+      const m = String(Math.floor((countdownSec % 3600) / 60)).padStart(2, '0');
+      const s = String(countdownSec % 60).padStart(2, '0');
+      const el = $('#escrow-timer');
+      if (el) el.textContent = `${h}:${m}:${s}`;
+    }, 1000);
+  }
+
+  function uploadProofSim() {
+    hasUploadedProof = true;
+    render();
+  }
+
+  function openRefundModal() {
+    $('#modal-box').classList.add('show');
+  }
+
+  function closeModal() {
+    $('#modal-box').classList.remove('show');
+  }
+
+  function confirmRefund() {
+    closeModal();
+    hasSubmittedClaim = true;
+    render();
+  }
+
+  function render() {
+    const scen = scenarios[currentScenario];
+    $('#order-bar').innerHTML = `
+      <div class="order-img">${currentScenario === 'normal' ? '👔' : currentScenario === 'k5' ? '🍹' : '🍳'}</div>
+      <div class="order-info">
+        <div class="order-title">${scen.orderName}</div>
+        <div class="order-meta">Mã SKU: ${scen.sku} · Giá trị: ${scen.price} · Đã thanh toán Escrow</div>
+      </div>
+    `;
+
+    if (currentPerspective === 'seller') {
+      renderSellerView();
+      return;
+    }
+
+    // Buyer View Rendering
+    let html = `
+      <div class="bubble-wrap me">
+        <div class="bubble-sender">Bạn (Người mua) · 14:46</div>
+        <div class="bubble-me">${scen.userMsg}</div>
+      </div>
+    `;
+
+    // AI Responses based on Scenario and Level
+    if (currentScenario === 'k1') {
+      if (currentLevel === 1) {
+        // Level 1: Suggestion only
+        html += `
+          <div class="bubble-wrap ai">
+            <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee · Mức ① Gợi ý</div>
+            <div class="bubble-ai">
+              Chào bạn, Shopee đã nhận được phản ánh về việc dung tích sản phẩm nhận được khác với mong đợi.
+              <div class="diff-card">
+                <b>Hướng dẫn tự gửi khiếu nại:</b><br>
+                Bạn vui lòng tự thoát ra mục <i>Tôi > Đơn Mua > Chọn Đơn hàng > Yêu cầu Trả hàng/Hoàn tiền</i> và tự nhập lý do "Hàng không đúng mô tả".
+              </div>
+              <div class="btns-action">
+                <button class="btn-action primary" onclick="alert('Chuyển hướng đến trang khiếu nại thủ công...')">Mở trang Trả hàng tự điền</button>
+                <button class="btn-action outline" onclick="alert('Đang kết nối nhân viên...')"><span class="n">5</span>Gặp nhân viên hỗ trợ</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (currentLevel === 2) {
+        // Level 2: Draft + Verify (Recommended by group)
+        html += `
+          <div class="bubble-wrap ai">
+            <div class="bubble-sender">
+              <span class="n">1</span>Trợ lý Shopee (AI Trung lập)
+              <span class="pill p-ask" style="font-size: 11px;">Đối chiếu Snapshot</span>
+            </div>
+            <div class="bubble-ai">
+              Em đã đối chiếu khiếu nại của bạn với <b>bản lưu mô tả sản phẩm lúc bạn bấm mua (ngày 02/11 lúc 14:20)</b>.
+              <div class="diff-card">
+                <div style="font-weight: 700; color: var(--ink); margin-bottom: 4px;">
+                  <span class="n">2</span>Kết quả so sánh bản lưu kỹ thuật số:
+                </div>
+                <div class="diff-grid">
+                  <div class="diff-col buyer">
+                    <b>Bản lưu lúc bạn mua (02/11):</b><br>
+                    • Tiêu đề: "Nồi chiên không dầu 6.0L"<br>
+                    • Thông số lòng: Không ghi rõ 5L<br>
+                    <span style="color: var(--g); font-weight: 700;">✓ Cơ sở bảo vệ người mua</span>
+                  </div>
+                  <div class="diff-col seller">
+                    <b>Mô tả shop sửa hiện tại:</b><br>
+                    • Ghi: "Vỏ 6L, Lòng nồi 5L"<br>
+                    • Cập nhật sau ngày 02/11<br>
+                    <span style="color: var(--mut);">✗ Không áp dụng cho bạn</span>
+                  </div>
+                </div>
+                <div style="font-size: 11.5px; color: var(--mut); margin-top: 4px;">
+                  Shopee cam kết <b>bảo vệ quyền lợi của bạn dựa trên đúng thông tin lúc bạn thanh toán</b>, không phụ thuộc vào việc shop đã sửa mô tả sau đó.
+                </div>
+              </div>
+
+              ${!hasUploadedProof ? `
+                <div class="proof-guide">
+                  <span class="n">3</span><b>Để hoàn tất hồ sơ gửi Người bán duyệt:</b><br>
+                  Bạn vui lòng chụp giúp em <b>ảnh tem thông số NSX ở đáy nồi</b> và <b>ảnh đặt thước đo lòng nồi</b> nhé.
+                </div>
+                <div class="btns-action">
+                  <button class="btn-action primary" onclick="uploadProofSim()">📸 Tải ảnh tem đáy & thước đo (Mô phỏng)</button>
+                  <button class="btn-action outline" onclick="alert('Kết nối nhân viên giải quyết...')"><span class="n">5</span>Gặp chuyên viên sàn</button>
+                </div>
+              ` : `
+                <div class="diff-card" style="background: var(--gb); border-color: #86efac;">
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <span style="font-size: 20px;">✅</span>
+                    <div>
+                      <b>Đã nạp 2 chứng cứ hợp lệ:</b><br>
+                      <small>1. Anh_tem_day_noi.jpg · 2. Thuoc_do_duong_kinh.jpg</small>
+                    </div>
+                  </div>
+                </div>
+
+                ${!hasSubmittedClaim ? `
+                  <div class="diff-card">
+                    <span class="n">6</span><b>Hồ sơ hoàn tiền AI đã điền sẵn cho bạn:</b><br>
+                    • Lý do: Hàng không đúng mô tả dung tích (Snapshot discrepancy)<br>
+                    • Số tiền đề xuất hoàn: <b>${scen.price}</b> (Hoàn 100% trả hàng)<br>
+                    <div class="btns-action" style="margin-top: 8px;">
+                      <button class="btn-action primary" onclick="openRefundModal()">Gửi yêu cầu hoàn tiền tới Shop</button>
+                      <button class="btn-action" onclick="alert('Cho phép sửa lý do hoặc số tiền hoàn...')">Sửa thông tin</button>
+                    </div>
+                  </div>
+                ` : `
+                  <div class="escrow-box">
+                    <span class="n">4</span>
+                    <div>
+                      <b>Đã gửi hồ sơ khiếu nại tới Shop!</b><br>
+                      Khoản tiền <b>${scen.price}</b> đang được Shopee <b>đóng băng an toàn</b>.<br>
+                      Người bán có thời hạn phản hồi: <span class="timer" id="escrow-timer">23:59:45</span>.<br>
+                      <small style="color: var(--mut);">Nếu shop không phản hồi trong thời gian này, hệ thống sẽ tự động hoàn tiền cho bạn.</small>
+                    </div>
+                  </div>
+                  <div class="btns-action">
+                    <button class="btn-action" onclick="alert('Xem mã vận đơn trả hàng...')">📦 Lấy mã gửi trả hàng miễn phí</button>
+                    <button class="btn-action outline" onclick="alert('Chuyển nhân viên sàn can thiệp...')"><span class="n">5</span>Gặp nhân viên hỗ trợ</button>
+                  </div>
+                `}
+              `}
+            </div>
+          </div>
+        `;
+      } else {
+        // Level 3: Auto refund immediately (Risk scenario)
+        html += `
+          <div class="bubble-wrap ai">
+            <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee · Mức ③ Tự động hoàn tiền</div>
+            <div class="bubble-ai">
+              <div style="background: var(--rb); border: 1.5px solid var(--r); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;">
+                <b style="color: var(--r);">⚠️ CẢNH BÁO MỨC TỰ CHỦ QUÁ TAY:</b><br>
+                AI đã tự động kích hoạt lệnh chuyển <b>${scen.price}</b> từ tài khoản Shop về ví của bạn mà không cần người bán đối soát!
+              </div>
+              <div>Số tiền 1.250.000 đ đã được hoàn trả. Bạn không cần trả lại nồi chiên.</div>
+              <div style="font-size: 12px; color: var(--mut); margin-top: 6px;">
+                <b>Hậu quả tài chính:</b> Người bán mất trắng chiếc nồi và mất tiền hàng dù có thể khách đo sai góc tiêu cự. Shop bức xúc khiếu nại kiện sàn.
+              </div>
+              <div class="btns-action">
+                <button class="btn-action outline" onclick="alert('Hoàn tác giao dịch trong 10 phút...')">Hoàn tác hoàn tiền</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    } else if (currentScenario === 'k5') {
+      // Scenario K5: Threat of black-mail / social media
+      html += `
+        <div class="bubble-wrap ai">
+          <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee (AI Trung lập)</div>
+          <div class="bubble-ai">
+            Em rất hiểu bạn đang vô cùng bức xúc và việc nhận hàng chưa ưng ý đã làm mất thời gian quý báu của bạn. Shopee cam kết <b>bảo vệ quyền lợi chính đáng của bạn 100%</b>.
+            <div class="escrow-box">
+              <span class="n">4</span>
+              <div>
+                <b style="color: #92400e;">Chính sách bảo chứng tài chính Shopee Escrow:</b><br>
+                Toàn bộ số tiền <b>${scen.price}</b> của đơn hàng này đang được Shopee <b>giữ an toàn tại tài khoản trung gian</b>. Người bán KHÔNG THỂ rút số tiền này cho đến khi khiếu nại được giải quyết xong.
+              </div>
+            </div>
+            <p style="margin: 8px 0; font-size: 13px;">
+              Theo quy chuẩn công bằng của sàn TMĐT, mọi khiếu nại đều có thời hạn <b>24 giờ</b> để người bán tiếp nhận thông tin đối soát. Em đã lập hồ sơ ưu tiên mã số <b>#KN-2A2026-HOT</b>.
+            </p>
+            <div class="btns-action">
+              <button class="btn-action primary" onclick="uploadProofSim()"><span class="n">3</span>Tải thêm video khui hàng để ưu tiên duyệt</button>
+              <button class="btn-action outline" onclick="alert('Đang kết nối thẳng tới Trưởng nhóm CSKH trực tuyến...')"><span class="n">5</span>Nói chuyện với Trưởng nhóm CSKH</button>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      // Scenario Normal: Size wrong, shop admitted
+      html += `
+        <div class="bubble-wrap ai">
+          <div class="bubble-sender"><span class="n">1</span>Trợ lý Shopee (AI Trung lập)</div>
+          <div class="bubble-ai">
+            Em đã kiểm tra lịch sử chat giữa bạn và Shop. Đúng là Shop có xác nhận gửi nhầm áo size M thay vì size L như bạn đặt.
+            <div class="diff-card" style="background: var(--gb); border-color: #86efac;">
+              <b>Xác thực đồng thuận:</b><br>
+              Shop đã thừa nhận lỗi gửi nhầm size. AI đã soạn sẵn yêu cầu hoàn tiền <b>${scen.price}</b> kèm mã gửi trả hàng bưu tá lấy tận nhà miễn phí.
+            </div>
+            <div class="btns-action">
+              <button class="btn-action primary" onclick="alert('Đã gửi thông báo cho Shop bấm duyệt hoàn tiền trong 30 giây...')">Gửi yêu cầu hoàn tiền ngay</button>
+              <button class="btn-action" onclick="alert('Đang tạo mã vận đơn bưu tá qua lấy áo...')">Xem mã bưu tá lấy hàng tận nơi</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    $('#chat-content').innerHTML = html;
+    updateSidePanel();
+    startCountdown();
+  }
+
+  function renderSellerView() {
+    const scen = scenarios[currentScenario];
+    $('#chat-title').textContent = "Kênh Người Bán · Khiếu nại";
+    $('#ai-status').textContent = "Trung tâm Đối soát";
+    $('#chat-content').innerHTML = `
+      <div class="seller-phone-banner">
+        <span>🏪 SHOP GIA DỤNG CHÍNH HÃNG</span>
+        <span>Hạn phản hồi: 23:59:40</span>
+      </div>
+      <div style="background: #fff; padding: 14px; border-radius: 12px; border: 1px solid var(--line); font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <b style="color: var(--shopee);">Khiếu nại mới từ Người Mua</b>
+          <span class="pill p-ask">Chờ Shop phản hồi</span>
+        </div>
+        <p style="margin: 4px 0;"><b>Đơn hàng:</b> #${scen.sku} (${scen.price})</p>
+        <p style="margin: 4px 0;"><b>Lý do khiếu nại:</b> Hàng không đúng mô tả dung tích</p>
+        <p style="margin: 4px 0; color: var(--mut);"><b>Lời người mua:</b> "${scen.userMsg}"</p>
+
+        <div class="diff-card">
+          <b style="color: var(--b);">Cơ sở đối chiếu của Shopee AI:</b><br>
+          <small>Hệ thống ghi nhận mô tả lúc khách mua là <b>6.0L</b>. Bạn đã cập nhật mô tả lúc 16:30 ngày 03/11. Khách hàng được bảo vệ theo bản lưu lúc mua.</small>
+        </div>
+
+        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn-action primary" style="justify-content: center;" onclick="alert('Shop đã bấm Đồng ý hoàn tiền. Tiền sẽ được hoàn sau khi nhận lại hàng!')">
+            ✓ Đồng ý nhận lại hàng & Hoàn tiền
+          </button>
+          <button class="btn-action" style="justify-content: center;" onclick="alert('Shop gửi chứng từ giải trình cho Chuyên viên Shopee xem xét...')">
+            📝 Gửi bằng chứng khiếu nại ngược lại
+          </button>
+          <button class="btn-action outline" style="justify-content: center;" onclick="alert('Kết nối Chuyên viên xử lý tranh chấp sàn Shopee...')">
+            Liên hệ Chuyên viên Shopee
+          </button>
+        </div>
+      </div>
+    `;
+    updateSidePanel();
+  }
+
+  function updateSidePanel() {
+    // Promises according to Autonomy Levels
+    const promises = {
+      1: `"Bạn tự làm hết, AI chỉ chỉ đường." Mức an toàn tối đa cho sàn và shop, nhưng người mua đang bực tức sẽ cảm thấy bị bỏ rơi và phải bấm quá nhiều bước thủ công trên app.`,
+      2: `"AI chuẩn bị sẵn mọi hồ sơ bảo vệ bạn theo bản lưu lúc mua; tiền đóng băng an toàn và cần shop hoặc chuyên viên duyệt trước khi giải ngân." Đảm bảo trung lập tuyệt đối, chặn gian lận và không làm thất thoát tiền shop. <b>Mức tối ưu nhóm chọn.</b>`,
+      3: `"Bạn nói sai là AI tự bấm hoàn tiền ngay lập tức." Rất nhanh và chiều lòng khách, nhưng khiến người bán mất trắng hàng và tiền oan. Mở toang kẽ hở cho trục lợi và lừa đảo.`
+    };
+    $('#promise-text').innerHTML = promises[currentLevel];
+
+    // Tools Table
+    const toolRows = [
+      { name: 'yeu_cau_bang_chung', level: 'TỰ LÀM', pill: 'p-auto', desc: 'Sai thì rẻ (chỉ là gửi nhầm form ảnh), khách tự sửa được. Chờ người duyệt thì làm chậm tiến trình.' },
+      { name: 'chuyen_truong_nhom', level: 'TỰ LÀM', pill: 'p-auto', desc: 'Sai thì rẻ (nhân viên kiểm tra sơ rồi trả lại bot). Đảm bảo thoát hiểm kịp thời khi gặp dọa bóc phốt.' },
+      { name: 'soan_ho_so_hoan_tien (Tách)', level: 'TỰ LÀM', pill: 'p-auto', desc: 'AI tự trích xuất mã đơn, số tiền, điền sẵn form giúp khách tiết kiệm thời gian.' },
+      { name: 'quyet_dinh_hoan_tien (Tách)', level: currentLevel === 3 ? 'TỰ LÀM (Rủi ro)' : 'CẦN NGƯỜI DUYỆT', pill: currentLevel === 3 ? 'p-no' : 'p-ask', desc: 'Tiền đã chuyển về ví là KHÔNG THỂ ĐẢO NGƯỢC. Phải có xác nhận của Shop (24h) hoặc Sàn.', changed: true },
+      { name: 'tu_choi_khieu_nai', level: 'CẦN NGƯỜI DUYỆT', pill: 'p-ask', desc: 'Đóng khiếu nại làm khách mất tiền oan vĩnh viễn. Chỉ chuyên viên sàn mới có thẩm quyền bác bỏ.' },
+      { name: 'phat_shop', level: 'CẤM', pill: 'p-no', desc: 'Ảnh hưởng sống còn tới doanh nghiệp của shop. AI tuyệt đối không có quyền tài phán trừng phạt.' }
+    ];
+
+    $('#tools-table-body').innerHTML = toolRows.map(r => `
+      <tr class="${r.changed ? 'changed' : ''}">
+        <td><code>${r.name}</code></td>
+        <td><span class="pill ${r.pill}">${r.level}</span></td>
+        <td>${r.desc}</td>
+      </tr>
+    `).join('');
+
+    // HAX / PAIR Items
+    const haxItems = [
+      { id: '1', title: 'HAX G2 · Làm rõ AI làm tốt đến đâu', desc: 'Thông báo rõ AI đang ở mức độ chắc chắn nào và đang dựa trên việc đối chiếu bản lưu Snapshot.' },
+      { id: '2', title: 'PAIR Explainability & Trust', desc: 'Thẻ so sánh 2 cột [Snapshot lúc mua] vs [Mô tả hiện tại] giúp người dùng tự kiểm chứng sự thật khách quan.' },
+      { id: '3', title: 'HAX G10 · Thu hẹp phạm vi khi nghi ngờ', desc: 'Hướng dẫn cụ thể loại ảnh cần chụp (tem đáy nồi + thước đo 3 chiều), không hỏi chung chung.' },
+      { id: '4', title: 'PAIR Feedback & Control (Escrow Hold)', desc: 'Đồng hồ đếm ngược 24h và thông báo đóng băng tài khoản giúp người mua an tâm tiền chưa bị mất.' },
+      { id: '5', title: 'PAIR Graceful Failure (Lối thoát an toàn)', desc: 'Luôn có nút [Gặp nhân viên hỗ trợ] ở mọi bước, mang theo đầy đủ hồ sơ đã tóm tắt.' },
+      { id: '6', title: 'HAX G8/G9 · Sửa và kiểm soát dễ dàng', desc: 'Hồ sơ khiếu nại được soạn sẵn nhưng cho phép người dùng kiểm tra và chỉnh sửa trước khi gửi.' }
+    ];
+
+    $('#ann-list-items').innerHTML = haxItems.map(item => `
+      <li>
+        <span class="n">${item.id}</span>
+        <div><b>${item.title}:</b> ${item.desc}</div>
+      </li>
+    `).join('');
+  }
+
+  // Event Listeners
+  document.querySelectorAll('.ctrl-group button[data-l]').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.ctrl-group button[data-l]').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      currentLevel = +btn.dataset.l;
+      render();
+    };
+  });
+
+  $('#view-buyer').onclick = () => {
+    $('#view-buyer').classList.add('on');
+    $('#view-seller').classList.remove('on');
+    currentPerspective = 'buyer';
+    $('#chat-title').textContent = "Trò chuyện với Shopee";
+    $('#ai-status').textContent = "AI Trung lập";
+    render();
+  };
+
+  $('#view-seller').onclick = () => {
+    $('#view-seller').classList.add('on');
+    $('#view-buyer').classList.remove('on');
+    currentPerspective = 'seller';
+    render();
+  };
+
+  $('#toggle-hax').onchange = e => {
+    document.body.classList.toggle('hide-n', !e.target.checked);
+  };
+
+  // URL params support for automated preview & testing
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('level')) {
+    currentLevel = parseInt(urlParams.get('level'));
+    document.querySelectorAll('.ctrl-group button[data-l]').forEach(b => {
+      b.classList.toggle('on', +b.dataset.l === currentLevel);
+    });
+  }
+  if (urlParams.get('scen')) {
+    currentScenario = urlParams.get('scen');
+    document.querySelectorAll('[id^="scen-"]').forEach(b => {
+      b.classList.toggle('primary', b.id === `scen-${currentScenario}`);
+    });
+  }
+  if (urlParams.get('view') === 'seller') {
+    currentPerspective = 'seller';
+    $('#view-seller').classList.add('on');
+    $('#view-buyer').classList.remove('on');
+  }
+  if (urlParams.get('proof') === 'true') {
+    hasUploadedProof = true;
+  }
+  if (urlParams.get('submitted') === 'true') {
+    hasUploadedProof = true;
+    hasSubmittedClaim = true;
+  }
+
+  // Initial load
+  render();
+</script>
+
+</body>
+</html>
