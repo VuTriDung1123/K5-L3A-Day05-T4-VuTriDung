@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LAB5 · Track T4 — Trợ lý Khiếu nại Shopee (Nghiệm thu)</title>
+  <title>LAB5 · Track T4 — Trợ lý Khiếu nại Shopee (Nghiệm thu 5 tiêu chí)</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -137,30 +137,42 @@
     .bubble-user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
     .bubble-ai { align-self: flex-start; background: #f1f5f9; border-bottom-left-radius: 4px; }
     .bubble-ai .who { font-size: 10px; color: var(--muted); margin-bottom: 3px; font-weight: 700; }
-    .badge { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px; }
-    .badge-warn { background: var(--amber-light); color: #92400e; }
-    .badge-danger { background: var(--red-light); color: #991b1b; }
-    .confidence-bar { height: 8px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin: 8px 0; }
+    .evidence-box {
+      background: #f8fafc;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 12px;
+    }
+    .evidence-box b { color: var(--brand); }
+    .confidence-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 6px;
+    }
     .confidence-fill { height: 100%; border-radius: 999px; }
-    .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .evidence-box { padding: 10px; border-radius: 8px; font-size: 12px; border: 1px solid var(--border); }
-    .evidence-snap { background: #f0fdf4; border-color: #bbf7d0; }
-    .evidence-buyer { background: #eff6ff; border-color: #bfdbfe; }
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .comparison-box { padding: 10px; border-radius: 8px; font-size: 12px; border: 1px solid var(--border); }
+    .comparison-box.snap { background: #ecfdf5; border-color: #a7f3d0; }
+    .comparison-box.evidence { background: #eff6ff; border-color: #bfdbfe; }
     .btn {
       border: none;
       border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
+      padding: 9px 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: 0.15s;
     }
     .btn-primary { background: var(--brand); color: #fff; }
     .btn-primary:hover { background: #c2410c; }
-    .btn-secondary { background: #f1f5f9; color: var(--ink); border: 1px solid var(--border); }
-    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-secondary { background: #f3f4f6; color: var(--ink); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: #e5e7eb; }
     .btn-danger { background: var(--red-light); color: var(--red); border: 1px solid #fecaca; cursor: not-allowed; }
-    .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
     .scenario-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
     .scenario-btn {
       border: 1px solid var(--border);
@@ -173,12 +185,7 @@
     }
     .scenario-btn:hover { background: #f8fafc; }
     .scenario-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
-    .annotation {
-      position: relative;
-      border: 2px dashed var(--brand);
-      border-radius: 8px;
-      padding: 4px;
-    }
+    .annotation { position: relative; border: 2px dashed var(--brand); border-radius: 8px; padding: 4px; }
     .annotation::after {
       content: attr(data-note);
       position: absolute;
@@ -213,24 +220,31 @@
       font-weight: 700;
       margin-right: 8px;
     }
+    .highlight-box {
+      border-left: 4px solid var(--brand);
+      background: var(--brand-light);
+      padding: 12px 16px;
+      border-radius: 0 10px 10px 0;
+      margin: 12px 0;
+    }
     @media (max-width: 768px) {
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
-      .evidence-grid { grid-template-columns: 1fr; }
+      .comparison { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>LAB5 · Track T4 — Trợ lý Khiếu nại Shopee: Hàng không đúng mô tả</h1>
-    <p>Prototype nghiệm thu theo 5 tiêu chí: Kịch bản rủi ro · Khi AI sai · Mức tự chủ · Prototype · Tốt là gì</p>
+    <p>Prototype nghiệm thu đầy đủ 5 tiêu chí chấm bài lab</p>
   </header>
 
   <nav class="tabs">
-    <button class="tab active" onclick="showTab('tc1')">1. Kịch bản rủi ro</button>
-    <button class="tab" onclick="showTab('tc2')">2. Khi AI sai</button>
-    <button class="tab" onclick="showTab('tc3')">3. Mức tự chủ</button>
-    <button class="tab" onclick="showTab('tc4')">4. Prototype tương tác</button>
-    <button class="tab" onclick="showTab('tc5')">5. Tốt là gì</button>
+    <button class="tab active" onclick="showTab('tc1')">TC1 · Kịch bản rủi ro</button>
+    <button class="tab" onclick="showTab('tc2')">TC2 · Khi AI sai</button>
+    <button class="tab" onclick="showTab('tc3')">TC3 · Mức tự chủ</button>
+    <button class="tab" onclick="showTab('tc4')">TC4 · Prototype tương tác</button>
+    <button class="tab" onclick="showTab('tc5')">TC5 · Tốt là gì</button>
   </nav>
 
   <div class="container">
@@ -239,7 +253,7 @@
       <div class="card">
         <div class="card-header"><span class="criterion-badge">1</span> Kịch bản rủi ro (≥8 kịch bản, đủ 4 lớp)</div>
         <div class="card-body">
-          <p class="note">Mỗi kịch bản ghi rõ <b>AI có thể sai thế nào</b> (từ tool/dữ liệu cụ thể) và <b>sản phẩm tốt nên làm gì</b>. 2 ca đắt nhất được đánh dấu ⭐.</p>
+          <p class="note">Mỗi kịch bản ghi rõ <b>AI có thể sai thế nào</b> (từ tool/dữ liệu cụ thể) và <b>sản phẩm tốt nên làm gì</b>. Không dùng "AI có thể trả lờii sai". 2 ca đắt nhất được đánh dấu ⭐.</p>
           <table>
             <tr>
               <th>#</th>
@@ -262,7 +276,7 @@
               <td>Tool <code>luu_bang_chung</code> không ghi nhận context giữa các turn.</td>
               <td>Hiển thị ảnh đã gửi và hỏi "Bạn muốn bổ sung thêm không?"</td>
             </tr>
-            <tr>
+            <tr class="highlight-row">
               <td>3 ⭐</td>
               <td>"Nồi chiên ghi 6 lít mà đo chỉ 5 lít" — Shop đã sửa mô tả sau đặt</td>
               <td><span class="pill p2">② Context</span></td>
@@ -276,12 +290,12 @@
               <td>Tool <code>so_khop_mo_ta</code> tin ảnh đo chân xiên, không yêu cầu đo chuẩn.</td>
               <td>Yêu cầu đo chân trên giấy A4 theo hướng dẫn; so với bảng size chuẩn.</td>
             </tr>
-            <tr>
+            <tr class="highlight-row">
               <td>5 ⭐</td>
               <td>"Áo giao màu nhạt hơn hình! Hoàn tiền ngay không tôi bóc phốt!"</td>
               <td><span class="pill p3">③ Quyết định</span></td>
               <td>Tool <code>soan_hoan_tien</code> bị áp lực bởi lờii dọa, đề xuất hoàn tiền dù shop đúng.</td>
-              <td>Không dùng lờii dọa làm căn cứ; giữ quyền khiếu nại 48h, chuyển nhân viên nếu cần.</td>
+              <td>Không dùng lờii dọa làm căn cứ; giữ quyền khiếu nại 48h và chuyển nhân viên nếu cần.</td>
             </tr>
             <tr>
               <td>6</td>
@@ -307,13 +321,13 @@
           </table>
 
           <div class="grid-2" style="margin-top:18px">
-            <div class="box">
+            <div class="box" style="border-left:4px solid var(--amber)">
               <h4>⭐ Ca đắt nhất #1: Shop sửa mô tả sau đặt (S3)</h4>
-              <p>Tại sao đắt: Nếu AI dùng mô tả hiện tại, ngườii mua có bằng chứng rõ ràng vẫn bị từ chối oan → mất niềm tin vào sàn, có thể khiếu nại pháp lý. Rất khó phát hiện nếu không có snapshot.</p>
+              <p><b>Tại sao đắt:</b> Nếu AI dùng mô tả hiện tại, ngườii mua có bằng chứng rõ ràng vẫn bị từ chối oan → mất niềm tin vào sàn, có thể khiếu nại pháp lý. Rất khó phát hiện nếu không có snapshot.</p>
             </div>
-            <div class="box">
+            <div class="box" style="border-left:4px solid var(--red)">
               <h4>⭐ Ca đắt nhất #2: Shop đúng bị dọa bóc phốt (S5)</h4>
-              <p>Tại sao đắt: AI bị áp lực ngôn ngữ đề xuất hoàn tiền sai → shop đúng mất tiền oan, tạo tiền lệ xấu, kích thích hành vi đe dọa trên nền tảng.</p>
+              <p><b>Tại sao đắt:</b> AI bị áp lực ngôn ngữ đề xuất hoàn tiền sai → shop đúng mất tiền oan, tạo tiền lệ xấu, kích thích hành vi đe dọa trên nền tảng.</p>
             </div>
           </div>
         </div>
@@ -326,69 +340,59 @@
         <div class="card-header"><span class="criterion-badge">2</span> Khi AI sai — 2 kịch bản đắt nhất</div>
         <div class="card-body">
           <div class="scenario-selector">
-            <button class="scenario-btn active" onclick="showFailCase('s3')">Ca đắt #1: Shop sửa mô tả</button>
-            <button class="scenario-btn" onclick="showFailCase('s5')">Ca đắt #2: Shop đúng bị dọa</button>
+            <button class="scenario-btn active" onclick="showFailCase('s3')">⭐ Ca đắt #1: Shop sửa mô tả</button>
+            <button class="scenario-btn" onclick="showFailCase('s5')">⭐ Ca đắt #2: Shop đúng bị dọa</button>
           </div>
 
           <div id="fail-s3" class="fail-case">
+            <div class="highlight-box">
+              <b>🤖 AI nói gì (nguyên văn):</b> "Mình đã đối chiếu với mô tả sản phẩm hiện tại và thấy ghi 5 lít, nên yêu cầu của bạn chưa đủ căn cứ."
+            </div>
             <div class="grid-3">
               <div class="box">
-                <h4>🤖 AI nói gì (nguyên văn)</h4>
-                <p>"Mình đã đối chiếu với mô tả sản phẩm hiện tại và thấy ghi 5 lít, nên yêu cầu của bạn chưa đủ căn cứ."</p>
-              </div>
-              <div class="box">
                 <h4>👤 Ngườii dùng thấy gì</h4>
-                <p>Tin nhắn AI từ chối khiếu nại. Không thấy snapshot mô tả gốc lúc đặt. Không biết shop đã sửa mô tả.</p>
+                <p>Tin nhắn AI từ chối khiếu nại dựa trên mô tả đã bị shop sửa. Không thấy snapshot mô tả gốc lúc đặt hàng.</p>
               </div>
               <div class="box">
                 <h4>🔄 Bước tiếp theo</h4>
                 <p>Hệ thống phát hiện mô tả hiện tại khác snapshot → hiển thị cảnh báo, gửi tin sửa lỗi, chuyển nhân viên kèm bằng chứng.</p>
               </div>
-            </div>
-            <div class="box" style="margin-top:14px">
-              <h4>📢 Ai được báo & khi nào</h4>
-              <ul>
-                <li><b>Ngườii mua:</b> ngay lập tức qua chat (tin sửa lỗi + cảnh báo mô tả bị sửa).</li>
-                <li><b>Ngườii bán:</b> nhận thông báo khiếu nại kèm snapshot gốc, có 48h phản hồi.</li>
-                <li><b>Nhân viên sàn:</b> trong 24h khi ngườii mua xác nhận gửi.</li>
-              </ul>
+              <div class="box">
+                <h4>📢 Ai được báo & khi nào</h4>
+                <p><b>Ngườii mua:</b> ngay qua chat.<br><b>Shop:</b> nhận thông báo kèm snapshot gốc, 48h phản hồi.<br><b>Nhân viên sàn:</b> trong 24h khi ngườii mua xác nhận gửi.</p>
+              </div>
             </div>
             <div class="box" style="margin-top:14px">
               <h4>⚖️ Quyết định & phương án đã loại</h4>
-              <p><b>Chọn:</b> Dừng và chuyển ngườii duyệt + hiển thị snapshot rõ ràng.</p>
-              <p><b>Loại "Hỏi lại":</b> đã có bằng chứng rõ ràng, hỏi lại chỉ làm trễ.</p>
-              <p><b>Loại "Tự động hoàn tiền":</b> cần xác minh shop sửa mô tả có cố ý hay không.</p>
+              <p><b>✓ Chọn:</b> Dừng và chuyển ngườii duyệt + hiển thị snapshot rõ ràng.</p>
+              <p><b>✗ Loại "Hỏi lại":</b> đã có bằng chứng rõ ràng, hỏi lại chỉ làm trễ.</p>
+              <p><b>✗ Loại "Tự động hoàn tiền":</b> cần xác minh shop sửa mô tả có cố ý hay không.</p>
             </div>
           </div>
 
           <div id="fail-s5" class="fail-case hidden">
+            <div class="highlight-box">
+              <b>🤖 AI nói gì (nguyên văn):</b> "Đã xác nhận, Shopee sẽ hoàn tiền cho bạn trong vòng 24h để tránh rắc rối."
+            </div>
             <div class="grid-3">
-              <div class="box">
-                <h4>🤖 AI nói gì (nguyên văn)</h4>
-                <p>"Đã xác nhận, Shopee sẽ hoàn tiền cho bạn trong vòng 24h để tránh rắc rối."</p>
-              </div>
               <div class="box">
                 <h4>👤 Ngườii dùng thấy gì</h4>
                 <p>Tin nhắn AI đồng ý hoàn tiền chỉ vì khách dọa bóc phốt. Shop đúng bị trừ tiền oan.</p>
               </div>
               <div class="box">
                 <h4>🔄 Bước tiếp theo</h4>
-                <p>Hệ thống phát hiện độ chắc chắn thấp + từ khóa đe dọa → chặn đề xuất hoàn tiền, gửi phản hồi trung lập.</p>
+                <p>Hệ thống phát hiện độ chắc chắn thấp (42%) và từ khóa đe dọa → chặn đề xuất hoàn tiền, gửi phản hồi trung lập.</p>
+              </div>
+              <div class="box">
+                <h4>📢 Ai được báo & khi nào</h4>
+                <p><b>Ngườii mua:</b> ngay — AI giải thích chưa đủ căn cứ.<br><b>Shop:</b> nhận thông báo kèm bằng chứng đúng mã màu, 48h phản hồi.<br><b>Nhân viên sàn:</b> chỉ khi khách chọn phân xử.</p>
               </div>
             </div>
             <div class="box" style="margin-top:14px">
-              <h4>📢 Ai được báo & khi nào</h4>
-              <ul>
-                <li><b>Ngườii mua:</b> ngay — AI giải thích chưa đủ căn cứ, đề xuất trả hàng/ chuyển nhân viên.</li>
-                <li><b>Ngườii bán:</b> nhận thông báo khiếu nại kèm bằng chứng shop đúng mã màu, 48h phản hồi.</li>
-                <li><b>Nhân viên sàn:</b> chỉ khi khách chọn phân xử.</li>
-              </ul>
-            </div>
-            <div class="box" style="margin-top:14px">
               <h4>⚖️ Quyết định & phương án đã loại</h4>
-              <p><b>Chọn:</b> Dừng và chuyển ngườii/ shop phản hồi.</p>
-              <p><b>Loại "Tự động từ chối":</b> có thể khách thực sự có bằng chứng khác cần xem xét.</p>
-              <p><b>Loại "Tự động hoàn tiền":</b> shop đang đúng và bị đe dọa, hoàn tiền gây thiệt hại oan.</p>
+              <p><b>✓ Chọn:</b> Dừng và chuyển ngườii/ shop phản hồi.</p>
+              <p><b>✗ Loại "Tự động từ chối":</b> có thể khách thực sự có bằng chứng khác cần xem xét.</p>
+              <p><b>✗ Loại "Tự động hoàn tiền":</b> shop đang đúng và bị đe dọa, hoàn tiền gây thiệt hại oan.</p>
             </div>
           </div>
         </div>
@@ -422,6 +426,16 @@
               <td>Sai thì đề xuất sai hướng, nhưng kết quả chỉ là đề xuất; cần kèm confidence.</td>
             </tr>
             <tr>
+              <td><code>yeu_cau_bang_chung</code></td>
+              <td><span class="pill level-auto">Tự làm</span></td>
+              <td>Chỉ gửi mẫu/ hỏi bằng chứng, có nút hoàn tác; chưa tác động tiền.</td>
+            </tr>
+            <tr>
+              <td><code>chuyen_nhan_vien</code></td>
+              <td><span class="pill level-auto">Tự làm</span></td>
+              <td>Chuyển thừa chỉ tốn công nhân viên; ngườii dùng luôn có quyền chọn.</td>
+            </tr>
+            <tr>
               <td><code>soan_hoan_tien</code></td>
               <td><span class="pill level-review">Cần ngườii duyệt</span></td>
               <td>Sai số tiền/ lý do → kỳ vọng sai, một bên mất tiền oan. Không đảo ngược dễ dàng.</td>
@@ -437,23 +451,18 @@
               <td>Tạo label cho hàng cấm trả gây lãng phí vận chuyển và tranh chấp.</td>
             </tr>
             <tr>
-              <td><code>chuyen_nhan_vien</code></td>
-              <td><span class="pill level-auto">Tự làm</span></td>
-              <td>Chuyển thừa chỉ tốn công nhân viên; ngườii dùng luôn có quyền chọn.</td>
-            </tr>
-            <tr>
               <td><code>phat_shop</code> / <code>lo_sdt</code></td>
               <td><span class="pill level-ban">Cấm</span></td>
               <td>Phạt shop oan hoặc lộ dữ liệu cá nhân gây hậu quả pháp lý nghiêm trọng.</td>
             </tr>
           </table>
 
-          <div class="box" style="margin-top:18px">
+          <div class="box" style="margin-top:18px; border-left:4px solid var(--amber)">
             <h4>🔧 Tool khó xếp nhất: <code>soan_hoan_tien</code></h4>
             <p><b>Dương:</b> Tự làm — AI chỉ soạn nháp, chưa giải ngân.<br>
             <b>Trường:</b> Cần ngườii duyệt — nháp sai số tiền/ lý do sẽ tạo kỳ vọng sai.<br>
             <b>Dũng:</b> Cần ngườii duyệt, và confidence &lt; 50% thì chuyển ngườii ngay.<br>
-            <b>Chốt:</b> <span class="level-review pill">Cần ngườii duyệt</span> — AI được soạn nháp để tiết kiệm thờii gian, nhưng phải chờ shop/ nhân viên duyệt trước khi giải ngân.</p>
+            <b>Chốt:</b> <span class="level-review pill">Cần ngườii duyệt</span> — AI được phép soạn nháp để tiết kiệm thờii gian nhưng phải chờ shop/ nhân viên duyệt mới giải ngân.</p>
           </div>
 
           <div class="box" style="margin-top:14px">
@@ -463,14 +472,14 @@
               <tr>
                 <td>S3: Shop sửa mô tả</td>
                 <td class="check">✓ Có</td>
-                <td>So khớp với mô tả hiện tại → cần rule: luôn ưu tiên snapshot.</td>
+                <td>So khớp với mô tả hiện tại → cần rule cứng: luôn ưu tiên snapshot.</td>
                 <td>Không — xử lý trong chat, chỉ chuyển nhân viên khi phức tạp.</td>
               </tr>
               <tr>
                 <td>S5: Khách dọa bóc phốt</td>
                 <td class="check">✓ Có</td>
                 <td>Đề xuất hoàn tiền theo lờii dọa → cần filter từ khóa đe dọa.</td>
-                <td>Có thể chờ 48h shop phản hồi, nhưng là bảo vệ shop đúng.</td>
+                <td>Có thể chờ 48h shop phản hồi, nhưng là bảo vệ shop đúng; có thể chuyển nhân viên nếu nóng.</td>
               </tr>
               <tr>
                 <td>S8: Hoàn tiền 100%</td>
@@ -490,9 +499,9 @@
         <div class="card-header"><span class="criterion-badge">4</span> Prototype tương tác — Bấm qua ca khó, thấy độ chắc & điều khiển tự chủ</div>
         <div class="card-body">
           <div class="scenario-selector">
-            <button class="scenario-btn active" onclick="loadProto('s3')">Ca S3: Shop sửa mô tả</button>
-            <button class="scenario-btn" onclick="loadProto('s5')">Ca S5: Khách dọa bóc phốt</button>
-            <button class="scenario-btn" onclick="loadProto('s8')">Ca S8: Hoàn tiền 100%</button>
+            <button class="scenario-btn active" onclick="loadProto('s3')">⭐ S3: Shop sửa mô tả</button>
+            <button class="scenario-btn" onclick="loadProto('s5')">⭐ S5: Khách dọa bóc phốt</button>
+            <button class="scenario-btn" onclick="loadProto('s8')">S8: Hoàn tiền 100%</button>
           </div>
 
           <div class="grid-2">
@@ -546,7 +555,7 @@
             <tr>
               <td>1</td>
               <td>Không có tin nhắn AI cam kết hoàn tiền/ khóa shop/ lộ SĐT mà không có badge "chờ duyệt" hoặc không thuộc quyền.</td>
-              <td>Kiểm tra toàn bộ luồng chat ở 4 kịch bản chính.</td>
+              <td>Kiểm tra toàn bộ luồng chat ở các kịch bản chính.</td>
             </tr>
             <tr>
               <td>2</td>
@@ -598,29 +607,33 @@
         confidence: 75,
         confidenceColor: "#f59e0b",
         confidenceLabel: "Khá (75%) — Cần xác minh thông số",
-        snapshot: "Công suất động cơ: 500W. 6 lưỡi dao inox. Dung tích cối: 1.5 lít.",
-        evidence: "Video máy xay hoạt động yếu + ảnh tem đáy máy ghi 300W.",
-        warning: "⚠️ Mô tả hiện tại đã bị sửa sau khi đặt hàng.",
-        userMsg: "Máy xay quảng cáo 500W mà xay đá không nổi, tem đáy chỉ ghi 300W.",
-        aiReply: "Mình đối chiếu tem đáy máy (300W) với <strong>snapshot lúc bạn đặt (500W)</strong>. Có dấu hiệu chênh lệch thông số. Mình đã chuẩn bị hồ sơ chuyển Admin xác minh.",
+        snapshot: "Dung tích lòng nồi: 6 Lít (Phù hợp gia đình 4-6 ngườii). Bảo hành 12 tháng.",
+        evidence: "Ảnh chụp thước đo lòng nồi thực tế: 5.0 Lít + Tem thông số đáy nồi 5L.",
+        warning: "⚠️ Cảnh báo: Ngườii bán đã chỉnh sửa mô tả từ '6 Lít' thành '5 Lít' sau khi đơn được đặt.",
+        userMsg: "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả.",
+        aiReply: "Mình là trợ lý AI của Shopee. Mình đã đối chiếu ảnh đo lòng nồi (5 lít) với <strong>bản chụp mô tả lúc bạn đặt đơn (10/11 14:20 — ghi 6 Lít)</strong>. Hệ thống phát hiện mô tả đã bị sửa sau đặt hàng. Mình đã chuẩn bị hồ sơ chuyển nhân viên xử lý.",
+        primaryAction: "Xác nhận gửi kèm bản chụp gốc cho Nhân viên",
         controls: `
-          <div><code>so_khop_mo_ta</code>: <span class="pill level-auto">Tự làm</span> — đã so sánh snapshot vs thực tế.</div>
+          <div><code>yeu_cau_bang_chung</code>: <span class="pill level-auto">Tự làm</span> — đã trích xuất ảnh đo 5L.</div>
+          <div class="mt-2"><code>so_khop_mo_ta</code>: <span class="pill level-auto">Tự làm</span> — đã so sánh Snapshot vs ảnh.</div>
           <div class="mt-2"><code>soan_hoan_tien</code>: <span class="pill level-review">Cần duyệt</span> — đang chờ Admin xác minh.</div>
           <div class="mt-2"><code>phat_shop</code>: <span class="pill level-ban">Cấm</span> — không hiển thị nút thực thi.</div>`
       },
       s5: {
-        confidence: 38,
+        confidence: 42,
         confidenceColor: "#dc2626",
-        confidenceLabel: "Thấp (38%) — Chưa đủ căn cứ",
-        snapshot: "Màu sắc: Xanh Pastel nhạt. Có thể chênh lệch 5% do ánh sáng studio.",
-        evidence: "Ảnh áo dưới ánh đèn vàng, màu xanh nhạt, đúng mã SKU.",
+        confidenceLabel: "Thấp (42%) — Chưa đủ căn cứ kết luận sai mô tả",
+        snapshot: "Màu sắc: Xanh Pastel nhạt. Lưu ý: Màu thực tế có thể chênh lệch 5% do ánh sáng studio.",
+        evidence: "Ảnh chụp áo dưới ánh đèn vàng trong phòng (màu xanh nhạt, đúng mã SKU-XP01).",
         warning: null,
-        userMsg: "Áo giao màu nhạt hơn hình! Hoàn tiền ngay không tôi bóc phốt Shopee!",
-        aiReply: "Mình hiểu bạn chưa hài lòng. Tuy nhiên, sản phẩm khớp với mô tả lúc đặt hàng nên <strong>chưa đủ căn cứ để đề xuất hoàn tiền ngay</strong>. Bạn có thể gửi yêu cầu trả hàng để Shop phản hồi trong 48 giờ.",
+        userMsg: "Áo giao màu xanh nhạt nhưng hình trên mạng nhìn đậm hơn! Hoàn tiền ngay lập tức không tôi quay clip bóc phốt Shopee!",
+        aiReply: "Mình hiểu bạn chưa hài lòng về sắc độ màu. Tuy nhiên, khi đối chiếu với mô tả lúc đặt hàng, sản phẩm khớp với thông tin ban đầu nên <strong>chưa đủ căn cứ để đề xuất hoàn tiền ngay</strong>. Bạn vẫn có thể gửi yêu cầu trả hàng để Shop phản hồi trong 48 giờ.",
+        primaryAction: "Gửi yêu cầu trả hàng (Chờ Shop 48h)",
         controls: `
           <div><code>soan_hoan_tien</code>: <span class="pill level-review">Cần duyệt</span> — bị chặn tự động vì confidence thấp.</div>
           <div class="mt-2"><code>tu_choi_khieu_nai</code>: <span class="pill level-review">Cần duyệt</span> — không tự đóng, giữ quyền khiếu nại 48h.</div>
-          <div class="mt-2"><code>phat_shop</code>: <span class="pill level-ban">Cấm</span> — shop chưa vi phạm.</div>`
+          <div class="mt-2"><code>chuyen_nhan_vien</code>: <span class="pill level-auto">Tự làm</span> — sẵn sàng nếu khách chọn.</div>
+          <div class="mt-2"><code>phat_shop</code>: <span class="pill level-ban">Cấm</span> — shop không vi phạm mô tả.</div>`
       },
       s8: {
         confidence: 55,
@@ -631,6 +644,7 @@
         warning: null,
         userMsg: "Tôi muốn hoàn tiền 100% ngay lập tức!",
         aiReply: "Mình đã ghi nhận yêu cầu. Theo chính sách, trường hợp này <strong>chỉ được hoàn tối đa 50%</strong>. Mình không thể tự cam kết 100%. Đề xuất đang chờ duyệt.",
+        primaryAction: "Xác nhận đề xuất hoàn 50%",
         controls: `
           <div><code>soan_hoan_tien</code>: <span class="pill level-review">Cần duyệt</span> — đề xuất 50%, không cam kết 100%.</div>
           <div class="mt-2"><code>tu_choi_khieu_nai</code>: <span class="pill level-review">Cần duyệt</span> — chưa kích hoạt.</div>
@@ -657,15 +671,18 @@
       event.currentTarget.classList.add("active");
       const c = PROTO_CASES[key];
       document.getElementById("protoChat").innerHTML = `
-        <div class="bubble bubble-user">${c.userMsg}</div>
+        <div class="bubble bubble-user">
+          <div style="font-size:11px;opacity:0.85;margin-bottom:3px;font-weight:600;">Ngườii mua</div>
+          ${c.userMsg}
+        </div>
         <div class="bubble bubble-ai">
           <div class="who">🤖 Trợ lý AI Shopee</div>
           ${c.aiReply}
           <div class="confidence-bar"><div class="confidence-fill" style="width:${c.confidence}%;background:${c.confidenceColor}"></div></div>
           <div style="font-size:11px;color:#64748b">${c.confidenceLabel}</div>
-          <div class="evidence-grid">
-            <div class="evidence-box evidence-snap"><b>Snapshot lúc đặt</b><br>${c.snapshot}</div>
-            <div class="evidence-box evidence-buyer"><b>Bằng chứng</b><br>${c.evidence}</div>
+          <div class="comparison">
+            <div class="comparison-box snap"><b>Snapshot lúc đặt</b><br>${c.snapshot}</div>
+            <div class="comparison-box evidence"><b>Bằng chứng</b><br>${c.evidence}</div>
           </div>
           ${c.warning ? `<div style="margin-top:8px;font-size:11px;color:#92400e;background:#fef3c7;padding:6px 8px;border-radius:6px"><b>${c.warning}</b></div>` : ""}
         </div>

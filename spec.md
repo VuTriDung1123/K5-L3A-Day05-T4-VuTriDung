@@ -9,7 +9,7 @@
 | Phạm Quang Trường | 2A202603378 |             |
 | Vũ Trí Dũng       | 2A202603478 |             |
 
-> Ghi chú: file `tracks/t4-ecommerce.md` chưa có sẵn trong thư mục, nên dàn ý dưới đây được xây dựng từ mô tả đề bài và prototype đã hoàn thiện trong `prototype/index.html`.
+> Dàn ý được xây dựng theo đúng 5 tiêu chí nghiệm thu bài lab và prototype tương tác trong `prototype/index.html`.
 
 ---
 
@@ -179,38 +179,48 @@ Nếu AI đã đồng ý hoàn tiền vì bị dọa, không thể chỉ xin l�
 ## §5. Prototype (chặng 5)
 
 ### 5.1 Thông tin chung
-- **Công cụ:** HTML + Tailwind CSS + JavaScript thuần.
+- **Công cụ:** HTML + CSS + JavaScript thuần.
 - **File:** `prototype/index.html`.
-- **Phần mock:** giao diện chat Shopee, 4 kịch bản tương tác, 2 màn hình (Ngườii mua + Ngườii bán).
-- **AI thật:** có tích hợp bonus gọi OpenRouter/ OpenAI để đối chiếu tin nhắn khiếu nại với snapshot (API key do ngườii dùng tự dán, không lưu key).
+- **Cấu trúc:** 5 tab tương ứng 5 tiêu chí nghiệm thu bài lab.
+- **AI thật:** không — prototype hoạt động offline, dùng mock dữ liệu.
 
-### 5.2 Các màn hình prototype
+### 5.2 Các tab của prototype
 
-**Màn 1 — Màn hình Ngườii mua (Buyer Chat View)**
-- Header cam: "Trợ lý AI Hỗ trợ Khiếu nại Shopee" + badge "AI Assistant" + nhãn giới hạn quyền: "Không tự ý hoàn tiền/ khóa shop".
-- Thẻ đơn hàng: mã đơn, tên sản phẩm, thờii điểm đặt.
-- Bubble chat: tin nhắn ngườii mua + phản hồi AI.
-- **6 điểm đánh số HAX/PAIR** được gắn trực tiếp trên giao diện.
+**Tab 1 — Kịch bản rủi ro**
+- Bảng 8 kịch bản phủ đủ 4 lớp ①②③④.
+- Mỗi kịch bản ghi rõ AI có thể sai thế nào (từ tool/dữ liệu) và sản phẩm tốt nên làm gì.
+- 2 ca đắt nhất được đánh dấu ⭐ kèm lý do.
 
-**Màn 2 — Màn hình Ngườii bán (Seller Resolution Center)**
-- Header xám đậm: "Kênh Ngườii Bán — Trung tâm Phản hồi Khiếu nại".
-- Thẻ tóm tắt khiếu nại: mã đơn, trạng thái chờ phản hồi, hạn 48h.
-- 2 cột so sánh: snapshot mô tả lúc khách đặt vs lý do & bằng chứng khách gửi.
-- Thông báo nguyên tắc trung lập: "Hệ thống AI không tự động trừ tiền của Shop."
-- 2 nút: [Đồng ý Trả hàng / Hoàn tiền] [Từ chối & Gửi bằng chứng phản bác].
+**Tab 2 — Khi AI sai**
+- Chi tiết 2 ca đắt nhất: câu AI nói nguyên văn, ngườii dùng thấy gì, bước tiếp theo, ai được báo.
+- Mỗi quyết định có phương án đã loại và lý do.
 
-### 5.3 Ảnh đánh số & giải thích
+**Tab 3 — Mức tự chủ**
+- Bảng 9 tool với mức tự làm / cần ngườii duyệt / cấm.
+- Tool khó xếp nhất và cách chốt của nhóm.
+- Bảng thử mức tự chủ trên 2 ca khó + 1 ca bình thường.
 
-**Ảnh 1 — Màn hình Ngườii mua (ví dụ ca sc7)**
-- Số **①**: Nhãn "Trợ lý AI Hỗ trợ Khiếu nại Shopee" + dòng "Không tự ý hoàn tiền/ khóa shop" → **HAX G1 / Luật AI**: làm rõ AI là gì, không phải con ngườii, và giới hạn quyền.
-- Số **②**: Thanh độ chắc chắn 42% màu đỏ + 2 thẻ so sánh "Mô tả lúc đặt hàng (Snapshot)" vs "Bằng chứng ngườii mua cung cấp" → **HAX G2 / PAIR Explainability**: minh bạch căn cứ và độ tin cậy.
-- Số **③**: Nút [Gửi yêu cầu trả hàng (Chờ Shop phản hồi 48h)] + nút [Nhờ Nhân viên Shopee phân xử] → **HAX G10**: thu hẹp phạm vi khi AI không chắc chắn.
-- Số **④**: Nút [Hoàn tác gửi mẫu bằng chứng / Sửa ảnh] → **HAX G8/G9**: kiểm soát và sửa dễ dàng.
-- Số **⑤**: Dòng "🚫 Khóa shop / Xem SĐT (Không thuộc quyền AI)" dạng disabled → **PAIR Errors + Graceful Failure**: cấm tuyệt đối tool vượt quyền.
-- Số **⑥**: Tab "2. Màn hình Ngườii bán" → màn hình đối ứng với hạn phản hồi 48h, đảm bảo sự trung lập.
+**Tab 4 — Prototype tương tác**
+- Giao diện phone chat có thể bấm qua 3 ca (2 ca khó + 1 ca bình thường).
+- Thanh độ chắc chắn + so sánh Snapshot vs Bằng chứng.
+- Các nút điều khiển mức tự chủ: Duyệt/ Gửi đề xuất, Hoàn tác, Chuyển ngườii.
+- Nút Khóa shop / Lộ SĐT bị vô hiệu hóa.
 
-**Ảnh 2 — Màn hình Ngườii bán**
-- Số **⑥**: Toàn bộ màn hình ngườii bán với hạn 48h và 2 nút phản hồi → đảm bảo **công bằng 2 bên**, không tự động trừ tiền shop.
+**Tab 5 — Tốt là gì**
+- 3 tiêu chí Pass/Fail chấm được.
+- Bảng chấm thử thiết kế trên 2 ca đắt nhất.
+- Lỗi còn lại.
+
+### 5.3 Vị trí HAX/PAIR trên prototype
+
+| # | Nguyên tắc | Vị trí cụ thể trên prototype |
+|---|------------|------------------------------|
+| ① | HAX G1 / Luật AI | Header chat: "Trợ lý AI Shopee" + dòng "Không tự ý hoàn tiền · Không tự khóa shop". |
+| ② | HAX G2 / PAIR Explainability | Thanh độ chắc chắn (%) + 2 thẻ so sánh "Snapshot lúc đặt" vs "Bằng chứng". |
+| ③ | HAX G10 | Khi confidence thấp, AI không đề xuất hoàn tiền; nút chính là "Gửi yêu cầu trả hàng (Chờ Shop 48h)". |
+| ④ | HAX G8/G9 | Nút "Hoàn tác" và "Sửa bằng chứng" cho ngườii dùng kiểm soát hành động AI tự làm. |
+| ⑤ | PAIR Errors / Graceful Failure | Nút "Khóa shop / Lộ SĐT" bị disabled, không thể bấm. |
+| ⑥ | PAIR Accountability | Bảng "Điều khiển mức tự chủ" hiển thị trạng thái từng tool; mọi đề xuất tài chính cần bấm Duyệt. |
 
 ### 5.4 Quyết định hiển thị độ chắc/ bằng chứng
 - **Đã cân nhắc:**
@@ -221,10 +231,10 @@ Nếu AI đã đồng ý hoàn tiền vì bị dọa, không thể chỉ xin l�
 - **Lý do:** cân bằng giữa minh bạch và đơn giản, dễ nhìn trong giao diện chat.
 
 ### 5.5 Điều khiển mức tự chủ
-- Dropdown chuyển đổi 4 kịch bản để demo việc AI xử lý khác nhau theo từng ca.
-- Tab chuyển đổi Ngườii mua / Ngườii bán.
-- Nút [Hoàn tác] cho phép ngườii dùng sửa bằng chứng trước khi gửi.
-- Nút [Nhờ Nhân viên Shopee phân xử] luôn hiện diện.
+- Tab chuyển đổi giữa 5 tiêu chí.
+- Selector chuyển đổi 3 ca trong tab Prototype tương tác.
+- Nút [Duyệt/ Gửi đề xuất], [Hoàn tác], [Chuyển ngườii] trên từng ca.
+- Nút [Khóa shop / Lộ SĐT] luôn bị vô hiệu hóa.
 
 ---
 
