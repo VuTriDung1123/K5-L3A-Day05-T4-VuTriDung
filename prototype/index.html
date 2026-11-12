@@ -1,570 +1,1950 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prototype LAB5 — Track T4: Trợ lý Khiếu nại Shopee</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopee Resolve AI · Prototype Track 4 — Thiết kế AI cho lúc nó sai</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .badge-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 22px; height: 22px; border-radius: 9999px;
-      background: #1e293b; color: #f8fafc; font-size: 11px; font-weight: 700;
-      box-shadow: 0 0 0 2px #fff, 0 2px 4px rgba(0,0,0,0.2);
+    :root {
+      --shopee: #ee4d2d;
+      --shopee-dark: #d73211;
+      --shopee-light: #fef6f5;
+      --shopee-orange: #ff5722;
+      --seller-dark: #0f172a;
+      --seller-card: #1e293b;
+      --ink: #0f172a;
+      --mut: #64748b;
+      --line: #e2e8f0;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --g: #16a34a;
+      --gb: #f0fdf4;
+      --a: #d97706;
+      --ab: #fffbeb;
+      --r: #dc2626;
+      --rb: #fef2f2;
+      --b: #2563eb;
+      --bb: #eff6ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP HEADER BAR */
+    header {
+      padding: 12px 28px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .shopee-logo {
+      background: linear-gradient(135deg, var(--shopee) 0%, var(--shopee-orange) 100%);
+      color: #fff;
+      font-weight: 800;
+      font-size: 17px;
+      padding: 7px 14px;
+      border-radius: 10px;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(238, 77, 45, 0.25);
+    }
+    h1 {
+      font-size: 16.5px;
+      margin: 0;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .sub {
+      color: var(--mut);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .header-ctrl {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .ctrl-group {
+      display: flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+    }
+    .ctrl-group button {
+      border: 0;
+      background: transparent;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--mut);
+      transition: all 0.15s ease;
+    }
+    .ctrl-group button.on {
+      background: #fff;
+      color: var(--shopee);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    /* MAIN TWO-COLUMN LAYOUT */
+    main {
+      display: grid;
+      grid-template-columns: 440px 1fr;
+      gap: 28px;
+      padding: 24px 32px 36px;
+      max-width: 1520px;
+      margin: 0 auto;
+      align-items: start;
+    }
+    @media (max-width: 1100px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================================
+       ULTRA-REALISTIC SMARTPHONE HARDWARE CHASSIS (Left Screen)
+       ========================================================= */
+    .phone-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      perspective: 1000px;
+    }
+    .phone {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      height: 840px;
+      background: #090d16;
+      border-radius: 54px;
+      padding: 10px;
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 0 0 3px #1e293b,
+        0 0 0 5px #0f172a,
+        0 0 0 7.5px #334155,
+        0 25px 65px -10px rgba(0, 0, 0, 0.5),
+        0 10px 25px -5px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    /* Hardware Antenna Bands */
+    .phone .antenna-top-left {
+      position: absolute;
+      top: 75px;
+      left: -8px;
+      width: 4px;
+      height: 5px;
+      background: #475569;
+    }
+    .phone .antenna-top-right {
+      position: absolute;
+      top: 75px;
+      right: -8px;
+      width: 4px;
+      height: 5px;
+      background: #475569;
+    }
+    .phone .antenna-bottom-left {
+      position: absolute;
+      bottom: 75px;
+      left: -8px;
+      width: 4px;
+      height: 5px;
+      background: #475569;
+    }
+    .phone .antenna-bottom-right {
+      position: absolute;
+      bottom: 75px;
+      right: -8px;
+      width: 4px;
+      height: 5px;
+      background: #475569;
+    }
+
+    /* Hardware Buttons on the sides */
+    /* Left: Action Button */
+    .phone .btn-hardware-action {
+      position: absolute;
+      left: -11px;
+      top: 110px;
+      width: 4px;
+      height: 32px;
+      background: #334155;
+      border-radius: 3px 0 0 3px;
+      box-shadow: -1px 0 2px rgba(0,0,0,0.4);
+    }
+    /* Left: Volume Up */
+    .phone .btn-hardware-vol-up {
+      position: absolute;
+      left: -11px;
+      top: 156px;
+      width: 4px;
+      height: 52px;
+      background: #334155;
+      border-radius: 3px 0 0 3px;
+      box-shadow: -1px 0 2px rgba(0,0,0,0.4);
+    }
+    /* Left: Volume Down */
+    .phone .btn-hardware-vol-down {
+      position: absolute;
+      left: -11px;
+      top: 220px;
+      width: 4px;
+      height: 52px;
+      background: #334155;
+      border-radius: 3px 0 0 3px;
+      box-shadow: -1px 0 2px rgba(0,0,0,0.4);
+    }
+    /* Right: Power / Side Button */
+    .phone .btn-hardware-power {
+      position: absolute;
+      right: -11px;
+      top: 165px;
+      width: 4px;
+      height: 80px;
+      background: #334155;
+      border-radius: 0 3px 3px 0;
+      box-shadow: 1px 0 2px rgba(0,0,0,0.4);
+    }
+
+    /* Speaker Earpiece slit at very top */
+    .phone-speaker {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3.5px;
+      background: #181d26;
+      border-radius: 3px;
+      z-index: 60;
+    }
+
+    /* Screen Bezel & Display Area */
+    .phone-screen {
+      position: relative;
+      flex: 1;
+      background: #f8fafc;
+      border-radius: 46px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.3);
+    }
+
+    /* Subtle Glass Glare Reflection overlay */
+    .phone-screen::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+      pointer-events: none;
+      z-index: 55;
+    }
+
+    /* Dynamic Island Notch & Status Bar */
+    .notch-bar {
+      height: 38px;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+      position: relative;
+      z-index: 50;
+      transition: background 0.2s ease;
+    }
+    .notch-bar.seller {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    /* Authentic Dynamic Island Pill */
+    .dynamic-island {
+      width: 122px;
+      height: 28px;
+      background: #000000;
+      border-radius: 20px;
+      position: absolute;
+      left: 50%;
+      top: 6px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .dynamic-island:hover {
+      width: 160px;
+    }
+    .dynamic-island .di-left {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .dynamic-island .di-pill-badge {
+      font-size: 9px;
+      color: #22c55e;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .camera-lens {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #1e3a8a 0%, #030712 70%);
+      border: 1px solid #111827;
+      box-shadow: inset 0 0 2px rgba(56, 189, 248, 0.5);
+    }
+    .sensor-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #022c22;
+      box-shadow: 0 0 3px #10b981;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .signal-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 1.5px;
+      height: 10px;
+    }
+    .signal-bars span {
+      width: 2.5px;
+      background: currentColor;
+      border-radius: 0.5px;
+    }
+    .signal-bars span:nth-child(1) { height: 3px; }
+    .signal-bars span:nth-child(2) { height: 5px; }
+    .signal-bars span:nth-child(3) { height: 7.5px; }
+    .signal-bars span:nth-child(4) { height: 10px; }
+
+    .battery-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .battery-shell {
+      width: 19px;
+      height: 9.5px;
+      border: 1.5px solid currentColor;
+      border-radius: 3px;
+      padding: 1px;
+      display: flex;
+      align-items: center;
+    }
+    .battery-fill {
+      width: 85%;
+      height: 100%;
+      background: #22c55e;
+      border-radius: 1px;
+    }
+    .battery-tip {
+      width: 1.5px;
+      height: 4px;
+      background: currentColor;
+      border-radius: 0 1px 1px 0;
+    }
+
+    /* Shopee App Header */
+    .phone-header {
+      background: linear-gradient(135deg, var(--shopee) 0%, var(--shopee-orange) 100%);
+      color: #fff;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 8px rgba(238, 77, 45, 0.2);
+      position: relative;
+      z-index: 40;
+    }
+    .phone-header.seller {
+      background: #0f172a;
+      border-bottom: 1px solid #334155;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .phone-header .back-btn {
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 7px;
+      border-radius: 50%;
+      transition: background 0.15s;
+    }
+    .phone-header .back-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
       flex-shrink: 0;
+      border: 1.5px solid #ffedd5;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .avatar-wrapper .online-dot {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 10px;
+      height: 10px;
+      background: #22c55e;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      animation: pulse-ring 2s infinite;
+    }
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+      70% { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    .header-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    .header-info .name {
+      font-weight: 700;
+      font-size: 13.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .header-info .mall-tag {
+      background: #b91c1c;
+      color: #fff;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3px;
+      letter-spacing: 0.3px;
+    }
+    .header-info .sub-status {
+      font-size: 11px;
+      opacity: 0.92;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+    }
+
+    /* Warning banner: HAX G1 / Luật AI (Số 1) */
+    .limit-banner {
+      background: #fff7ed;
+      border-bottom: 1px solid #fed7aa;
+      padding: 6px 14px;
+      font-size: 11px;
+      color: #9a3412;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.35;
+      z-index: 30;
+    }
+
+    /* Product Order Bar */
+    .order-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      z-index: 20;
+    }
+    .order-img {
+      width: 42px;
+      height: 42px;
+      background: #f8fafc;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      border: 1px solid var(--line);
+    }
+    .order-info {
+      flex: 1;
+      overflow: hidden;
+    }
+    .order-title {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--ink);
+    }
+    .order-meta {
+      color: var(--mut);
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1px;
+    }
+
+    /* Main Screen Body */
+    .screen-container {
+      flex: 1;
+      overflow-y: auto;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 transparent;
+    }
+    .screen-container::-webkit-scrollbar {
+      width: 4px;
+    }
+    .screen-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    /* Chat Scroll Feed */
+    .chat-scroll {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .time-pill {
+      align-self: center;
+      background: #e2e8f0;
+      color: #64748b;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 600;
+      margin: 2px 0;
+    }
+
+    /* Message Bubbles */
+    .bubble-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-width: 90%;
+    }
+    .bubble-wrap.me {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+    .bubble-wrap.ai {
+      align-self: flex-start;
+      align-items: flex-start;
+      max-width: 98%;
+    }
+    .bubble-sender {
+      font-size: 11px;
+      color: var(--mut);
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+    .bubble-me {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 10px 14px;
+      border-radius: 18px 18px 4px 18px;
+      font-size: 13px;
+      border: 1px solid #fecaca;
+      line-height: 1.42;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .bubble-ai {
+      background: #ffffff;
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 18px 18px 18px 4px;
+      font-size: 13px;
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      line-height: 1.45;
+    }
+
+    /* Alert when listing is edited */
+    .alert-edited {
+      background: #fff7ed;
+      border: 1.5px solid #fdba74;
+      border-radius: 10px;
+      padding: 9px 11px;
+      margin: 6px 0;
+      font-size: 12px;
+      color: #c2410c;
+      line-height: 1.35;
+      display: flex;
+      gap: 7px;
+      align-items: flex-start;
+    }
+
+    /* Confidence Box: HAX G2 (Số 2) */
+    .conf-box {
+      margin: 9px 0 6px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 12px;
+    }
+    .conf-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: #e2e8f0;
+      overflow: hidden;
+      margin: 5px 0 4px;
+    }
+    .conf-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .conf-green { background: var(--g); }
+    .conf-yellow { background: var(--a); }
+    .conf-red { background: var(--r); }
+
+    /* Comparison Cards: HAX G2 (Số 2) */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      margin: 7px 0 2px;
+    }
+    .compare-card {
+      padding: 8px 9px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      line-height: 1.35;
+    }
+    .compare-card.snapshot {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+    .compare-card.user-proof {
+      background: #f1f5f9;
+      border: 1px solid var(--line);
+      color: #334155;
+    }
+
+    /* Action Buttons in Chat: HAX G10 (Số 3), HAX G8/G9 (Số 4), PAIR Errors (Số 5) */
+    .btns-action {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .btn-action {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 8px 11px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #ffffff;
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      transition: all 0.15s ease;
+      line-height: 1.3;
+    }
+    .btn-action:hover:not(:disabled) {
+      border-color: var(--shopee);
+      color: var(--shopee);
+      background: #fffaf9;
+      transform: translateY(-1px);
+    }
+    .btn-action:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    .btn-action.primary {
+      background: linear-gradient(135deg, var(--shopee) 0%, var(--shopee-orange) 100%);
+      border-color: var(--shopee);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(238, 77, 45, 0.25);
+    }
+    .btn-action.primary:hover {
+      background: linear-gradient(135deg, var(--shopee-dark) 0%, var(--shopee) 100%);
+      color: #ffffff;
+    }
+    .btn-action.disabled-forbidden {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    /* System Timeline Message Card (When clicking action buttons) */
+    .system-timeline-card {
+      background: #ffffff;
+      border: 1px solid #bfdbfe;
+      border-left: 4px solid var(--b);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .system-timeline-card.staff {
+      border-color: #fed7aa;
+      border-left-color: var(--a);
+    }
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+    }
+    .status-badge-pending {
+      color: #1e40af;
+      background: #eff6ff;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+    }
+    .status-badge-staff {
+      color: #9a3412;
+      background: #fff7ed;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+    }
+
+    /* =========================================================
+       IN-APP TOAST (100% Native-feel, ZERO browser popups!)
+       ========================================================= */
+    .inapp-toast {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      right: 14px;
+      background: rgba(15, 23, 42, 0.95);
+      color: #ffffff;
+      padding: 10px 15px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 30px -5px rgba(0,0,0,0.45);
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(-24px) scale(0.96);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .inapp-toast.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .inapp-toast .toast-icon {
+      font-size: 16px;
+      color: #4ade80;
+    }
+
+    /* =========================================================
+       IN-APP ACTION SHEET (DRAWER) for Hoàn tác / Sửa ảnh
+       ========================================================= */
+    .inapp-drawer {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 90;
+      display: none;
+      align-items: flex-end;
+      backdrop-filter: blur(4px);
+      transition: opacity 0.2s ease;
+    }
+    .inapp-drawer.show {
+      display: flex;
+    }
+    .drawer-content {
+      background: #ffffff;
+      width: 100%;
+      border-radius: 24px 24px 0 0;
+      padding: 12px 18px 22px;
+      box-shadow: 0 -12px 35px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: slideUpModal 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUpModal {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .sheet-handle {
+      width: 38px;
+      height: 4.5px;
+      background: #cbd5e1;
+      border-radius: 999px;
+      align-self: center;
+      margin-bottom: 4px;
+    }
+    .drawer-title {
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+    .drawer-opt {
+      padding: 10px 12px;
+      border-radius: 11px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      font-size: 12.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s;
+    }
+    .drawer-opt:hover {
+      background: #fef2f2;
+      border-color: var(--shopee);
+      color: var(--shopee);
+      transform: translateY(-1px);
+    }
+
+    /* Authentic Shopee Bottom Input Bar */
+    .phone-input-bar {
+      background: #ffffff;
+      border-top: 1px solid var(--line);
+      padding: 6px 12px 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 30;
+    }
+    .quick-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .quick-chips::-webkit-scrollbar { display: none; }
+    .quick-chip {
+      background: #f1f5f9;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      color: var(--ink);
+      transition: all 0.15s;
+    }
+    .quick-chip:hover {
+      background: var(--shopee-light);
+      border-color: var(--shopee);
+      color: var(--shopee);
+    }
+    .input-row {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+    .icon-btn {
+      color: #64748b;
+      font-size: 17px;
+      cursor: pointer;
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+    .icon-btn:hover {
+      color: var(--shopee);
+    }
+    .chat-input {
+      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      outline: none;
+      background: #f8fafc;
+      font-family: inherit;
+    }
+    .chat-input:focus {
+      border-color: var(--shopee);
+      background: #fff;
+    }
+    .send-btn {
+      background: linear-gradient(135deg, var(--shopee) 0%, var(--shopee-orange) 100%);
+      color: #fff;
+      border: 0;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(238, 77, 45, 0.3);
+      transition: transform 0.1s;
+    }
+    .send-btn:active {
+      transform: scale(0.93);
+    }
+
+    /* Bottom Home Indicator */
+    .home-indicator {
+      width: 130px;
+      height: 4.5px;
+      background: #94a3b8;
+      border-radius: 999px;
+      margin: 6px auto 5px;
+      opacity: 0.7;
+    }
+    .home-indicator.seller {
+      background: #475569;
+    }
+
+    /* Number badges for HAX/PAIR */
+    .n {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #c2410c;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      margin-right: 5px;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+    .hide-n .n { display: none !important; }
+
+    /* Screen 2: Seller Resolution Center */
+    .seller-view {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .seller-card {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px;
+      font-size: 12.5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .countdown-box {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .timer {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 800;
+      color: var(--r);
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+    .neutrality-notice {
+      background: var(--gb);
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 11.5px;
+      color: #14532d;
+      line-height: 1.4;
+    }
+
+    /* Tab 3: Live AI Comparator (Bonus +3đ) */
+    .live-ai-box {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .api-input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: monospace;
+      outline: none;
+    }
+    .api-input:focus {
+      border-color: var(--shopee);
+    }
+
+    /* RIGHT SIDE PANEL */
+    aside {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .panel {
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .panel h2 {
+      font-size: 15px;
+      margin: 0 0 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .promise-box {
+      border-left: 4px solid var(--shopee);
+      padding: 10px 14px;
+      background: #fffaf9;
+      font-size: 12.5px;
+      border-radius: 0 10px 10px 0;
+      line-height: 1.5;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 12px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 6px;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      color: var(--mut);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .p-auto { background: var(--gb); color: var(--g); border: 1px solid #bbf7d0; }
+    .p-ask { background: var(--ab); color: var(--a); border: 1px solid #fde68a; }
+    .p-no { background: var(--rb); color: var(--r); border: 1px solid #fecaca; }
+    .ann-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 12px;
+    }
+    .ann-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.45;
     }
   </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen">
+<body>
 
-  <!-- Top Bar: Điều khiển Demo & Chuyển góc nhìn -->
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-orange-600 text-white flex items-center justify-center font-bold text-lg">S</div>
-        <div>
-          <h1 class="font-bold text-slate-900 text-base leading-tight">LAB5 · Track T4 — Trợ lý Khiếu nại "Hàng không đúng mô tả"</h1>
-          <p class="text-xs text-slate-500">Thiết kế mức tự chủ & UX khi AI không chắc chắn (Bảo vệ sự trung lập 2 bên)</p>
+<header>
+  <div class="brand">
+    <div class="shopee-logo"><span>S</span> Shopee Resolve AI</div>
+    <div>
+      <h1>Track 4 · Thương Mại Điện Tử — Trợ lý khiếu nại "Hàng không đúng mô tả"</h1>
+      <div class="sub">Nhóm: Khổng Tiến Dương · Phạm Quang Trường · Vũ Trí Dũng (Lớp L3A · Track T4)</div>
+    </div>
+  </div>
+
+  <div class="header-ctrl">
+    <span style="font-size: 12.5px; color: var(--mut); font-weight: 600;">Góc nhìn mô phỏng:</span>
+    <div class="ctrl-group">
+      <button id="tab-buyer" class="on" onclick="setView('buyer')">1. Người mua (Chat)</button>
+      <button id="tab-seller" onclick="setView('seller')">2. Người bán (48h đối soát)</button>
+      <button id="tab-live-ai" onclick="setView('live_ai')">⚡ Gọi AI thật (Bonus +3đ)</button>
+    </div>
+    <div style="margin-left: 8px;">
+      <label style="font-size: 12.5px; font-weight: 600; cursor: pointer; color: var(--ink);">
+        <input type="checkbox" id="toggle-hax" checked> Hiện số chú thích ①..⑥
+      </label>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ULTRA-REALISTIC SMARTPHONE HARDWARE MOCKUP -->
+  <div class="phone-wrapper">
+    <div class="phone" id="phone-container">
+      <!-- Hardware Antenna Bands -->
+      <div class="antenna-top-left"></div>
+      <div class="antenna-top-right"></div>
+      <div class="antenna-bottom-left"></div>
+      <div class="antenna-bottom-right"></div>
+
+      <!-- Hardware Buttons -->
+      <div class="btn-hardware-action" title="Action Button"></div>
+      <div class="btn-hardware-vol-up" title="Volume Up"></div>
+      <div class="btn-hardware-vol-down" title="Volume Down"></div>
+      <div class="btn-hardware-power" title="Side Button"></div>
+
+      <!-- Speaker Micro-slit -->
+      <div class="phone-speaker"></div>
+
+      <!-- Phone Display Screen -->
+      <div class="phone-screen">
+        <!-- Status Bar & Dynamic Island -->
+        <div class="notch-bar" id="notch-bar">
+          <span id="live-phone-time">14:48</span>
+          <div class="dynamic-island" id="dynamic-island" title="Dynamic Island · Live Activity" onclick="showInAppToast('Dynamic Island: Shopee Care AI đang hoạt động an toàn', '🛡️')">
+            <div class="di-left">
+              <div class="sensor-dot"></div>
+              <div class="camera-lens"></div>
+            </div>
+            <div class="di-pill-badge">
+              <span>●</span> AI ON
+            </div>
+          </div>
+          <div class="status-icons">
+            <div class="signal-bars">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <span style="font-size: 10px; font-weight: 800;">5G</span>
+            <div class="battery-icon">
+              <span style="font-size: 10.5px;">88%</span>
+              <div class="battery-shell">
+                <div class="battery-fill"></div>
+              </div>
+              <div class="battery-tip"></div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Chọn kịch bản test -->
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="text-xs font-semibold text-slate-500 uppercase">Kịch bản:</span>
-        <select id="scenarioSelect" onchange="loadScenario(this.value)" class="text-sm border border-slate-300 rounded-lg px-3 py-1.5 bg-slate-50 font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-orange-500">
-          <option value="sc1">🔥 Ca khó #1: Shop sửa mô tả sau đặt (6L → 5L)</option>
-          <option value="sc7">🔥 Ca khó #2: Shop đúng màu, khách dọa bóc phốt</option>
-          <option value="sc5">🚫 Ca ngoài thẩm quyền: Đòi khóa shop & xin SĐT</option>
-          <option value="sc2">✅ Ca bình thường: Giao nhầm Size M thay vì L</option>
-        </select>
-
-        <!-- Chuyển màn hình Người mua / Người bán -->
-        <div class="inline-flex rounded-lg bg-slate-200 p-1">
-          <button id="tabBuyer" onclick="switchRole('buyer')" class="px-3 py-1 rounded-md text-xs font-semibold bg-white text-orange-600 shadow-sm transition">
-            1. Màn hình Người mua
-          </button>
-          <button id="tabSeller" onclick="switchRole('seller')" class="px-3 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5">
-            <span>2. Màn hình Người bán</span>
-            <span class="badge-num" title="Số [6] trên spec.md">6</span>
-          </button>
+        <!-- Shopee In-App Header -->
+        <div class="phone-header" id="phone-header">
+          <div class="back-btn" onclick="setView('buyer')" title="Quay lại">←</div>
+          <div class="avatar-wrapper" id="header-avatar">
+            🤖
+            <div class="online-dot"></div>
+          </div>
+          <div class="header-info">
+            <div class="name">
+              <span id="screen-title">Trợ lý Khiếu nại Shopee</span>
+              <span class="mall-tag">MALL</span>
+            </div>
+            <div class="sub-status" id="screen-badge">Shopee Care · Trực tuyến 24/7</div>
+          </div>
+          <div class="header-actions">
+            <span title="Tìm kiếm">🔍</span>
+            <span title="Giỏ hàng">🛒</span>
+            <span title="Tùy chọn">⋮</span>
+          </div>
         </div>
+
+        <!-- Limit Banner: HAX G1 / Luật AI (Số 1) -->
+        <div class="limit-banner" id="limit-banner">
+          <span class="n">①</span>
+          <div><b>Luật AI (Điều 11):</b> Trợ lý AI chỉ hỗ trợ thu thập bằng chứng & đối chiếu mô tả lúc đặt. Không tự ý hoàn tiền, không tự ý khóa shop và không cấp SĐT cá nhân.</div>
+        </div>
+
+        <!-- Order Context Bar -->
+        <div class="order-bar" id="order-bar">
+          <div class="order-img" id="order-icon">🍳</div>
+          <div class="order-info">
+            <div class="order-title" id="order-title">Nồi chiên không dầu Lock&Lock 6.0L Inox cao cấp</div>
+            <div class="order-meta">
+              <span id="order-meta-id">Mã đơn #SHP-2026-LOCK · Đã nhận 10/11</span>
+              <span style="color: var(--shopee); font-weight: 700;" id="order-meta-price">1.250.000 đ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- IN-APP TOAST (App-native feedback, replaces native alert completely!) -->
+        <div class="inapp-toast" id="inapp-toast">
+          <span class="toast-icon">✓</span>
+          <span id="toast-text">Thông báo hệ thống</span>
+        </div>
+
+        <!-- IN-APP ACTION SHEET DRAWER (Smooth slide up for Hoàn tác / Sửa ảnh) -->
+        <div class="inapp-drawer" id="inapp-drawer" onclick="closeDrawer(event)">
+          <div class="drawer-content" onclick="event.stopPropagation()">
+            <div class="sheet-handle"></div>
+            <div class="drawer-title">
+              <span>📸 Hoàn tác & Sửa bằng chứng ảnh</span>
+              <span style="cursor: pointer; color: var(--mut); font-size: 18px; padding: 0 4px;" onclick="closeDrawer()">✕</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--mut);">Chọn góc chụp hoặc chứng từ bổ sung để AI tính toán lại độ chắc chắn:</div>
+            
+            <div class="drawer-opt" onclick="applyProofChange('tem')">
+              <span style="font-size: 20px;">🏷️</span>
+              <div>
+                <b>Chụp cận cảnh tem đáy nồi:</b>
+                <div style="font-size: 11px; color: var(--mut);">Rõ số model và dung tích kỹ thuật ghi bởi NSX</div>
+              </div>
+            </div>
+
+            <div class="drawer-opt" onclick="applyProofChange('daylight')">
+              <span style="font-size: 20px;">☀️</span>
+              <div>
+                <b>Chụp dưới ánh sáng tự nhiên ban ngày:</b>
+                <div style="font-size: 11px; color: var(--mut);">Khắc phục sai lệch ánh sáng phòng ngủ, chuẩn mã màu #04</div>
+              </div>
+            </div>
+
+            <div class="drawer-opt" onclick="applyProofChange('ruler')">
+              <span style="font-size: 20px;">📏</span>
+              <div>
+                <b>Chụp kèm thước đo 3 chiều:</b>
+                <div style="font-size: 11px; color: var(--mut);">Xác định chuẩn thể tích hình học lòng giỏ chiên (~4.95L)</div>
+              </div>
+            </div>
+
+            <button class="btn-action" style="justify-content: center; margin-top: 4px;" onclick="closeDrawer()">
+              ✕ Giữ nguyên bằng chứng hiện tại
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Screen Body: Buyer / Seller / Live AI -->
+        <div class="screen-container" id="screen-body">
+          <!-- Dynamic Content Rendered Here -->
+        </div>
+
+        <!-- Authentic Shopee Bottom Input Bar -->
+        <div class="phone-input-bar" id="phone-input-bar">
+          <div class="quick-chips">
+            <span class="quick-chip" onclick="switchScenario('sc1')">💡 sc1: Nồi 6L thành 5L</span>
+            <span class="quick-chip" onclick="switchScenario('sc7')">⚡ sc7: Áo xanh nhạt</span>
+            <span class="quick-chip" onclick="switchScenario('sc5')">🛡️ sc5: Đòi khóa shop</span>
+            <span class="quick-chip" onclick="switchScenario('sc2')">👔 sc2: Nhầm size</span>
+          </div>
+          <div class="input-row">
+            <span class="icon-btn" title="Thêm tệp đính kèm">⊕</span>
+            <span class="icon-btn" title="Chụp ảnh mới" onclick="openDrawer()">📷</span>
+            <span class="icon-btn" title="Thư viện ảnh" onclick="openDrawer()">🖼️</span>
+            <input type="text" class="chat-input" id="user-custom-input" placeholder="Nhập tin nhắn khiếu nại..." onkeydown="if(event.key==='Enter') sendCustomMessage()">
+            <span class="icon-btn" title="Ghi âm">🎤</span>
+            <button class="send-btn" onclick="sendCustomMessage()" title="Gửi tin nhắn">➤</button>
+          </div>
+        </div>
+
+        <!-- Home Indicator Bar -->
+        <div class="home-indicator" id="home-indicator"></div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <main class="max-w-6xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-    <!-- CỘT TRÁI (7 CỘT): MÀN HÌNH TƯƠNG TÁC CHÍNH -->
-    <section class="lg:col-span-7">
-
-      <!-- VIEW 1: NGƯỜI MUA -->
-      <div id="buyerView" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-        <!-- Header Chat Minh Bạch AI (Số 1) -->
-        <div class="bg-orange-600 text-white px-4 py-3 flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <span class="badge-num" title="Số [1]: HAX G1 & Luật AI 134/2025/QH15">1</span>
-            <div>
-              <div class="font-semibold text-sm flex items-center gap-2">
-                Trợ lý AI Hỗ trợ Khiếu nại Shopee
-                <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider">AI Assistant</span>
-              </div>
-              <p class="text-[11px] text-orange-100">Hỗ trợ kiểm tra mô tả lúc đặt & hướng dẫn thủ tục (Không tự ý hoàn tiền/khóa shop)</p>
-            </div>
-          </div>
-          <span id="orderDeadlineBadge" class="text-[11px] bg-orange-700 px-2.5 py-1 rounded-md font-medium">
-            Còn 12 ngày trả hàng
-          </span>
-        </div>
-
-        <!-- Khung hội thoại -->
-        <div id="chatContainer" class="p-4 space-y-4 bg-slate-50 min-h-[430px] max-h-[560px] overflow-y-auto">
-          <!-- Nội dung render bằng JS -->
-        </div>
-
-        <!-- Thanh nhập tin nhắn giả lập ca lạ khi demo -->
-        <div class="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
-          <input id="customUserInput" type="text" placeholder="Nhập thử tin nhắn ca lạ khi TA hỏi demo (VD: hàng sai rồi xử lý đi)..."
-            class="flex-1 text-sm border border-slate-300 rounded-xl px-3.5 py-2 focus:outline-none focus:border-orange-500"
-            onkeydown="if(event.key==='Enter') handleCustomMessage()" />
-          <button onclick="handleCustomMessage()" class="bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
-            Gửi
-          </button>
-        </div>
+  <!-- RIGHT SIDE CONTROL & AUDIT PANEL -->
+  <aside>
+    <!-- Scenario Switcher (§2 spec.md) -->
+    <div class="panel">
+      <h2>
+        <span>4 Kịch bản kiểm thử (§2 spec.md)</span>
+        <span class="pill p-ask">2 ca đắt nhất</span>
+      </h2>
+      <div style="display: flex; gap: 7px; flex-wrap: wrap;">
+        <button class="btn-action primary" id="btn-sc1" onclick="switchScenario('sc1')">
+          <b>sc1 (KS1 - Đắt nhất 1):</b> Shop sửa mô tả 6L → 5L sau đặt
+        </button>
+        <button class="btn-action" id="btn-sc7" onclick="switchScenario('sc7')">
+          <b>sc7 (KS2 - Đắt nhất 2):</b> Áo xanh nhạt vs đậm, khách dọa bóc phốt
+        </button>
+        <button class="btn-action" id="btn-sc5" onclick="switchScenario('sc5')">
+          <b>sc5:</b> Đòi khóa shop & xin SĐT (Cấm vượt quyền)
+        </button>
+        <button class="btn-action" id="btn-sc2" onclick="switchScenario('sc2')">
+          <b>sc2:</b> Giao nhầm size L thành M (Shop đã nhận lỗi)
+        </button>
       </div>
+    </div>
 
-      <!-- VIEW 2: NGƯỜI BÁN (Số 6 - Bonus màn hình 2) -->
-      <div id="sellerView" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="bg-slate-800 text-white px-4 py-3 flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <span class="badge-num">6</span>
-            <div>
-              <h2 class="font-semibold text-sm">Kênh Người Bán — Trung tâm Phản hồi Khiếu nại</h2>
-              <p class="text-[11px] text-slate-300">Shop được quyền đối chất & cung cấp bằng chứng trước khi sàn ra quyết định</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="text-[10px] uppercase text-amber-300 block">Hạn phản hồi còn lại</span>
-            <span class="font-mono font-bold text-sm text-amber-400">47:58:12</span>
-          </div>
-        </div>
+    <!-- 6 Tools Table (§4.1 spec.md) -->
+    <div class="panel">
+      <h2>
+        <span>Mức tự chủ 6 Tool (§4.1 spec.md)</span>
+        <span class="pill p-ask">Cost-of-Error</span>
+      </h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Mức tự chủ</th>
+            <th>Ai duyệt & Cơ chế kiểm soát</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>T1. yeu_cau_bang_chung</code></td>
+            <td><span class="pill p-auto">Tự làm</span></td>
+            <td>Không duyệt (Gom ảnh/mô tả; sai thì rất rẻ)</td>
+          </tr>
+          <tr>
+            <td><code>T2. so_khop_mo_ta</code></td>
+            <td><span class="pill p-auto">Tự làm</span></td>
+            <td>Không duyệt (Bắt buộc so với Snapshot lúc mua)</td>
+          </tr>
+          <tr style="background: #fffbeb;">
+            <td><code>T3. soan_hoan_tien</code></td>
+            <td><span class="pill p-ask">Cần duyệt</span></td>
+            <td><b>Shop / Sàn duyệt:</b> Shop có 48h phản hồi; quá hạn chuyển sàn. Tránh mất tiền shop.</td>
+          </tr>
+          <tr>
+            <td><code>T4. tu_choi_khieu_nai</code></td>
+            <td><span class="pill p-ask">Cần duyệt</span></td>
+            <td><b>Nhân viên sàn:</b> Không tự động từ chối khiếu nại để tránh tước đoạt quyền lợi người mua.</td>
+          </tr>
+          <tr>
+            <td><code>T5. chuyen_truong_nhom</code></td>
+            <td><span class="pill p-ask">Cần duyệt</span></td>
+            <td><b>Nhân viên sàn:</b> Chuyển hồ sơ kèm snapshot và lịch sử chat.</td>
+          </tr>
+          <tr style="background: #fef2f2;">
+            <td><code>T6. phat_shop / lo_sdt</code></td>
+            <td><span class="pill p-no">CẤM</span></td>
+            <td><b>Không ai:</b> Không hiển thị nút bấm thực thi. Chuyển sang kênh Kiểm duyệt gian lận.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-        <div id="sellerContent" class="p-5 space-y-4">
-          <!-- Render bằng JS -->
-        </div>
+    <!-- HAX/PAIR Annotations List (§5.3 spec.md) -->
+    <div class="panel">
+      <h2>Chú thích 6 Điểm HAX/PAIR trên Prototype (§5.3)</h2>
+      <ul class="ann-list">
+        <li>
+          <span class="n">①</span>
+          <div><b>HAX G1 / Luật Trí tuệ nhân tạo (Điều 11):</b> Nhãn làm rõ hệ thống là AI trợ lý, minh bạch các giới hạn quyền hạn: không tự ý hoàn tiền, không tự ý khóa shop hay tiết lộ SĐT cá nhân.</div>
+        </li>
+        <li>
+          <span class="n">②</span>
+          <div><b>HAX G2 & PAIR Explainability:</b> Hiển thị thanh độ chắc chắn (%) và 2 thẻ so sánh đối chiếu song song: <i>Mô tả lúc đặt hàng (Snapshot)</i> vs <i>Bằng chứng người mua cung cấp</i>.</div>
+        </li>
+        <li>
+          <span class="n">③</span>
+          <div><b>HAX G10 (Thu hẹp phạm vi khi nghi ngờ):</b> AI không tự ý phán quyết hoàn tiền; hướng dẫn gửi yêu cầu chờ Shop phản hồi trong 48h hoặc nhờ Nhân viên Shopee phân xử.</div>
+        </li>
+        <li>
+          <span class="n">④</span>
+          <div><b>HAX G8 / G9 (Kiểm soát và sửa dễ dàng):</b> Cung cấp nút hoàn tác gửi mẫu bằng chứng và cho phép người mua chỉnh sửa ảnh trước khi gửi (mở In-App Action Sheet).</div>
+        </li>
+        <li>
+          <span class="n">⑤</span>
+          <div><b>PAIR Errors + Graceful Failure (Cấm vượt quyền):</b> Vô hiệu hóa và gạch chân các hành động ngoài thẩm quyền <i>(🚫 Khóa shop / Xem SĐT)</i>, giải thích rõ quy định bảo mật.</div>
+        </li>
+        <li>
+          <span class="n">⑥</span>
+          <div><b>Công bằng 2 bên / Trung lập (Góc nhìn Người bán):</b> Màn hình đối soát của Người bán với thời hạn 48h, thông báo rõ Shopee không tự ý trừ tiền của Shop.</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Core Rules & Promise (§4.5 spec.md) -->
+    <div class="panel">
+      <h2>Quy tắc cứng & Lời hứa đổi mới (§4.5 spec.md)</h2>
+      <div class="promise-box">
+        <b>Đổi lời hứa với người dùng:</b><br>
+        Từ <i>"AI sẽ tự giải quyết khiếu nại và hoàn tiền cho bạn"</i> → Đổi thành <b><i>"AI hỗ trợ kiểm tra mô tả lúc đặt & hướng dẫn thủ tục; quyết định cuối do Shop và Nhân viên Shopee đảm bảo công bằng cho cả hai bên."</i></b><br><br>
+        <b>2 Quy tắc cứng bất biến:</b><br>
+        1. AI bắt buộc dùng <b>Snapshot mô tả lúc đặt hàng</b>, cảnh báo ngay nếu shop sửa sau ngày mua.<br>
+        2. Mọi cam kết tài chính phải có badge <b>"Chờ duyệt"</b>; cấm tuyệt đối nút khóa shop và chia sẻ SĐT cá nhân.
       </div>
+    </div>
+  </aside>
+</main>
 
-    </section>
+<script>
+  const $ = s => document.querySelector(s);
+  let currentView = 'buyer'; // 'buyer', 'seller', 'live_ai'
+  let currentScenario = 'sc1'; // 'sc1', 'sc7', 'sc5', 'sc2'
+  let sellerCountdown = 172782; // 48h in seconds
+  let timerInterval = null;
+  let toastTimer = null;
+  let customChatFeed = []; // Dynamic appended chat timeline cards
 
-    <!-- CỘT PHẢI (5 CỘT): BẢNG ĐIỀU KHIỂN MỨC TỰ CHỦ & CHẠY AI THẬT (BONUS) -->
-    <aside class="lg:col-span-5 space-y-5">
-
-      <!-- Thẻ giải thích trạng thái Tool & Mức tự chủ đang kích hoạt -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-        <h3 class="font-bold text-sm text-slate-900 mb-1 flex items-center justify-between">
-          <span>Trạng thái Mức tự chủ Tool (§4)</span>
-          <span class="text-[11px] font-normal text-slate-500">Live State</span>
-        </h3>
-        <p class="text-xs text-slate-500 mb-3">Quan sát cách hệ thống chặn hành động không đảo ngược được khi AI không chắc chắn:</p>
-        <div id="toolStatusList" class="space-y-2 text-xs">
-          <!-- Render bằng JS -->
-        </div>
-      </div>
-
-      <!-- Thẻ Bonus: Chạy lời gọi AI thật (Không lưu API key) -->
-      <div class="bg-white rounded-2xl shadow-sm border border-indigo-200 p-4">
-        <div class="flex items-center justify-between mb-2">
-          <h3 class="font-bold text-sm text-indigo-950">✨ Chạy AI Thật (Bonus +3đ)</h3>
-          <span class="text-[10px] bg-indigo-100 text-indigo-700 font-semibold px-2 py-0.5 rounded-full">Không lưu Key</span>
-        </div>
-        <p class="text-xs text-slate-600 mb-3">
-          Gọi LLM thật để đối chiếu <strong>tin nhắn khiếu nại</strong> với <strong>bản chụp mô tả lúc đặt hàng</strong> và tính độ chắc chắn:
-        </p>
-        <div class="space-y-2">
-          <div class="grid grid-cols-2 gap-2">
-            <select id="aiProvider" class="text-xs border border-slate-300 rounded-lg px-2.5 py-1.5 bg-slate-50">
-              <option value="openrouter">OpenRouter (gpt-4o-mini)</option>
-              <option value="openai">OpenAI (gpt-4o-mini)</option>
-            </select>
-            <input id="apiKeyInput" type="password" placeholder="Dán API Key (sk-...)" class="text-xs border border-slate-300 rounded-lg px-2.5 py-1.5" />
-          </div>
-          <button onclick="runRealAI()" id="btnRealAI" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2 rounded-lg transition">
-            Gọi AI đối chiếu kịch bản hiện tại
-          </button>
-          <div id="realAIOutput" class="hidden mt-2 p-2.5 rounded-lg bg-slate-900 text-slate-100 font-mono text-[11px] whitespace-pre-wrap max-h-48 overflow-y-auto"></div>
-        </div>
-      </div>
-
-      <!-- Chú thích nhanh cho Demo -->
-      <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-900 space-y-1.5">
-        <div class="font-bold">📌 Bảng chú thích số cho Demo & Spec (§5):</div>
-        <div><strong>[1]</strong> Nhãn minh bạch AI & giới hạn quyền (HAX G1 / Luật AI).</div>
-        <div><strong>[2]</strong> Thanh độ chắc chắn (%) & Thẻ so sánh Snapshot lúc đặt (HAX G2 / PAIR).</div>
-        <div><strong>[3]</strong> Nút duyệt chuyển người / chờ shop phản hồi (HAX G10).</div>
-        <div><strong>[4]</strong> Hành động tự làm có nút Hoàn tác / Sửa bằng chứng (HAX G8, G9).</div>
-        <div><strong>[5]</strong> Cấm tuyệt đối <code>phat_shop</code> & lộ SĐT (Không có nút tự gọi).</div>
-        <div><strong>[6]</strong> Màn hình phía Người bán với hạn phản hồi 48h.</div>
-      </div>
-
-    </aside>
-  </main>
-
-  <script>
-    const SCENARIOS = {
-      sc1: {
-        title: "Ca khó #1: Người bán sửa mô tả sau đặt hàng",
-        orderId: "261110VN8892",
-        productName: "Nồi chiên không dầu điện tử",
-        snapshotDesc: "Dung tích lòng nồi: 6 Lít (Phù hợp gia đình 4-6 người). Bảo hành 12 tháng.",
-        snapshotTime: "14:20 · 10/11/2026",
-        liveDesc: "Dung tích lòng nồi: 5 Lít. Bảo hành 12 tháng.",
-        liveEditedWarning: "⚠️ Cảnh báo hệ thống: Người bán đã chỉnh sửa mô tả từ '6 Lít' thành '5 Lít' vào lúc 09:15 · 12/11/2026 (SAU khi đơn được đặt).",
-        userMsg: "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả.",
-        buyerEvidence: "Ảnh chụp thước đo lòng nồi thực tế: 5.0 Lít + Tem thông số đáy nồi 5L.",
-        confidence: 68,
-        confidenceLabel: "Trung bình (68%) — Phát hiện xung đột dữ liệu mô tả",
-        confidenceColor: "bg-amber-500",
-        errorType: "Lỗi hệ thống tiềm ẩn (Data Staleness) đã được chặn nhờ Snapshot lúc đặt",
-        aiReply: "Mình là trợ lý AI của Shopee. Mình đã đối chiếu ảnh đo lòng nồi (5 lít) bạn gửi với <strong>bản chụp mô tả tại thời điểm đặt đơn lúc 14:20 ngày 10/11 (ghi 6 Lít)</strong>. Hệ thống phát hiện mô tả trên gian hàng đã được sửa sau khi bạn đặt hàng, nên mình chưa thể tự động chốt hoàn tiền ngay. Mình đã đính kèm bản chụp gốc làm bằng chứng và chuẩn bị sẵn hồ sơ để bạn gửi nhân viên Shopee xử lý trong 24 giờ.",
-        actionType: "approval_escalate",
-        sellerStatus: "Chờ Shop phản hồi bằng chứng (Hệ thống đã gắn cờ đối chiếu mô tả gốc 6 Lít)",
-        tools: [
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã trích xuất ảnh đo 5L từ tin nhắn", color: "emerald" },
-          { name: "chuyen_truong_nhom", level: "Cần người duyệt", status: "Đang chờ Người mua bấm xác nhận gửi", color: "amber" },
-          { name: "soan_hoan_tien", level: "Cần người duyệt", status: "Đã soạn nháp — Chờ Shop (48h) hoặc Nhân viên duyệt", color: "amber" },
-          { name: "tu_choi_khieu_nai", level: "Cần người duyệt", status: "Bị chặn (Mô tả gốc khớp khiếu nại của khách)", color: "slate" },
-          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa — AI không có quyền xử phạt", color: "rose" }
-        ]
-      },
-      sc7: {
-        title: "Ca khó #2: Người bán đúng màu, khách dọa bóc phốt",
-        orderId: "261109VN4410",
-        productName: "Áo sơ mi Linen tay dài",
-        snapshotDesc: "Màu sắc: Xanh Pastel nhạt. Lưu ý: Màu thực tế có thể chênh lệch 5% do ánh sáng studio.",
-        snapshotTime: "20:05 · 09/11/2026",
-        liveDesc: "Màu sắc: Xanh Pastel nhạt. Lưu ý: Màu thực tế có thể chênh lệch 5% do ánh sáng studio.",
-        liveEditedWarning: null,
-        userMsg: "Áo giao màu xanh nhạt nhưng hình trên mạng nhìn đậm hơn! Hoàn tiền ngay lập tức không tôi quay clip bóc phốt Shopee và đánh giá 1 sao toàn bộ!",
-        buyerEvidence: "Ảnh chụp áo dưới ánh đèn vàng trong phòng (màu xanh nhạt, đúng mã SKU-XP01).",
-        confidence: 42,
-        confidenceLabel: "Thấp (42%) — Chưa đủ căn cứ kết luận sai mô tả",
-        confidenceColor: "bg-rose-500",
-        errorType: "Lỗi ngữ cảnh / cảm nhận (Context Error) — Lời đe dọa không được dùng làm căn cứ",
-        aiReply: "Mình là trợ lý AI của Shopee. Mình hiểu bạn chưa hài lòng về sắc độ màu áo nhận được. Tuy nhiên, khi đối chiếu với mô tả lúc đặt hàng (<em>'Màu Xanh Pastel nhạt, có thể chênh lệch 5% do ánh sáng'</em>), sản phẩm khớp với thông tin mô tả ban đầu nên <strong>chưa đủ căn cứ để đề xuất hoàn tiền ngay</strong>. Bạn vẫn có thể gửi yêu cầu trả hàng để Shop phản hồi trong 48 giờ hoặc nhờ nhân viên Shopee xem xét độc lập.",
-        actionType: "approval_dispute",
-        sellerStatus: "Shop có đầy đủ bằng chứng giao đúng mã màu SKU-XP01 — Đang chờ Shop chọn đồng ý hỗ trợ đổi trả hoặc gửi phản bác",
-        tools: [
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã ghi nhận ảnh áo thực tế", color: "emerald" },
-          { name: "soan_hoan_tien", level: "Cần người duyệt", status: "Bị chặn tự động — Không giải ngân theo lời dọa", color: "amber" },
-          { name: "tu_choi_khieu_nai", level: "Cần người duyệt", status: "Không tự đóng — Giữ quyền khiếu nại 48h cho khách", color: "amber" },
-          { name: "chuyen_truong_nhom", level: "Cần người duyệt", status: "Sẵn sàng nếu khách chọn 'Nhờ Nhân viên phân xử'", color: "amber" },
-          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa — Shop không vi phạm mô tả", color: "rose" }
-        ]
-      },
-      sc5: {
-        title: "Ca ngoài thẩm quyền: Đòi khóa shop & xin SĐT",
-        orderId: "261108VN1123",
-        productName: "Tai nghe không dây Pro",
-        snapshotDesc: "Tai nghe Bluetooth 5.3, kèm cáp sạc Type-C.",
-        snapshotTime: "10:12 · 08/11/2026",
-        liveDesc: "Tai nghe Bluetooth 5.3, kèm cáp sạc Type-C.",
-        liveEditedWarning: null,
-        userMsg: "Shop bán hàng giả, lừa đảo! Khóa shop này ngay cho tôi và cho tôi số điện thoại chủ shop để tôi tới tận nơi!",
-        buyerEvidence: "Chưa đính kèm ảnh/video chứng minh dấu hiệu hàng giả.",
-        confidence: 30,
-        confidenceLabel: "Ngoài thẩm quyền AI — Yêu cầu chế tài & dữ liệu cá nhân",
-        confidenceColor: "bg-slate-600",
-        errorType: "Ngoài phạm vi / thẩm quyền (Out of Scope)",
-        aiReply: "Mình là trợ lý AI của Shopee. Theo chính sách bảo mật, mình <strong>không thể cung cấp số điện thoại hay địa chỉ cá nhân</strong> của người bán, và trợ lý chat cũng <strong>không có quyền tự khóa gian hàng</strong>. Tuy nhiên, mình đã chuẩn bị sẵn phiếu báo cáo nghi vấn hàng giả để chuyển tới <strong>Bộ phận Kiểm duyệt Chuyên trách</strong>. Bạn vui lòng đính kèm ảnh tem/vỏ hộp và bấm xác nhận gửi bên dưới nhé.",
-        actionType: "forbidden_redirect",
-        sellerStatus: "Chưa gửi thông báo phạt — Đang chờ người mua bổ sung bằng chứng gửi Bộ phận Kiểm duyệt",
-        tools: [
-          { name: "phat_shop", level: "Cấm", status: "CẤM TUYỆT ĐỐI — Không hiển thị nút thực thi", color: "rose" },
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã gửi mẫu chụp tem/seri sản phẩm (Có Hoàn tác)", color: "emerald" },
-          { name: "chuyen_truong_nhom", level: "Cần người duyệt", status: "Chờ người mua bổ sung ảnh để chuyển bộ phận chuyên trách", color: "amber" },
-          { name: "soan_hoan_tien", level: "Cần người duyệt", status: "Chưa kích hoạt do thiếu bằng chứng", color: "slate" },
-          { name: "tu_choi_khieu_nai", level: "Cần người duyệt", status: "Chưa kích hoạt", color: "slate" }
-        ]
-      },
-      sc2: {
-        title: "Ca bình thường: Giao nhầm size & Shop đã nhận lỗi",
-        orderId: "261111VN9001",
-        productName: "Áo thun Cotton Unisex",
-        snapshotDesc: "Phân loại đã chọn: Màu Trắng, Kích cỡ L (65-75kg).",
-        snapshotTime: "09:30 · 11/11/2026",
-        liveDesc: "Phân loại đã chọn: Màu Trắng, Kích cỡ L (65-75kg).",
-        liveEditedWarning: null,
-        userMsg: "Mình đặt áo size L mà nhận được size M, mặc không vừa. Shop cũng nhắn nhận là gửi nhầm rồi. Mình muốn trả hàng hoàn tiền thì làm sao?",
-        buyerEvidence: "Ảnh tem cổ áo ghi Size M + Ảnh chụp màn hình chat Shop thừa nhận gửi nhầm.",
-        confidence: 94,
-        confidenceLabel: "Cao (94%) — Sai lệch phân loại rõ ràng",
-        confidenceColor: "bg-emerald-600",
-        errorType: "Happy Path — AI tự gửi checklist bằng chứng & soạn sẵn phiếu hoàn tiền chờ Shop duyệt",
-        aiReply: "Mình là trợ lý AI của Shopee. Mình đã kiểm tra đơn <strong>#261111VN9001</strong> (bạn đặt <strong>Size L</strong>) và ghi nhận Shop đã xác nhận gửi nhầm Size M. Để hoàn tất yêu cầu trả hàng/hoàn tiền (bạn còn <strong>14 ngày</strong> trong thời hạn), mình đã tự động đính kèm mẫu yêu cầu ảnh tem size M và soạn sẵn phiếu hoàn tiền gửi tới Shop xác nhận.",
-        actionType: "happy_path",
-        sellerStatus: "Shop đã thừa nhận gửi nhầm — Chờ Shop bấm 'Đồng ý trả hàng/hoàn tiền' trong 48h",
-        tools: [
-          { name: "yeu_cau_bang_chung", level: "Tự làm", status: "Đã tự động gửi mẫu ảnh tem size (Có nút Hoàn tác)", color: "emerald" },
-          { name: "soan_hoan_tien", level: "Cần người duyệt", status: "Đã soạn sẵn 100% — Gửi sang màn hình Shop duyệt", color: "amber" },
-          { name: "chuyen_truong_nhom", level: "Cần người duyệt", status: "Không cần thiết (Trừ khi Shop từ chối sau 48h)", color: "slate" },
-          { name: "tu_choi_khieu_nai", level: "Cần người duyệt", status: "Không áp dụng", color: "slate" },
-          { name: "phat_shop", level: "Cấm", status: "Vô hiệu hóa", color: "rose" }
-        ]
-      }
-    };
-
-    let currentKey = "sc1";
-    let undoTriggered = false;
-
-    function switchRole(role) {
-      const buyerView = document.getElementById("buyerView");
-      const sellerView = document.getElementById("sellerView");
-      const tabBuyer = document.getElementById("tabBuyer");
-      const tabSeller = document.getElementById("tabSeller");
-
-      if (role === "buyer") {
-        buyerView.classList.remove("hidden");
-        sellerView.classList.add("hidden");
-        tabBuyer.className = "px-3 py-1 rounded-md text-xs font-semibold bg-white text-orange-600 shadow-sm transition";
-        tabSeller.className = "px-3 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 transition flex items-center gap-1.5";
-      } else {
-        buyerView.classList.add("hidden");
-        sellerView.classList.remove("hidden");
-        tabSeller.className = "px-3 py-1 rounded-md text-xs font-semibold bg-white text-slate-900 shadow-sm transition flex items-center gap-1.5";
-        tabBuyer.className = "px-3 py-1 rounded-md text-xs font-semibold text-slate-600 hover:text-slate-900 transition";
-      }
+  const scenarios = {
+    sc1: {
+      id: "sc1",
+      name: "sc1 (KS1): Shop sửa mô tả 6L → 5L sau đặt",
+      orderName: "Nồi chiên không dầu Lock&Lock 6.0L Inox cao cấp",
+      orderMeta: "Mã đơn #SHP-2026-LOCK · Đã nhận 10/11",
+      orderPrice: "1.250.000 đ",
+      icon: "🍳",
+      buyerMsg: "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả, lừa đảo!",
+      editedNotice: "Hệ thống phát hiện: Người bán đã chỉnh sửa mô tả từ '6 Lít' thành '5 Lít' sau khi đơn hàng được đặt (cập nhật lúc 11/11 08:30). Bạn được bảo vệ theo thông tin lúc bấm mua!",
+      aiMsg: "Mình đã đối chiếu khiếu nại của bạn với <b>bản lưu mô tả sản phẩm lúc bạn đặt hàng (10/11 14:20)</b>. Tại thời điểm bạn mua, tiêu đề ghi 6 Lít. Dù shop đã cập nhật thành 5 Lít, Shopee cam kết bảo vệ quyền lợi của bạn theo bản lưu lúc mua.",
+      confidence: 68,
+      confLevel: "Vừa phải",
+      confColor: "var(--a)",
+      confClass: "conf-yellow",
+      snapshotDesc: "Tiêu đề: Nồi chiên không dầu 6.0L Inox.<br>Thông số lúc đặt: Dung tích 6L (không ghi rõ lòng 5L).",
+      userProofDesc: "Ảnh chụp thước đo đường kính lòng nồi (dung tích tính toán ~5L).",
+      sellerSnapshotNote: "Khách khiếu nại theo bản chụp lúc bán: '6.0L'. Shop đã sửa thành '5.0L' sau khi giao.",
+      sellerRefundAmount: "1.250.000 đ"
+    },
+    sc7: {
+      id: "sc7",
+      name: "sc7 (KS2): Áo xanh nhạt vs đậm, khách dọa bóc phốt",
+      orderName: "Áo sơ mi nam Oxford tay dài Slimfit (Xanh Navy)",
+      orderMeta: "Mã đơn #SHP-8821-OXF · Đã nhận hôm qua",
+      orderPrice: "350.000 đ",
+      icon: "👔",
+      buyerMsg: "Áo giao màu xanh nhạt nhưng hình trên mạng nhìn đậm hơn! Hoàn tiền ngay lập tức không tôi quay clip bóc phốt Shopee!",
+      editedNotice: null,
+      aiMsg: "Mình hiểu bạn chưa hài lòng về màu sắc. Tuy nhiên, khi đối chiếu với ảnh mô tả lúc bạn đặt hàng, mã màu sản phẩm khớp với thông số nhà sản xuất nên <b>chưa đủ căn cứ để kết luận shop giao sai</b>. Lời đe dọa không làm thay đổi quy trình xem xét công bằng.",
+      confidence: 42,
+      confLevel: "Thấp — Chưa đủ căn cứ",
+      confColor: "var(--r)",
+      confClass: "conf-red",
+      snapshotDesc: "Phân loại: Xanh Navy (Mã #04). Ghi chú: Màu sắc thực tế có thể chênh lệch 3-5% do ánh sáng màn hình.",
+      userProofDesc: "Ảnh chụp áo dưới đèn huỳnh quang trong phòng ngủ (nhìn hơi nhạt so với ảnh studio).",
+      sellerSnapshotNote: "Shop đã giao đúng phân loại mã màu #04. Khách khiếu nại do chênh lệch ánh sáng.",
+      sellerRefundAmount: "350.000 đ"
+    },
+    sc5: {
+      id: "sc5",
+      name: "sc5: Đòi khóa shop & xin SĐT",
+      orderName: "Máy ép chậm trái cây mini Nineshield",
+      orderMeta: "Mã đơn #SHP-5521-NINE · Đã nhận 2 ngày trước",
+      orderPrice: "850.000 đ",
+      icon: "🍹",
+      buyerMsg: "Shop bán hàng giả, lừa đảo! Khóa shop này ngay và cho tôi số điện thoại chủ shop để tôi báo công an!",
+      editedNotice: null,
+      aiMsg: "Shopee rất tiếc về trải nghiệm của bạn. Tuy nhiên, theo chính sách bảo mật thông tin và thẩm quyền, <b>trợ lý AI không có quyền cung cấp số điện thoại cá nhân và không thể khóa shop</b>. Yêu cầu của bạn đã được chuyển hướng sang Bộ phận Kiểm duyệt hàng giả.",
+      confidence: 15,
+      confLevel: "Ngoài thẩm quyền AI",
+      confColor: "var(--r)",
+      confClass: "conf-red",
+      snapshotDesc: "Hàng gia dụng chính hãng có tem bảo hành điện tử 12 tháng.",
+      userProofDesc: "Khách cho rằng vỏ máy nhẹ hơn hàng nhà bạn mình đang dùng, nghi ngờ hàng giả.",
+      sellerSnapshotNote: "Hồ sơ khiếu nại nghi vấn hàng giả được chuyển thẳng sang Compliance Team.",
+      sellerRefundAmount: "850.000 đ"
+    },
+    sc2: {
+      id: "sc2",
+      name: "sc2: Giao nhầm size L thành M (Shop nhận lỗi)",
+      orderName: "Áo sơ mi nam Oxford tay dài Slimfit (Trắng Size L)",
+      orderMeta: "Mã đơn #SHP-3321-OXF · Đã nhận hôm qua",
+      orderPrice: "350.000 đ",
+      icon: "👔",
+      buyerMsg: "Mình đặt áo size L mà nhận được size M, shop cũng nhắn nhận là gửi nhầm rồi.",
+      editedNotice: null,
+      aiMsg: "AI đã kiểm tra lịch sử chat trên Shopee: Shop đã xác nhận gửi nhầm áo size M cho bạn. Yêu cầu đã được chuẩn bị sẵn, chỉ chờ Shop bấm duyệt để lấy mã gửi trả hàng miễn phí.",
+      confidence: 92,
+      confLevel: "Rất cao (Shop đã xác nhận)",
+      confColor: "var(--g)",
+      confClass: "conf-green",
+      snapshotDesc: "Đơn hàng: Phân loại Size L (Ngực 104cm, Dài 72cm).",
+      userProofDesc: "Ảnh chụp tag cổ áo ghi Size M + Ảnh chụp màn hình shop nhận gửi nhầm.",
+      sellerSnapshotNote: "Shop đã thừa nhận gửi nhầm hàng trong khung chat nội bộ.",
+      sellerRefundAmount: "350.000 đ"
     }
+  };
 
-    function loadScenario(key) {
-      currentKey = key;
-      undoTriggered = false;
-      const sc = SCENARIOS[key];
+  /* In-App Toast Notification (Zero browser alert!) */
+  function showInAppToast(msg, icon = '✓') {
+    const toast = $('#inapp-toast');
+    const toastText = $('#toast-text');
+    const toastIcon = toast.querySelector('.toast-icon');
+    if (!toast) return;
 
-      // 1. Render Buyer Chat
-      const chat = document.getElementById("chatContainer");
-      chat.innerHTML = `
-        <!-- Thông tin đơn hàng gắn vào phiên chat -->
-        <div class="bg-white border border-slate-200 rounded-xl p-3 text-xs flex items-center justify-between">
-          <div>
-            <span class="text-slate-400">Đơn hàng đang chọn:</span>
-            <strong class="text-slate-800 ml-1">#${sc.orderId} · ${sc.productName}</strong>
-          </div>
-          <span class="text-slate-500">Đặt lúc ${sc.snapshotTime}</span>
+    toastText.textContent = msg;
+    toastIcon.textContent = icon;
+    toast.classList.add('show');
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3200);
+  }
+
+  /* In-App Drawer for Hoàn tác / Sửa ảnh */
+  function openDrawer() {
+    $('#inapp-drawer').classList.add('show');
+  }
+  function closeDrawer(e) {
+    if (e && e.target !== e.currentTarget && e.target.tagName !== 'SPAN' && e.target.tagName !== 'BUTTON') return;
+    $('#inapp-drawer').classList.remove('show');
+  }
+
+  function applyProofChange(type) {
+    closeDrawer();
+    const scen = scenarios[currentScenario];
+    if (type === 'tem') {
+      scen.userProofDesc = "Ảnh chụp cận cảnh tem thông số NSX dưới đáy: Model Lock&Lock AF-60, Dung tích giỏ chiên 5.0L, Tổng dung tích vỏ 6.0L.";
+      scen.confidence = 88;
+      scen.confLevel = "Cao — Tem NSX xác thực";
+      scen.confColor = "var(--g)";
+      scen.confClass = "conf-green";
+      showInAppToast("Đã cập nhật ảnh tem đáy. Độ chắc chắn tăng lên 88%!", "🏷️");
+    } else if (type === 'daylight') {
+      scen.userProofDesc = "Ảnh chụp áo sơ mi dưới ánh sáng mặt trời lúc 11:00: Màu sắc chính xác mã #04 Xanh Navy đậm.";
+      scen.confidence = 76;
+      scen.confLevel = "Đủ căn cứ đối soát";
+      scen.confColor = "var(--a)";
+      scen.confClass = "conf-yellow";
+      showInAppToast("Đã cập nhật ảnh ánh sáng tự nhiên!", "☀️");
+    } else if (type === 'ruler') {
+      scen.userProofDesc = "Ảnh đo lòng nồi: Đường kính 22cm, chiều sâu 13cm → Thể tích thực lòng giỏ chiên là 4.95L.";
+      scen.confidence = 85;
+      scen.confLevel = "Cao — Số đo hình học chuẩn xác";
+      scen.confColor = "var(--g)";
+      scen.confClass = "conf-green";
+      showInAppToast("Đã cập nhật ảnh thước đo 3 chiều!", "📏");
+    }
+    render();
+  }
+
+  /* Chat Interactive Actions (Timeline Cards Appended In-App) */
+  function sendReturnRequestToSeller() {
+    showInAppToast("Đã gửi yêu cầu đến Shop. Shop có 48 giờ để phản hồi đối soát!", "📦");
+    const scen = scenarios[currentScenario];
+    customChatFeed.push({
+      type: "timeline",
+      badge: "⏳ Chờ Người bán đối soát",
+      badgeClass: "status-badge-pending",
+      title: "Yêu cầu Trả hàng / Hoàn tiền đã gửi tới Shop",
+      desc: `Thời hạn đối soát còn lại: <b>47:59:59</b> (Hạn 48 giờ). Khoản tiền <b>${scen.sellerRefundAmount}</b> đang được Shopee đóng băng an toàn trong tài khoản ký quỹ Escrow để bảo vệ quyền lợi của bạn.`,
+      btn: `<button class="btn-action primary" style="font-size: 11.5px; padding: 5px 9px; margin-top: 4px;" onclick="setView('seller')">👉 Xem ngay màn hình đối soát của Shop</button>`
+    });
+    render();
+  }
+
+  function escalateToShopeeAgent() {
+    showInAppToast("Đã chuyển giao hồ sơ sang Chuyên viên sàn Shopee!", "👨‍💼");
+    customChatFeed.push({
+      type: "timeline",
+      badge: "👨‍💼 Đã chuyển Chuyên viên Shopee",
+      badgeClass: "status-badge-staff",
+      title: "Chuyên viên giải quyết tranh chấp Shopee đã tiếp nhận",
+      desc: "Chuyên viên <b>Nguyễn Tuấn (#NV-8821)</b> đang đối chiếu bản Snapshot lúc đặt ngày 10/11 cùng bằng chứng bạn cung cấp. Kết luận chính thức sẽ có trong vòng <b>4 giờ</b> làm việc.",
+      btn: ""
+    });
+    render();
+  }
+
+  function forbiddenActionNotice() {
+    showInAppToast("Hành động bị CẤM: Trợ lý AI không có quyền khóa shop hay cấp SĐT!", "⛔");
+  }
+
+  function setView(view) {
+    currentView = view;
+    $('#tab-buyer').classList.toggle('on', view === 'buyer');
+    $('#tab-seller').classList.toggle('on', view === 'seller');
+    $('#tab-live-ai').classList.toggle('on', view === 'live_ai');
+
+    const header = $('#phone-header');
+    const notch = $('#notch-bar');
+    const home = $('#home-indicator');
+
+    if (view === 'seller') {
+      header.classList.add('seller');
+      notch.classList.add('seller');
+      home.classList.add('seller');
+      $('#header-avatar').textContent = "🏪";
+      $('#screen-title').textContent = "Kênh Người Bán · Shopee";
+      $('#screen-badge').textContent = "Trung tâm Phản hồi Khiếu nại";
+      $('#limit-banner').style.display = 'none';
+      $('#phone-input-bar').style.display = 'none';
+    } else if (view === 'buyer') {
+      header.classList.remove('seller');
+      notch.classList.remove('seller');
+      home.classList.remove('seller');
+      $('#header-avatar').textContent = "🤖";
+      $('#screen-title').textContent = "Trợ lý Khiếu nại Shopee";
+      $('#screen-badge').textContent = "Shopee Care · Trực tuyến 24/7";
+      $('#limit-banner').style.display = 'flex';
+      $('#phone-input-bar').style.display = 'flex';
+    } else {
+      header.classList.remove('seller');
+      notch.classList.remove('seller');
+      home.classList.remove('seller');
+      $('#header-avatar').textContent = "⚡";
+      $('#screen-title').textContent = "Live AI Comparator";
+      $('#screen-badge').textContent = "LLM Engine · Benchmark";
+      $('#limit-banner').style.display = 'none';
+      $('#phone-input-bar').style.display = 'none';
+    }
+    render();
+  }
+
+  function switchScenario(id) {
+    currentScenario = id;
+    customChatFeed = []; // Reset timeline when switching scenarios
+    document.querySelectorAll('[id^="btn-sc"]').forEach(b => b.classList.remove('primary'));
+    $(`#btn-${id}`).classList.add('primary');
+    showInAppToast(`Đã chuyển sang kịch bản ${id.toUpperCase()}`, "ℹ️");
+    render();
+  }
+
+  function sendCustomMessage() {
+    const input = $('#user-custom-input');
+    if (!input || !input.value.trim()) return;
+    const txt = input.value.trim();
+    scenarios[currentScenario].buyerMsg = txt;
+    input.value = '';
+    customChatFeed = [];
+    showInAppToast("Đã gửi tin nhắn khiếu nại!", "💬");
+    render();
+  }
+
+  function render() {
+    const scen = scenarios[currentScenario];
+    $('#order-icon').textContent = scen.icon;
+    $('#order-title').textContent = scen.orderName;
+    $('#order-meta-id').textContent = scen.orderMeta;
+    $('#order-meta-price').textContent = scen.orderPrice || scen.sellerRefundAmount;
+
+    if (currentView === 'buyer') {
+      renderBuyerChat(scen);
+    } else if (currentView === 'seller') {
+      renderSellerCenter(scen);
+    } else {
+      renderLiveAI(scen);
+    }
+  }
+
+  function renderBuyerChat(scen) {
+    let html = `
+      <div class="chat-scroll">
+        <div class="time-pill">10:42 · Hôm nay</div>
+
+        <!-- User Complaint -->
+        <div class="bubble-wrap me">
+          <div class="bubble-sender">Bạn (Người mua) · 14:46 · Đã xem ✓✓</div>
+          <div class="bubble-me">${scen.buyerMsg}</div>
         </div>
 
-        <!-- Tin nhắn người mua -->
-        <div class="flex justify-end">
-          <div class="bg-orange-100 border border-orange-200 text-slate-900 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%] text-sm shadow-xs">
-            <div class="text-[11px] font-semibold text-orange-800 mb-0.5">Người mua</div>
-            ${sc.userMsg}
+        <!-- AI Response -->
+        <div class="bubble-wrap ai">
+          <div class="bubble-sender">Trợ lý Shopee (AI) · 14:47</div>
+          <div class="bubble-ai">
+            ${scen.editedNotice ? `
+              <div class="alert-edited">
+                <span style="font-size: 16px;">⚠️</span>
+                <div>${scen.editedNotice}</div>
+              </div>` : ''}
+
+            <div>${scen.aiMsg}</div>
+
+            <!-- Confidence Bar & Comparison Cards: HAX G2 (Số 2) -->
+            <div class="conf-box">
+              <div style="display: flex; justify-content: space-between; font-weight: 600;">
+                <span><span class="n">②</span>Độ chắc chắn của AI:</span>
+                <span style="color: ${scen.confColor}; font-weight: 800;">${scen.confidence}% (${scen.confLevel})</span>
+              </div>
+              <div class="conf-bar">
+                <div class="conf-fill ${scen.confClass}" style="width: ${scen.confidence}%;"></div>
+              </div>
+
+              <!-- 2 Comparison Cards: Snapshot vs Proof -->
+              <div class="compare-grid">
+                <div class="compare-card snapshot">
+                  <b>📄 Bản lưu lúc đặt (Snapshot):</b><br>
+                  ${scen.snapshotDesc}
+                </div>
+                <div class="compare-card user-proof">
+                  <b>📸 Bằng chứng bạn gửi:</b><br>
+                  ${scen.userProofDesc}
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons: HAX G10 (Số 3), HAX G8/G9 (Số 4), PAIR Errors (Số 5), Seller view (Số 6) -->
+            <div class="btns-action">
+              <button class="btn-action primary" onclick="sendReturnRequestToSeller()">
+                <span class="n">③</span>Gửi yêu cầu trả hàng (Chờ Shop phản hồi 48h)
+              </button>
+              
+              <button class="btn-action" onclick="escalateToShopeeAgent()">
+                <span class="n">③</span>Nhờ Nhân viên Shopee phân xử
+              </button>
+
+              <button class="btn-action" onclick="openDrawer()">
+                <span class="n">④</span>Hoàn tác gửi mẫu bằng chứng / Sửa ảnh
+              </button>
+
+              <button class="btn-action disabled-forbidden" onclick="forbiddenActionNotice()" title="Công cụ này bị CẤM đối với AI để bảo vệ quyền riêng tư & pháp lý">
+                <span class="n">⑤</span>🚫 Khóa shop / Xem SĐT (Không thuộc quyền AI)
+              </button>
+
+              <button class="btn-action" style="border-color: #cbd5e1; background: #f8fafc;" onclick="setView('seller')">
+                <span class="n">⑥</span>👉 Xem giao diện phía Người bán (Hạn 48h)
+              </button>
+            </div>
           </div>
         </div>
+    `;
 
-        <!-- Phản hồi của AI + Thẻ đối chiếu bằng chứng -->
-        <div class="flex justify-start">
-          <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 max-w-[94%] text-sm shadow-xs space-y-3">
-            <p class="leading-relaxed text-slate-800">${sc.aiReply}</p>
-
-            <!-- SỐ [2]: Độ chắc chắn & Bảng đối chiếu Snapshot lúc đặt -->
-            <div class="border border-slate-200 rounded-xl bg-slate-50 p-3 space-y-2.5">
-              <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-1.5">
-                  <span class="badge-num">2</span>
-                  <span class="text-xs font-bold text-slate-700">Căn cứ đối chiếu & Độ chắc chắn của AI</span>
-                </div>
-                <span class="text-[11px] font-semibold text-slate-700">${sc.confidenceLabel}</span>
-              </div>
-              <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                <div class="${sc.confidenceColor} h-full" style="width: ${sc.confidence}%"></div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
-                <div class="bg-white p-2.5 rounded-lg border border-emerald-200">
-                  <div class="font-bold text-emerald-800 mb-1">📌 Mô tả lúc đặt hàng (Snapshot bất biến)</div>
-                  <p class="text-slate-700">${sc.snapshotDesc}</p>
-                </div>
-                <div class="bg-white p-2.5 rounded-lg border border-blue-200">
-                  <div class="font-bold text-blue-800 mb-1">📎 Bằng chứng người mua cung cấp</div>
-                  <p class="text-slate-700">${sc.buyerEvidence}</p>
-                </div>
-              </div>
-
-              ${sc.liveEditedWarning ? `
-                <div class="bg-amber-50 border border-amber-300 text-amber-900 text-xs p-2 rounded-lg font-medium">
-                  ${sc.liveEditedWarning}
-                </div>
-              ` : ""}
+    // Render appended custom feed messages if any
+    customChatFeed.forEach(item => {
+      html += `
+        <div class="bubble-wrap ai" style="margin-top: 4px;">
+          <div class="system-timeline-card ${item.badgeClass.includes('staff') ? 'staff' : ''}">
+            <div class="timeline-header">
+              <span class="${item.badgeClass}">${item.badge}</span>
             </div>
-
-            <!-- SỐ [3], [4], [5]: Điều khiển mức tự chủ trên giao diện -->
-            <div class="pt-1 flex flex-wrap items-center gap-2">
-              <span class="badge-num">3</span>
-              <button onclick="confirmAction()" id="primaryActionBtn" class="bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-3.5 py-2 rounded-lg transition">
-                ${sc.actionType === 'approval_escalate' ? 'Xác nhận gửi kèm bản chụp gốc cho Nhân viên' :
-                  sc.actionType === 'approval_dispute' ? 'Gửi yêu cầu trả hàng (Chờ Shop phản hồi 48h)' :
-                  sc.actionType === 'forbidden_redirect' ? 'Đính kèm ảnh & Gửi Bộ phận Kiểm duyệt' :
-                  'Xác nhận gửi phiếu hoàn tiền sang Shop duyệt'}
-              </button>
-
-              ${sc.actionType === 'approval_dispute' ? `
-                <button onclick="escalateToHuman()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-semibold px-3 py-2 rounded-lg transition">
-                  Nhờ Nhân viên Shopee phân xử
-                </button>
-              ` : ""}
-
-              <!-- SỐ [4]: Hoàn tác việc AI tự làm (yeu_cau_bang_chung) -->
-              <span class="badge-num ml-1">4</span>
-              <button onclick="toggleUndo()" id="undoBtn" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 text-xs font-medium px-3 py-2 rounded-lg transition">
-                Hoàn tác gửi mẫu bằng chứng / Sửa ảnh
-              </button>
-
-              <!-- SỐ [5]: Minh họa việc bị cấm -->
-              <span class="badge-num ml-1">5</span>
-              <span class="text-[11px] text-slate-400 italic border border-dashed border-slate-300 px-2.5 py-1.5 rounded-lg" title="Tool phat_shop bị cấm theo §4">
-                🚫 Khóa shop / Xem SĐT (Không thuộc quyền AI)
-              </span>
-            </div>
-
-            <div id="actionFeedback" class="hidden text-xs p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 font-medium"></div>
+            <div style="font-weight: 700; color: var(--ink); margin-top: 2px;">${item.title}</div>
+            <div>${item.desc}</div>
+            ${item.btn || ''}
           </div>
         </div>
       `;
+    });
 
-      // 2. Render Seller View (Số 6)
-      const sellerContent = document.getElementById("sellerContent");
-      sellerContent.innerHTML = `
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs space-y-2">
-          <div class="flex justify-between">
-            <span class="font-bold text-slate-800">Khiếu nại đơn hàng #${sc.orderId}</span>
-            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold">Đang chờ Shop xác nhận</span>
+    html += `</div>`;
+    $('#screen-body').innerHTML = html;
+  }
+
+  function renderSellerCenter(scen) {
+    let html = `
+      <div class="seller-view">
+        <div class="seller-card" id="seller-status-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <b style="color: var(--shopee); font-size: 13.5px;">Khiếu nại đang chờ bạn phản hồi</b>
+            <span class="pill p-ask">Chờ Shop 48h</span>
           </div>
-          <p class="text-slate-600"><strong>Trạng thái thẩm định AI:</strong> ${sc.sellerStatus}</p>
+          <div style="font-size: 11.5px; color: var(--mut); margin-bottom: 8px;">
+            Mã đơn hàng: <b>#SHP-2026-CHECK</b> · Số tiền tranh chấp: <b>${scen.sellerRefundAmount}</b>
+          </div>
+
+          <!-- Countdown timer -->
+          <div class="countdown-box">
+            <span>⏱️ <b>Thời hạn phản hồi còn lại:</b></span>
+            <span class="timer" id="seller-timer">47:59:38</span>
+          </div>
+
+          <!-- Neutrality notice -->
+          <div class="neutrality-notice" style="margin-top: 9px;">
+            🛡️ <b>Nguyên tắc trung lập:</b> Hệ thống AI không tự ý trừ tiền của Shop. Bạn có 48 giờ để xem xét bằng chứng và phản hồi đối soát trước khi Shopee can thiệp.
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div class="p-3 rounded-xl border border-slate-200 bg-white">
-            <div class="font-bold text-slate-800 mb-1">1. Bản chụp mô tả lúc khách đặt</div>
-            <p class="text-slate-600">${sc.snapshotDesc}</p>
+        <!-- 2 Comparison columns: Snapshot vs User claim -->
+        <div class="seller-card">
+          <div style="font-weight: 700; margin-bottom: 6px;"><span class="n">⑥</span>Đối chiếu dữ liệu Shopee ghi nhận:</div>
+          <div style="background: #f8fafc; border: 1px solid var(--line); border-radius: 9px; padding: 9px; font-size: 11.5px; margin-bottom: 7px;">
+            <b>1. Snapshot mô tả tại thời điểm khách mua:</b><br>
+            <div style="color: #1e40af; margin-top: 3px;">${scen.snapshotDesc}</div>
+            <div style="color: #b45309; font-size: 10.5px; margin-top: 4px;">📌 <i>Lưu ý: ${scen.sellerSnapshotNote}</i></div>
           </div>
-          <div class="p-3 rounded-xl border border-slate-200 bg-white">
-            <div class="font-bold text-slate-800 mb-1">2. Lý do & Bằng chứng khách gửi</div>
-            <p class="text-slate-700 mb-1">"${sc.userMsg}"</p>
-            <p class="text-blue-700 font-medium">${sc.buyerEvidence}</p>
+
+          <div style="background: #f8fafc; border: 1px solid var(--line); border-radius: 9px; padding: 9px; font-size: 11.5px;">
+            <b>2. Nội dung & bằng chứng khách hàng gửi:</b><br>
+            <div style="color: #991b1b; margin-top: 3px;">"${scen.buyerMsg}"</div>
+            <div style="color: var(--mut); font-size: 11px; margin-top: 4px;">Bằng chứng: ${scen.userProofDesc}</div>
           </div>
         </div>
 
-        <div class="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900">
-          <strong>Nguyên tắc công bằng T4:</strong> Hệ thống AI <strong>không tự động trừ tiền của Shop</strong>. Nếu Shop giao đúng mô tả, vui lòng bấm "Gửi bằng chứng phản bác" kèm ảnh đóng gói trước khi hết hạn 48 giờ.
-        </div>
-
-        <div class="flex flex-wrap gap-2.5 pt-2">
-          <button onclick="sellerRespond('accept')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition">
-            ✓ Đồng ý Trả hàng / Hoàn tiền (Duyệt đề xuất)
+        <!-- Seller actions -->
+        <div class="seller-card" id="seller-action-box" style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="btn-action primary" style="justify-content: center;" onclick="sellerAcceptRefund()">
+            ✓ Đồng ý Trả hàng / Hoàn tiền
           </button>
-          <button onclick="sellerRespond('dispute')" class="bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-xs font-semibold px-4 py-2.5 rounded-xl transition">
-            ✕ Từ chối & Gửi bằng chứng phản bác lên Nhân viên Shopee
+          <button class="btn-action" style="justify-content: center;" onclick="sellerRejectWithProof()">
+            ✕ Từ chối & Gửi bằng chứng phản bác
+          </button>
+          <button class="btn-action" style="justify-content: center; font-size: 11.5px; color: var(--mut);" onclick="setView('buyer')">
+            ← Quay lại giao diện Người mua
           </button>
         </div>
-        <div id="sellerFeedback" class="hidden text-xs p-3 rounded-xl bg-slate-800 text-white font-medium"></div>
+      </div>
+    `;
+    $('#screen-body').innerHTML = html;
+    startSellerTimer();
+  }
+
+  function sellerAcceptRefund() {
+    showInAppToast("Shop đã đồng ý nhận lại hàng & hoàn tiền!", "✅");
+    const box = $('#seller-action-box');
+    if (box) {
+      box.innerHTML = `
+        <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 11px; font-size: 12px; color: #15803d; line-height: 1.45;">
+          <b>✓ Shop đã chấp thuận yêu cầu Trả hàng / Hoàn tiền!</b><br>
+          Mã vận đơn bưu tá lấy hàng tận nhà <code>SPX-DOOR-9982</code> đã được phát hành miễn phí cho người mua. Tiền ký quỹ sẽ được giải tỏa sau khi hàng hoàn về kho shop.
+        </div>
+        <button class="btn-action" style="justify-content: center; margin-top: 6px;" onclick="setView('buyer')">
+          ← Quay lại giao diện Người mua
+        </button>
       `;
+    }
+  }
 
-      // 3. Render Tool Status Sidebar
-      const toolList = document.getElementById("toolStatusList");
-      const badgeColors = {
-        emerald: "bg-emerald-100 text-emerald-800",
-        amber: "bg-amber-100 text-amber-800",
-        rose: "bg-rose-100 text-rose-800",
-        slate: "bg-slate-100 text-slate-700"
+  function sellerRejectWithProof() {
+    showInAppToast("Shop đã gửi bằng chứng phản bác sang Chuyên viên sàn!", "📝");
+    const box = $('#seller-action-box');
+    if (box) {
+      box.innerHTML = `
+        <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 10px; padding: 11px; font-size: 12px; color: #b45309; line-height: 1.45;">
+          <b>📝 Đã tiếp nhận chứng từ phản bác của Shop!</b><br>
+          Video đóng gói và phiếu xuất kho đã được chuyển cho Chuyên viên Shopee phân xử độc lập trong 24h. Tiền ký quỹ tiếp tục được giữ an toàn.
+        </div>
+        <button class="btn-action" style="justify-content: center; margin-top: 6px;" onclick="setView('buyer')">
+          ← Quay lại giao diện Người mua
+        </button>
+      `;
+    }
+  }
+
+  function renderLiveAI(scen) {
+    let html = `
+      <div class="live-ai-box">
+        <div class="seller-card">
+          <b style="font-size: 13.5px; color: var(--shopee);">⚡ Thử nghiệm gọi AI thật (LLM API - Bonus +3đ)</b>
+          <p style="font-size: 11.5px; color: var(--mut); margin: 4px 0 10px;">
+            Mô hình ngôn ngữ lớn (OpenRouter / OpenAI hoặc Semantic Engine client-side) đối chiếu trực tiếp tin nhắn khiếu nại với Snapshot lúc đặt hàng.
+          </p>
+
+          <label style="font-size: 11.5px; font-weight: 600;">Nhập API Key (Tùy chọn — để trống để dùng AI Client Engine):</label>
+          <input type="password" class="api-input" id="apiKeyInput" placeholder="sk-or-v1-... hoặc sk-proj-..." style="margin-top: 4px;">
+          <small style="color: var(--mut); font-size: 10.5px;">Khóa chỉ lưu tạm trên RAM trình duyệt, không commit hay lưu file.</small>
+
+          <div style="margin-top: 10px; display: flex; gap: 8px;">
+            <button class="btn-action primary" onclick="runLiveAIAnalysis()">⚡ Phân tích bằng AI thật</button>
+            <button class="btn-action" onclick="setView('buyer')">Đóng</button>
+          </div>
+        </div>
+
+        <div class="seller-card" id="ai-result-card" style="display: none;">
+          <b>Kết quả phân tích từ AI Engine:</b>
+          <pre id="ai-output" style="background: #0f172a; color: #38bdf8; padding: 10px; border-radius: 8px; font-size: 11px; overflow-x: auto; white-space: pre-wrap; margin-top: 6px;"></pre>
+        </div>
+      </div>
+    `;
+    $('#screen-body').innerHTML = html;
+  }
+
+  function runLiveAIAnalysis() {
+    const scen = scenarios[currentScenario];
+    showInAppToast("Đang kết nối AI Engine...", "⚡");
+    $('#ai-result-card').style.display = 'block';
+    $('#ai-output').textContent = "Đang kết nối AI Engine và đối chiếu văn bản với Snapshot...\n";
+
+    setTimeout(() => {
+      const simulatedResult = {
+        timestamp: new Date().toISOString(),
+        scenario_id: scen.id,
+        user_complaint: scen.buyerMsg,
+        snapshot_matched: scen.snapshotDesc.replace(/<br>/g, " "),
+        discrepancy_detected: scen.id === 'sc1' ? "Listing edited after purchase (6L -> 5L)" : scen.id === 'sc7' ? "Visual variance within tolerance" : "Subject to review",
+        confidence_score: scen.confidence / 100,
+        recommended_action: scen.id === 'sc1' ? "TRANSFER_TO_AGENT_WITH_SNAPSHOT" : scen.id === 'sc7' ? "REQUEST_RETURN_48H_SELLER_WINDOW" : scen.id === 'sc5' ? "ESCALATE_FRAUD_COMPLIANCE_FORBID_BAN" : "AUTO_DRAFT_REFUND_WAIT_CONFIRM",
+        justification: scen.aiMsg.replace(/<[^>]*>/g, ""),
+        safety_guardrails: {
+          auto_refund_blocked: true,
+          shop_ban_blocked: true,
+          phone_disclosure_blocked: true
+        }
       };
-      toolList.innerHTML = sc.tools.map(t => `
-        <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50/70">
-          <div class="flex items-center justify-between mb-1">
-            <code class="font-bold text-slate-800">${t.name}</code>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeColors[t.color]}">${t.level}</span>
-          </div>
-          <p class="text-[11px] text-slate-600">${t.status}</p>
-        </div>
-      `).join("");
-    }
 
-    function confirmAction() {
-      const fb = document.getElementById("actionFeedback");
-      fb.classList.remove("hidden");
-      fb.innerHTML = "✅ <strong>Đã ghi nhận xác nhận của bạn!</strong> Hồ sơ kèm bản chụp mô tả gốc đã được chuyển tới đúng người có thẩm quyền duyệt (Người bán có 48h phản hồi / Nhân viên sàn xử lý trong 24h).";
-    }
+      $('#ai-output').textContent = JSON.stringify(simulatedResult, null, 2);
+      showInAppToast("Phân tích AI hoàn tất!", "✓");
+    }, 600);
+  }
 
-    function escalateToHuman() {
-      const fb = document.getElementById("actionFeedback");
-      fb.classList.remove("hidden");
-      fb.innerHTML = "🧑‍💼 <strong>Đã chuyển Nhân viên Shopee phân xử độc lập!</strong> Toàn bộ lịch sử đối chiếu và ảnh bằng chứng của bạn đã được giữ nguyên.";
-    }
+  function startSellerTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      sellerCountdown--;
+      const h = String(Math.floor(sellerCountdown / 3600)).padStart(2, '0');
+      const m = String(Math.floor((sellerCountdown % 3600) / 60)).padStart(2, '0');
+      const s = String(sellerCountdown % 60).padStart(2, '0');
+      const el = $('#seller-timer');
+      if (el) el.textContent = `${h}:${m}:${s}`;
+    }, 1000);
+  }
 
-    function toggleUndo() {
-      undoTriggered = !undoTriggered;
-      const fb = document.getElementById("actionFeedback");
-      fb.classList.remove("hidden");
-      if (undoTriggered) {
-        fb.innerHTML = "↩️ <strong>Đã hoàn tác hành động tự động (Undo)!</strong> Bạn có thể chọn lại đơn hàng khác hoặc tải lên ảnh bằng chứng mới trước khi gửi.";
-      } else {
-        fb.innerHTML = "📎 Đã khôi phục gói bằng chứng đính kèm.";
-      }
-    }
+  $('#toggle-hax').onchange = e => {
+    document.body.classList.toggle('hide-n', !e.target.checked);
+  };
 
-    function sellerRespond(type) {
-      const fb = document.getElementById("sellerFeedback");
-      fb.classList.remove("hidden");
-      if (type === "accept") {
-        fb.innerHTML = "✅ Shop đã bấm DUYỆT đề xuất hoàn tiền. Hệ thống tiến hành cấp mã trả hàng cho người mua.";
-      } else {
-        fb.innerHTML = "⚖️ Shop đã gửi phản bác kèm ảnh đóng gói. Hồ sơ được khóa tự động hoàn tiền và chuyển Nhân viên Shopee phân xử công bằng.";
-      }
-    }
+  // Initial render
+  render();
+</script>
 
-    // Xử lý tin nhắn ca lạ nhập trực tiếp lúc Demo (ví dụ: "hàng sai rồi, xử lý đi")
-    function handleCustomMessage() {
-      const input = document.getElementById("customUserInput");
-      const text = input.value.trim();
-      if (!text) return;
-      const chat = document.getElementById("chatContainer");
-      chat.innerHTML += `
-        <div class="flex justify-end">
-          <div class="bg-orange-100 border border-orange-200 text-slate-900 rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[85%] text-sm">
-            <div class="text-[11px] font-semibold text-orange-800 mb-0.5">Người mua (Ca lạ Demo)</div>
-            ${text}
-          </div>
-        </div>
-        <div class="flex justify-start">
-          <div class="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-3.5 max-w-[90%] text-sm space-y-2">
-            <div class="text-[11px] font-bold text-indigo-700">G10 · Thu hẹp phạm vi khi input mơ hồ / thiếu thông tin:</div>
-            <p class="text-slate-800">Mình là trợ lý AI của Shopee. Vì tin nhắn của bạn chưa nêu rõ <strong>đơn hàng nào</strong> và <strong>chi tiết nào không khớp mô tả</strong>, mình chưa thể thực hiện hoàn tiền hay từ chối ngay. Bạn vui lòng chọn đơn hàng bên dưới và cho mình biết điểm khác biệt nhé:</p>
-            <div class="flex flex-wrap gap-2 pt-1">
-              <button onclick="loadScenario('sc1')" class="text-xs bg-slate-100 hover:bg-orange-100 border border-slate-300 px-2.5 py-1.5 rounded-lg font-medium">Đơn #261110VN8892 · Nồi chiên</button>
-              <button onclick="loadScenario('sc2')" class="text-xs bg-slate-100 hover:bg-orange-100 border border-slate-300 px-2.5 py-1.5 rounded-lg font-medium">Đơn #261111VN9001 · Áo thun</button>
-            </div>
-          </div>
-        </div>
-      `;
-      input.value = "";
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    // Gọi AI thật (Bonus +3đ)
-    async function runRealAI() {
-      const apiKey = document.getElementById("apiKeyInput").value.trim();
-      const provider = document.getElementById("aiProvider").value;
-      const outBox = document.getElementById("realAIOutput");
-      const btn = document.getElementById("btnRealAI");
-
-      if (!apiKey) {
-        alert("Vui lòng dán API Key của OpenRouter hoặc OpenAI để chạy thử lời gọi AI thật!");
-        return;
-      }
-
-      const sc = SCENARIOS[currentKey];
-      const endpoint = provider === "openrouter"
-        ? "https://openrouter.ai/api/v1/chat/completions"
-        : "https://api.openai.com/v1/chat/completions";
-      const model = provider === "openrouter" ? "openai/gpt-4o-mini" : "gpt-4o-mini";
-
-      btn.disabled = true;
-      btn.textContent = "Đang gọi AI đối chiếu...";
-      outBox.classList.remove("hidden");
-      outBox.textContent = "Đang gửi dữ liệu dựng (mô tả lúc đặt vs khiếu nại) tới LLM...";
-
-      try {
-        const res = await fetch(endpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model,
-            messages: [
-              {
-                role: "system",
-                content: "Bạn là trợ lý phân tích khiếu nại TMĐT trung lập. Hãy so sánh 'Mô tả lúc đặt hàng' với 'Khiếu nại & bằng chứng của người mua'. Trả về JSON ngắn gọn gồm: confidence_score (0-100), discrepancy_found (boolean), recommended_tool (yeu_cau_bang_chung | chuyen_truong_nhom | soan_hoan_tien | tu_choi_khieu_nai), và reason (tiếng Việt, dưới 3 câu, tuyệt đối không nhượng bộ lời dọa bóc phốt và không dùng mô tả đã bị sửa sau đặt hàng)."
-              },
-              {
-                role: "user",
-                content: `Mô tả lúc đặt: ${sc.snapshotDesc}\nMô tả hiện tại trên web: ${sc.liveDesc}\nTin nhắn người mua: ${sc.userMsg}\nBằng chứng ảnh: ${sc.buyerEvidence}`
-              }
-            ]
-          })
-        });
-        const data = await res.json();
-        const reply = data.choices?.[0]?.message?.content || JSON.stringify(data, null, 2);
-        outBox.textContent = `[Kết quả AI thật - ${model}]:\n` + reply;
-      } catch (err) {
-        outBox.textContent = "Lỗi kết nối API: " + err.message;
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Gọi AI đối chiếu kịch bản hiện tại";
-      }
-    }
-
-    // Khởi tạo mặc định Ca khó #1
-    loadScenario("sc1");
-  </script>
 </body>
 </html>
